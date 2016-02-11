@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>New Game Screen</title>
+        <!-- Link the Bootstrap (from twitter) CSS framework in order to use its classes-->
+        <link rel="stylesheet" href="../resource/menusStyle.css">
+        <!-- Link jQuery JavaScript library in order to use the $ (jQuery) method-->
+        <script src="gameSettings.js"></script>
+        <script src="../Utils.js"></script>
+    </head>
+    <body>
+        <div class="menu">
+            <div class="gameSettings">
+                <h1>New Game</h1>
+                <form method="GET" action="CreateNewGameServlet">
+                    Please enter a game name:
+                    <input type="text" name="gameName" class=""/>
+                    <br><br>
+                    insert number of players:
+                    <input type="radio" name="humanPlayers" value="1" checked> 1
+                    <input type="radio" name="humanPlayers" value="2"> 2
+                    <input type="radio" name="humanPlayers" value="3"> 3
+                    <br><br>
+                    insert number of computer players:
+                    <input type="radio" name="computerPlayers" value="1" checked> 0
+                    <input type="radio" name="computerPlayers" value="1"> 1
+                    <input type="radio" name="computerPlayers" value="2"> 2
+                    <input type="radio" name="computerPlayers" value="3"> 3
+                    <br><br>
+                    <button class="button" onclick="redirect('/RummikubWebApp')"  >Back</button>
+                    <input type="submit" value="CreateGame" class="button"/>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
