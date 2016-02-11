@@ -54,7 +54,6 @@ public class CreateNewGameServlet extends HttpServlet {
             catch (DuplicateGameName_Exception | InvalidParameters_Exception ex) {
                 response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-
             }
         }
         

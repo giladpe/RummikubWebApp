@@ -7,43 +7,45 @@ and open the template in the editor.
 <html>
     <head>
         <title>TODO supply a title</title>
+        <link rel="stylesheet" href="../resource/menusStyle.css">
+        <link rel="stylesheet" href="table.css">
+        <script src="../Utils.js"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
-    <body>
-      <table id="example" class="display" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Game Name</th>
-                <th>Players</th>
-                <th>Computers</th>
-                <th>Game Status</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Age</th>
-                <th>Start date</th>
-                <th>Salary</th>
-            </tr>
-        </tfoot>
-        <tbody>
-            <tr>
-                <td>Tiger Nixon</td>
-                <td>System Architect</td>
-                <td>Edinburgh</td>
-                <td>61</td>
-                <td>2011/04/25</td>
-                <td>$320,800</td>
-            </tr>
-            
-            </tr>
-        </tbody>
-    </table>
-    </body>
+    <div class="menu">
+        <div class="gameSettings">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Game Name</th>
+                        <th>Players</th>
+                        <th>Computers</th>
+                        <th>Game Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>showSpeed</strong></td>
+                        <td>15</td>
+                        <td>5</td>
+                        <td>Waiting</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Speed</strong></td>
+                        <td>15</td>
+                        <td>52</td>
+                        <td>Waiting</td>
+                    </tr>
+                </tbody>
+            </table>
+            <form method="GET" action="JoinGameServlet">
+                <input type="text" id="playerName" name="playerName" class="" placeholder="Insert player name"/>
+                <br><br>
+                <button class="button" onclick="redirect('/RummikubWebApp')"  >Back</button>
+                <input type="submit" value="JoinGame" class="button"/>
+            </form >
+
+        </div>
+    </div>
 </html>
