@@ -45,13 +45,11 @@ function createNewGame()
             success: function (data) {
                 if (data === "")//success **************************
                 {
-                    alert("game was created");
                     $("#errorMsg").text(gameNameJs + " game was created");
                     //getWaitingGames();
 
                 } else
                 {
-                    alert("game not created");
                     $("#errorMsg").text(data);
                 }
 
@@ -76,7 +74,6 @@ function getWaitingGames()
         dataType: 'json',
         success: function (data) {
 
-            alert("suc Servlet GetWaiting games");
             printTable(data);
 
         },
@@ -85,9 +82,11 @@ function getWaitingGames()
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
     });
+}
+
+function tableListener() {
     $('#tableBody').find('tr').on('click', function (event) {
         tableSelected(this);
-        alert('You clicked row ' + ($(this).index()));
         return false;
         var pickedup;
         $(document).ready(function () {
@@ -110,8 +109,8 @@ function getWaitingGames()
 
     });
 
-}
 
+}
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
         addSelection(watingGameList[i]);
