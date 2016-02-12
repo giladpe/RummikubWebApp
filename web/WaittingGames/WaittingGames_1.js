@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 
+
 $(function () { // onload...do
     $('#joinBtn').on('click', function (event) {
         joinGame();

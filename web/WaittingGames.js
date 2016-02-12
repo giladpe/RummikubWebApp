@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+ 
+ var EMPTY_STRING = "";
+ 
 $(function () { // onload...do
     $('#joinBtn').on('click', function (event) {
         joinGame();
@@ -25,10 +27,10 @@ function createNewGame()
     var humanPlayersJs = $("#humanPlayers").val();
     var computerPlayersJs = $("#computerPlayers").val();
 
-    if (computerPlayersJs === "") {
+    if (computerPlayersJs === EMPTY_STRING) {
         computerPlayersJs = 0;
     }
-    if (gameNameJs !== "" && humanPlayersJs !== "")
+    if (gameNameJs !== EMPTY_STRING && humanPlayersJs !== EMPTY_STRING)
     {
         $.ajax({
             url: "CreateNewGameServlet", //servlet
@@ -86,7 +88,7 @@ function printTable(watingGameList) {
     }
     for (var i = 0; i < watingGameList.length; i++) {
         var gameName = watingGameList[i];
-        addRowToTable([gameName, "", "", ""]);
+        addRowToTable([gameName, EMPTY_STRING, EMPTY_STRING, EMPTY_STRING]);
     }
 }
 function addSelection(gameName) {
@@ -101,7 +103,7 @@ function joinGame()
 
     var player_value = $("#playerNameLabel").val();
 
-    if (game_value !== "" && player_value !== "")
+    if (game_value !== EMPTY_STRING && player_value !== EMPTY_STRING)
     {
         $.ajax({
             url: "JoinGameServlet", //servlet
@@ -109,7 +111,7 @@ function joinGame()
             timeout: 2000,
             dataType: 'json',
             success: function (data) {
-                if (data === "")
+                if (data === EMPTY_STRING)
                 {
                     document.location.href = "gamePage.html";
                 } else
