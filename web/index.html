@@ -6,22 +6,44 @@ and open the template in the editor.
 -->
 
 
+
 <html>
     <head>
         <link rel="stylesheet" href="resource/menusStyle.css"/>
         <link rel="shortcut icon" href="resource/face.png">
-        <title>Menu</title>
+        <link rel="stylesheet" href="table.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-         <script src="index.js"></script>
-         <script src="Utils.js"></script>
+        <script src="jquery.js"></script>
+        <script src="WaittingGames.js"></script>
+        <script src="Utils.js"></script>
+        <title>Menu</title>
 
     </head>
-    <body class="menu">
-        <div class="dvCenter"> 
-            <button class="button" onclick="redirect('GameSettings/GameSetteingForm.html')" >New Game</button>
-            <button class="button" onclick="loadGameFunction()" >Load Game</button>
-            <button class="button" onclick="redirect('WaittingGames/WaittingGamesForm.html')" >Get Games</button>
+    <div class="menu">
+        <div class="gameSettings">
+            <br>
+            <h1>Game Selection</h1>
+            <select id="selectionBar">
+            </select>
+
+            <form >
+                <input type="text" id="gameName" name="gameName" class="" placeholder="Insert game name  "/>
+                <input type="text" id="humanPlayers" name="humanPlayers" class="" placeholder="Humans players"/>
+                <input type="text" id="computerPlayers" name="computerPlayers" class="" placeholder="Computer players"/>
+                <input type="submit" id="newGamebtn" value="Create Game" class="buttonTst"/>
+            </form >
+            <form >
+                <input type="text" id="playerName" name="playerName" class="" placeholder="Insert player name"/>
+                <input type="submit" id="joinBtn" value="JoinGame" class="buttonTst"/>
+            </form >
+            <form >
+                <input type="submit" id="refreshGameBtn" value="Refresh Games" class="buttonTst"/>
+            </form >
+            <div id ="errorMsg"  > </div>
         </div>
-    </body>
+    </div>
+</html>
+
+</body>
 </html>

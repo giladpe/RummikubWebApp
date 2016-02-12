@@ -28,7 +28,6 @@
 .gameSettings{
     position: absolute;
     text-align: center;
-    padding: 45px 32px;
     top:5%;
     width:80%;
     right:10%;
@@ -41,6 +40,27 @@
     width:80%;
     right:10%;
 }
+.buttonTst {
+    width: 130px;
+    height: 25px;
+    font-family: Georgia;
+    font-weight: bold;
+    padding: 2px 2px;
+    background: url(TileMenuButton.png);
+    background-size:100% 100%;
+    background-position: center;
+}
+
+.buttonTst:hover {
+    background: url(TileMenuButtonHover.png);
+    background-size:100% 100%;
+    background-position: center;
+    border-top-color: #edcba8;
+    color: white;
+    font-family: Georgia;
+}
+
+
 .button {
     font-family: Georgia;
     font-weight: bold;
@@ -49,6 +69,7 @@
     background-size:100% 100%;
     background-position: center;
 }
+
 .button:hover {
     background: url(TileMenuButtonHover.png);
     background-size:100% 100%;

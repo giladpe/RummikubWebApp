@@ -39,26 +39,24 @@ public class CreateNewGameServlet extends HttpServlet {
             throws ServletException, IOException {
         //PrintWriter out1
         response.setContentType("application/json;charset=UTF-8");
-        
+
         try (PrintWriter out = response.getWriter()) {
             String gameName = request.getParameter("gameName");
-            int computerPlayers = ServletUtils.getIntParameter(request,"computerPlayers");            
-            int humanPlayers = ServletUtils.getIntParameter(request,"humanPlayers");            
+            int computerPlayers = ServletUtils.getIntParameter(request, "computerPlayers");
+            int humanPlayers = ServletUtils.getIntParameter(request, "humanPlayers");
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
-            
+            response.setStatus(response.SC_OK);
+
             try {
                 rummikubAPI.createGame(gameName, humanPlayers, computerPlayers);
-                response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(null));
                 out.flush();
-            }
-            catch (DuplicateGameName_Exception | InvalidParameters_Exception ex) {
-                response.setStatus(response.SC_FORBIDDEN);
+            } catch (DuplicateGameName_Exception | InvalidParameters_Exception ex) {
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
                 out.flush();
             }
         }
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
