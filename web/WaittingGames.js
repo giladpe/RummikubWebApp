@@ -140,7 +140,7 @@ function updateGamesDetails()
     for (var i = 0; i < size; i++) {
         var row = document.getElementById("tableBody").rows[i];
         var cells = row[i].cells;
-        var gameName = cells.[0];
+        var gameName = cells[0];
         initGameDetails(gameName, row);
 
 
