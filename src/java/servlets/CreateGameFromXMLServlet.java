@@ -34,8 +34,7 @@ public class CreateGameFromXMLServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         response.setContentType("application/json;charset=UTF-8");
         
@@ -43,17 +42,17 @@ public class CreateGameFromXMLServlet extends HttpServlet {
             String xmlData = request.getParameter("xmlData");
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
+            response.setStatus(response.SC_OK);
+            
             try {
                 String gameName = rummikubAPI.createGameFromXML(xmlData);
-                response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(gameName));
-                out.flush();
             }
             catch (DuplicateGameName_Exception | InvalidParameters_Exception | InvalidXML_Exception ex) {
-                response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-                out.flush();
             }
+            
+            out.flush();
         }
     }
 

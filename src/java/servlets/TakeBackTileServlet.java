@@ -33,29 +33,26 @@ public class TakeBackTileServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
             int sequenceIndex = ServletUtils.getIntParameter(request,"sequenceIndex");
             int sequencePosition = ServletUtils.getIntParameter(request,"sequencePosition"); 
-            
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
+            response.setStatus(response.SC_OK);
+
             try {
                 rummikubAPI.takeBackTile(SessionUtils.getPlayerId(request), sequenceIndex, sequencePosition);
-
-                response.setStatus(response.SC_OK);
-                out.print(ServletUtils.GlobalGsonObject.toJson(null));
-                out.flush();
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.EMPTY_STRING));
             }
             catch (InvalidParameters_Exception ex) {
-                response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-                out.flush();
             }
+            
+            out.flush();
         }
     }
 

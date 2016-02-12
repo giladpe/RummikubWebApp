@@ -7,8 +7,6 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,8 +33,7 @@ public class CreateNewGameServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //PrintWriter out1
         response.setContentType("application/json;charset=UTF-8");
 
@@ -45,16 +42,17 @@ public class CreateNewGameServlet extends HttpServlet {
             int computerPlayers = ServletUtils.getIntParameter(request, "computerPlayers");
             int humanPlayers = ServletUtils.getIntParameter(request, "humanPlayers");
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
+            
             response.setStatus(response.SC_OK);
 
             try {
                 rummikubAPI.createGame(gameName, humanPlayers, computerPlayers);
-                out.print(ServletUtils.GlobalGsonObject.toJson(""));
-                out.flush();
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.EMPTY_STRING));
             } catch (DuplicateGameName_Exception | InvalidParameters_Exception ex) {
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-                out.flush();
             }
+            
+            out.flush();
         }
 
     }

@@ -35,27 +35,25 @@ public class GetEventsServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            int eventID = ServletUtils.getIntParameter(request,"eventID");            
-
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
+            response.setStatus(response.SC_OK);
+
             try {
-                List<Event> eventList = rummikubAPI.getEvents(SessionUtils.getPlayerId(request), eventID);
-                
-                response.setStatus(response.SC_OK);
+                List<Event> eventList = rummikubAPI.getEvents(SessionUtils.getPlayerId(request),
+                                                              SessionUtils.getEventId(request));
+
                 out.print(ServletUtils.GlobalGsonObject.toJson(eventList));
-                out.flush();
             }
             catch (InvalidParameters_Exception ex) {
-                response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-                out.flush();
             }
+
+            out.flush();
         }
     }
 

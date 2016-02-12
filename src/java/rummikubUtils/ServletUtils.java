@@ -25,6 +25,7 @@ public class ServletUtils {
     public static final String RUMMIKUB_API = "/RummikubApi/RummikubWebServiceService?wsdl";
     private static final String RUMMIKUB_WS_API = "rummikubWsApi";
     public static final Gson GlobalGsonObject = new Gson();
+    public static final String EMPTY_STRING = "";
 
     
     public static RummikubWebService getRummikubWsAPI(ServletContext servletContext) {

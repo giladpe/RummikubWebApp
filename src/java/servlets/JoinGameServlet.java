@@ -34,28 +34,26 @@ public class JoinGameServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
             String gameName = request.getParameter("gameName");
             String playerName = request.getParameter("playerName");
-
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
+            response.setStatus(response.SC_OK);
+
             try {
                 int playerId = rummikubAPI.joinGame(gameName, playerName);
                 SessionUtils.setPlayerId(request, playerId);
-                response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(playerId));
-                out.flush();
             }
             catch (GameDoesNotExists_Exception | InvalidParameters_Exception ex) {
-                response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-                out.flush();
             }
+            
+            out.flush();
         }
     }
 

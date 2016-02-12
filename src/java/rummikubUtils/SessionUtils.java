@@ -16,7 +16,6 @@ public class SessionUtils {
     private static final String PLAYED_ID = "playerId";
     private static final boolean CREATE_NEW_SESSION_IF_ABSENT = true;
 
-
     public static Integer getPlayerId (HttpServletRequest request) {
         Integer playerId;
         HttpSession session = request.getSession(!CREATE_NEW_SESSION_IF_ABSENT);        
@@ -27,9 +26,30 @@ public class SessionUtils {
         return playerId;
     }
     
-    public static void setPlayerId (HttpServletRequest request, int playerId) {
+    public static void setPlayerId (HttpServletRequest request, int playerID) {
         HttpSession session = request.getSession(CREATE_NEW_SESSION_IF_ABSENT);        
-        session.setAttribute(PLAYED_ID, playerId);
+        session.setAttribute(PLAYED_ID, playerID);
+    }
+    
+    public static Integer getEventId (HttpServletRequest request) {
+        Integer eventID;
+        HttpSession session = request.getSession(!CREATE_NEW_SESSION_IF_ABSENT);        
+        Object sessionAttribute = session != null ? session.getAttribute(PLAYED_ID) : null;
+        
+        if (sessionAttribute != null) {
+            eventID = (Integer)sessionAttribute;
+        }
+        else {
+            eventID = 0;
+            setEventId(request,eventID);
+        }
+        
+        return eventID;
+    }
+    
+    public static void setEventId (HttpServletRequest request, int eventID) {
+        HttpSession session = request.getSession(CREATE_NEW_SESSION_IF_ABSENT);        
+        session.setAttribute(PLAYED_ID, eventID);
     }
     
 

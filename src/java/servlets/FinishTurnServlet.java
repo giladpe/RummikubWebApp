@@ -33,27 +33,24 @@ public class FinishTurnServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
+            response.setStatus(response.SC_OK);
+
             try {
                 rummikubAPI.finishTurn(SessionUtils.getPlayerId(request));
-                
-                response.setStatus(response.SC_OK);
-                out.print(ServletUtils.GlobalGsonObject.toJson(null));
-                out.flush();
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.EMPTY_STRING));
             }
             catch (InvalidParameters_Exception ex) {
-                response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
-                out.flush();
             }
+            
+            out.flush();
         }
     }
 

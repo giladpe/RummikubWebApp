@@ -7,6 +7,7 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -31,15 +32,16 @@ public class GetWaitingGamesServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
             
         response.setContentType("application/json;charset=UTF-8");
         
         try (PrintWriter out = response.getWriter()) {
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
+            List<String> waitingGamesList = rummikubAPI.getWaitingGames();
+
             response.setStatus(response.SC_OK);
-            out.print(ServletUtils.GlobalGsonObject.toJson(rummikubAPI.getWaitingGames()));
+            out.print(ServletUtils.GlobalGsonObject.toJson(waitingGamesList));
             out.flush();
         }
     }
