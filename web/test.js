@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+var game_selected="";
 $(function () { // onload...do
     getWaitingGames();
     $('#joinBtn').on('click', function (event) {
@@ -21,8 +21,36 @@ $(function () { // onload...do
 
 });
 
-function tableSelected() {
-    alert('You clicked row ' + ($(this).index()));
+
+
+function joinGame()
+{
+    var playerNameJs = $("#playerName").val();
+    if (game_selected !== "" && playerNameJs !== "")
+    {
+        {
+            $.ajax({
+                url: "JoinGameServlet", //servlet
+                data: {"gameName": game_selected, "playerName": playerNameJs},
+                timeout: 3000,
+                dataType: 'json',
+                async:false,
+                success: function (data) {
+                    if (data === "")
+                    {
+                        //document.location.href = "gamePage.html";  //go to the game pager
+                    } else
+                    {
+                        $("#errorMsg").text(data);
+                    }
+
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR + " " + textStatus + " " + errorThrown);
+                }
+            });
+        }
+    }
 }
 
 function createNewGame()
@@ -30,7 +58,7 @@ function createNewGame()
     var gameNameJs = $("#gameName").val();
     var humanPlayersJs = $("#humanPlayers").val();
     var computerPlayersJs = $("#computerPlayers").val();
-
+    
     if (computerPlayersJs === "") {
         computerPlayersJs = 0;
     }
@@ -38,7 +66,7 @@ function createNewGame()
     {
         $.ajax({
             url: "CreateNewGameServlet", //servlet
-
+            async:false,
             data: {"gameName": gameNameJs, "computerPlayers": computerPlayersJs, "humanPlayers": humanPlayersJs},
             timeout: 3000,
             dataType: 'json',
@@ -73,7 +101,7 @@ function getWaitingGames()
         timeout: 5000,
         dataType: 'json',
         success: function (data) {
-
+            game_selected=""
             printTable(data);
 
         },
@@ -84,80 +112,16 @@ function getWaitingGames()
     });
 }
 
-//function tableListener() {
-//    $('#tableBody').find('tr').on('click', function (event) {
-//        tableSelected(this);
-//        return false;
-//        var pickedup;
-//        $(document).ready(function () {
-//
-//            $("#tableBody tbody tr").on("click", function (event) {
-//
-//                // get back to where it was before if it was selected :
-//                if (pickedup != null) {
-//                    pickedup.css("background-color", "#ffccff");
-//                }
-//
-//                $("#fillname").val($(this).find("td").eq(1).html());
-//                $(this).css("background-color", "red");
-//
-//                pickedup = $(this);
-//                alert(pickedup);
-//            });
-//        });
-//
-//
-//    });
-//
-//
-//}
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
         addSelection(watingGameList[i]);
     }
     for (var i = 0; i < watingGameList.length; i++) {
         var gameName = watingGameList[i];
-        addRowToTable([gameName, "", "", ""]);
+        var gameDetails=getGameDetails(gameName);
+        addRowToTable([gameName, gameDetails.humanPlayers,gameDetails.computerizedPlayers, gameDetails.status]);
     }
 }
-function addSelection(gameName) {
-    //var selection = $("#selectionBar");
-    $('<option>').val(gameName).text(gameName).appendTo('#selectionBar');
-}
-
-
-
-function joinGame()
-{
-    var gameNameJs = $('#selectionBar').find(":selected").text();
-    var playerNameJs = $("#playerName").val();
-    if (gameNameJs !== "" && playerNameJs !== "")
-    {
-        {
-            $.ajax({
-                url: "JoinGameServlet", //servlet
-                data: {"gameName": gameNameJs, "playerName": playerNameJs},
-                timeout: 2000,
-                dataType: 'json',
-                success: function (data) {
-                    if (data === "")
-                    {
-                        //document.location.href = "gamePage.html";  //go to the game pager
-                    } else
-                    {
-                        $("#errorMsg").text(data);
-                    }
-
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error(jqXHR + " " + textStatus + " " + errorThrown);
-                }
-            });
-        }
-    }
-}
-
-
 
 function addRowToTable(gameDetails) {
 var data="";
@@ -169,52 +133,36 @@ var data="";
 
 function OnRowSel(obj)
 {
+    alert(game_selected);
 	$(".rowSelected","#gamesTable").removeClass('rowSelected');
 		$(obj).addClass('rowSelected');
-         var x= $(".rowSelected","#gamesTable").cells     
-         alert(x[0]);
+         var selectedRow=$(".rowSelected","#gamesTable");  
+         game_selected=selectedRow[0].cells[0].innerText;
+    
 }
-function updateGamesDetails()
-{
-    var table = document.getElementById("tableBody");
-    var size = table.childElementCount;
-    var a = table.length;
-    for (var i = 0; i < size; i++) {
-        var row = document.getElementById("tableBody").rows[i];
-        var cells = row[i].cells;
-        var gameName = cells[0];
-        initGameDetails(gameName, row);
-
-
-    }
-}
-function initGameDetails(gameName, row) {
+function getGameDetails(gameName){
+    var gameDetails="";
     $.ajax({
         url: "GetGameDetailsServlet", //servlet
-        data: {"gameName": game_value, "playerName": player_value},
-        timeout: 2000,
+        data: {"gameName": gameName},
+        async:false,
+        timeout: 5000,
         dataType: 'json',
         success: function (data) {
             if (data !== "")
             {
-                row.cells[1] = data.humanPlayers;
-                row.cells[2] = data.computerizedPlayers
-                row.cells[3] = data.status
+              gameDetails=data;  
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            alert("serv faild details");
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
     });
-
-
+    return gameDetails;
 }
-
-function test() {
-    var watingGameList = ["aaa", "bbb", "ccc"];
-    for (var i = 0; i < watingGameList.length; i++) {
-        var gameName = watingGameList[i];
-        addRowToTable([gameName, 1, 1, 1]);
-    }
+function addSelection(gameName) {
+    //var selection = $("#selectionBar");
+    $('<option>').val(gameName).text(gameName).appendTo('#selectionBar');
 }
 

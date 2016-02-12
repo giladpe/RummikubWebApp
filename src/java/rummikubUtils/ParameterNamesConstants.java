@@ -14,7 +14,7 @@ public class ParameterNamesConstants {
     public static final String  SEQUENCE_INDEX = "sequenceIndex";
     public static final String  SEQUENCE_POSITION = "sequencePosition";
     public static final String  XML_DATA = "xmlData";
-    public static final String  GAME_NAME = "";
+    public static final String  GAME_NAME = "gameName";
     public static final String  COMPUTER_PLAYER = "computerPlayers";
     public static final String  HUMAN_PLAYER = "humanPlayers";
     public static final String  TILES = "tiles";
