@@ -18,16 +18,11 @@ $(function () { // onload...do
         getWaitingGames();
         return false;
     });
-    $('#tableBody').find('tr').on('click', function(event){
-        tableSelected(this);
-        alert('You clicked row '+ ($(this).index()) );
-        return false;
-});
 
 });
 
-function tableSelected(){    
-    alert('You clicked row '+ ($(this).index()) );
+function tableSelected() {
+    alert('You clicked row ' + ($(this).index()));
 }
 
 function createNewGame()
@@ -89,6 +84,30 @@ function getWaitingGames()
             alert("Error Servlet GetWaiting games");
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
+    });
+    $('#tableBody').find('tr').on('click', function (event) {
+        tableSelected(this);
+        alert('You clicked row ' + ($(this).index()));
+        return false;
+        var pickedup;
+        $(document).ready(function () {
+
+            $("#tableBody tbody tr").on("click", function (event) {
+
+                // get back to where it was before if it was selected :
+                if (pickedup != null) {
+                    pickedup.css("background-color", "#ffccff");
+                }
+
+                $("#fillname").val($(this).find("td").eq(1).html());
+                $(this).css("background-color", "red");
+
+                pickedup = $(this);
+                alert(pickedup);
+            });
+        });
+
+
     });
 
 }
