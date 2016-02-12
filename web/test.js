@@ -5,6 +5,7 @@
  */
 
 $(function () { // onload...do
+    getWaitingGames();
     $('#joinBtn').on('click', function (event) {
         joinGame();
     });
