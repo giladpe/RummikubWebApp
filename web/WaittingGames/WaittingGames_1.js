@@ -77,7 +77,7 @@ function getWaitingGames()
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
     });
-    updateGamesDetails();
+//    updateGamesDetails();
 }
 
 function printTable(watingGameList) {
@@ -132,41 +132,40 @@ function addRowToTable(gameDetails) {
         row.insertCell(i).innerHTML = gameDetails[i];
     }
 }
-function updateGamesDetails()
-{
-    var table= document.getElementById("tableBody");
-    var size =table.childElementCount;
-    var a=table.length;
-    for (var i = 0; i < size; i++) {
-        var row = document.getElementById("tableBody").rows[i];
-        var cells = row[i].cells;
-        var gameName = cells[0];
-        initGameDetails(gameName, row);
-
-
-    }
-}
-function initGameDetails(gameName, row) {
-    $.ajax({
-        url: "GetGameDetailsServlet", //servlet
-        data: {"gameName": game_value, "playerName": player_value},
-        timeout: 2000,
-        dataType: 'json',
-        success: function (data) {
-            if (data !== "")
-            {
-                row.cells[1] = data.humanPlayers;
-                row.cells[2] = data.computerizedPlayers
-                row.cells[3] = data.status
-            }
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            console.error(jqXHR + " " + textStatus + " " + errorThrown);
-        }
-    });
-
-
-}
+//function updateGamesDetails()
+//{
+//    var table= document.getElementById("tableBody");
+//    var size =table.childElementCount;
+//    for (var i = 0; i < size; i++) {
+//        var row = document.getElementById("tableBody").rows[i];
+//        var cells = row[i].cells;
+////        var gameName = cells[0];
+////        initGameDetails(gameName, row);
+//
+//
+//    }
+//}
+////function initGameDetails(gameName, row) {
+//    $.ajax({
+//        url: "GetGameDetailsServlet", //servlet
+//        data: {"gameName": game_value, "playerName": player_value},
+//        timeout: 2000,
+//        dataType: 'json',
+//        success: function (data) {
+//            if (data !== "")
+//            {
+//                row.cells[1] = data.humanPlayers;
+//                row.cells[2] = data.computerizedPlayers
+//                row.cells[3] = data.status
+//            }
+//        },
+//        error: function (jqXHR, textStatus, errorThrown) {
+//            console.error(jqXHR + " " + textStatus + " " + errorThrown);
+//        }
+//    });
+//
+//
+//}
 
 function test() {
     var watingGameList = ["aaa", "bbb", "ccc"];

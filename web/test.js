@@ -16,8 +16,16 @@ $(function () { // onload...do
         getWaitingGames();
         return false;
     });
+    $('#tableBody').find('tr').on('click', function(event){
+        tableSelected(this);
+        alert('You clicked row '+ ($(this).index()) );
+});
 
 });
+
+function tableSelected(){    
+    alert('You clicked row '+ ($(this).index()) );
+}
 
 function createNewGame()
 {
@@ -77,12 +85,16 @@ function getWaitingGames()
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
     });
-    
+
 }
 
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
         addSelection(watingGameList[i]);
+    }
+    for (var i = 0; i < watingGameList.length; i++) {
+        var gameName = watingGameList[i];
+        addRowToTable([gameName, "", "", ""]);
     }
 }
 function addSelection(gameName) {
@@ -94,29 +106,31 @@ function addSelection(gameName) {
 
 function joinGame()
 {
-    var player_value = $("#playerName").val();
-
-    if (game_value !== "" && player_value !== "")
+    var gameNameJs = $('#selectionBar').find(":selected").text();
+    var playerNameJs = $("#playerName").val();
+    if (gameNameJs !== "" && playerNameJs !== "")
     {
-        $.ajax({
-            url: "JoinGameServlet", //servlet
-            data: {"gameName": game_value, "playerName": player_value},
-            timeout: 2000,
-            dataType: 'json',
-            success: function (data) {
-                if (data === "")
-                {
-                    document.location.href = "gamePage.html";
-                } else
-                {
-                    $("#errorMsg").text(data);
-                }
+        {
+            $.ajax({
+                url: "JoinGameServlet", //servlet
+                data: {"gameName": gameNameJs, "playerName": playerNameJs},
+                timeout: 2000,
+                dataType: 'json',
+                success: function (data) {
+                    if (data === "")
+                    {
+                        //document.location.href = "gamePage.html";  //go to the game pager
+                    } else
+                    {
+                        $("#errorMsg").text(data);
+                    }
 
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR + " " + textStatus + " " + errorThrown);
-            }
-        });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error(jqXHR + " " + textStatus + " " + errorThrown);
+                }
+            });
+        }
     }
 }
 
@@ -132,9 +146,9 @@ function addRowToTable(gameDetails) {
 }
 function updateGamesDetails()
 {
-    var table= document.getElementById("tableBody");
-    var size =table.childElementCount;
-    var a=table.length;
+    var table = document.getElementById("tableBody");
+    var size = table.childElementCount;
+    var a = table.length;
     for (var i = 0; i < size; i++) {
         var row = document.getElementById("tableBody").rows[i];
         var cells = row[i].cells;
