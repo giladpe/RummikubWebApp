@@ -84,33 +84,33 @@ function getWaitingGames()
     });
 }
 
-function tableListener() {
-    $('#tableBody').find('tr').on('click', function (event) {
-        tableSelected(this);
-        return false;
-        var pickedup;
-        $(document).ready(function () {
-
-            $("#tableBody tbody tr").on("click", function (event) {
-
-                // get back to where it was before if it was selected :
-                if (pickedup != null) {
-                    pickedup.css("background-color", "#ffccff");
-                }
-
-                $("#fillname").val($(this).find("td").eq(1).html());
-                $(this).css("background-color", "red");
-
-                pickedup = $(this);
-                alert(pickedup);
-            });
-        });
-
-
-    });
-
-
-}
+//function tableListener() {
+//    $('#tableBody').find('tr').on('click', function (event) {
+//        tableSelected(this);
+//        return false;
+//        var pickedup;
+//        $(document).ready(function () {
+//
+//            $("#tableBody tbody tr").on("click", function (event) {
+//
+//                // get back to where it was before if it was selected :
+//                if (pickedup != null) {
+//                    pickedup.css("background-color", "#ffccff");
+//                }
+//
+//                $("#fillname").val($(this).find("td").eq(1).html());
+//                $(this).css("background-color", "red");
+//
+//                pickedup = $(this);
+//                alert(pickedup);
+//            });
+//        });
+//
+//
+//    });
+//
+//
+//}
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
         addSelection(watingGameList[i]);
@@ -160,12 +160,19 @@ function joinGame()
 
 
 function addRowToTable(gameDetails) {
-    var table = document.getElementById("tableBody");
-
-    var row = table.insertRow(0);
-    for (var i = 0; i < 4; i++) {
-        row.insertCell(i).innerHTML = gameDetails[i];
+var data="";
+    for (var i = 0; i < 4; i++) {  
+		data=data+"<td>"+gameDetails[i]+"</td>"
     }
+	$('#gamesTable').append('<tr onclick="OnRowSel(this)">'+data+'</tr>');
+}
+
+function OnRowSel(obj)
+{
+	$(".rowSelected","#gamesTable").removeClass('rowSelected');
+		$(obj).addClass('rowSelected');
+         var x= $(".rowSelected","#gamesTable").cells     
+         alert(x[0]);
 }
 function updateGamesDetails()
 {
