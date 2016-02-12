@@ -77,16 +77,12 @@ function getWaitingGames()
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
     });
-    //updateGamesDetails();
+    
 }
 
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
         addSelection(watingGameList[i]);
-    }
-    for (var i = 0; i < watingGameList.length; i++) {
-        var gameName = watingGameList[i];
-        addRowToTable([gameName, "", "", ""]);
     }
 }
 function addSelection(gameName) {
@@ -98,8 +94,7 @@ function addSelection(gameName) {
 
 function joinGame()
 {
-
-    var player_value = $("#playerNameLabel").val();
+    var player_value = $("#playerName").val();
 
     if (game_value !== "" && player_value !== "")
     {
@@ -124,6 +119,9 @@ function joinGame()
         });
     }
 }
+
+
+
 function addRowToTable(gameDetails) {
     var table = document.getElementById("tableBody");
 
@@ -140,7 +138,7 @@ function updateGamesDetails()
     for (var i = 0; i < size; i++) {
         var row = document.getElementById("tableBody").rows[i];
         var cells = row[i].cells;
-        var gameName = cells.[0];
+        var gameName = cells[0];
         initGameDetails(gameName, row);
 
 

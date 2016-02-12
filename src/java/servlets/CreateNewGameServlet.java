@@ -45,11 +45,11 @@ public class CreateNewGameServlet extends HttpServlet {
             int computerPlayers = ServletUtils.getIntParameter(request, "computerPlayers");
             int humanPlayers = ServletUtils.getIntParameter(request, "humanPlayers");
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
-            response.setStatus(response.SC_CREATED);
+            response.setStatus(response.SC_OK);
 
             try {
                 rummikubAPI.createGame(gameName, humanPlayers, computerPlayers);
-                out.print(ServletUtils.GlobalGsonObject.toJson(null));
+                out.print(ServletUtils.GlobalGsonObject.toJson(""));
                 out.flush();
             } catch (DuplicateGameName_Exception | InvalidParameters_Exception ex) {
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
