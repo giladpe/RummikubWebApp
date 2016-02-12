@@ -10,6 +10,7 @@ $(function () { // onload...do
     });
     $('#newGamebtn').on('click', function (event) {
         createNewGame();
+        getWaitingGames();
         return false;
     });
     $('#refreshGameBtn').on('click', function (event) {
@@ -19,6 +20,7 @@ $(function () { // onload...do
     $('#tableBody').find('tr').on('click', function(event){
         tableSelected(this);
         alert('You clicked row '+ ($(this).index()) );
+        return false;
 });
 
 });
@@ -69,6 +71,7 @@ function createNewGame()
 
 function getWaitingGames()
 {
+    $("#tableBody tr").remove();
     $.ajax({
         url: "GetWaitingGamesServlet", //servlet
         data: {},
