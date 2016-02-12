@@ -45,7 +45,7 @@ public class CreateNewGameServlet extends HttpServlet {
             int computerPlayers = ServletUtils.getIntParameter(request, "computerPlayers");
             int humanPlayers = ServletUtils.getIntParameter(request, "humanPlayers");
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
-            response.setStatus(response.SC_OK);
+            response.setStatus(response.SC_CREATED);
 
             try {
                 rummikubAPI.createGame(gameName, humanPlayers, computerPlayers);
