@@ -72,6 +72,7 @@ function createNewGame()
 function getWaitingGames()
 {
     $("#tableBody tr").remove();
+    $("#selectionBar option").remove();
     $.ajax({
         url: "GetWaitingGamesServlet", //servlet
         data: {},
