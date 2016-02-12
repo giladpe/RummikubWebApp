@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import rummikubUtils.ParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import rummikubUtils.SessionUtils;
 import ws.rummikub.InvalidParameters_Exception;
@@ -37,10 +38,10 @@ public class AddTileServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            String strVal = request.getParameter("tile");
+            String strVal = request.getParameter(ParameterNamesConstants.TILE);
             ws.rummikub.Tile tile = ServletUtils.parseTileStringToWsTile(strVal);
-            int sequenceIndex = ServletUtils.getIntParameter(request,"sequenceIndex");
-            int sequencePosition = ServletUtils.getIntParameter(request,"sequencePosition"); 
+            int sequenceIndex = ServletUtils.getIntParameter(request,ParameterNamesConstants.SEQUENCE_INDEX);
+            int sequencePosition = ServletUtils.getIntParameter(request,ParameterNamesConstants.SEQUENCE_POSITION); 
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
             response.setStatus(response.SC_OK);

@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import rummikubUtils.ParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import ws.rummikub.GameDoesNotExists_Exception;
 import ws.rummikub.PlayerDetails;
@@ -38,7 +39,7 @@ public class GetPlayersDetailsServlet extends HttpServlet {
         response.setContentType("application/json;charset=UTF-8");
 
         try (PrintWriter out = response.getWriter()) {
-            String gameName = request.getParameter("gameName");
+            String gameName = request.getParameter(ParameterNamesConstants.GAME_NAME);
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
             response.setStatus(response.SC_OK);
