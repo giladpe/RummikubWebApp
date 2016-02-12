@@ -37,6 +37,9 @@ public class GetPlayerDetailsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        response.setContentType("application/json;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
 
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
@@ -46,10 +49,12 @@ public class GetPlayerDetailsServlet extends HttpServlet {
                 
                 response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(playerDetails));
+                out.flush();
             }
             catch (GameDoesNotExists_Exception | InvalidParameters_Exception ex) {
                 response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                out.flush();
             }
         }
     }

@@ -49,10 +49,12 @@ public class GetEventsServlet extends HttpServlet {
                 
                 response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(eventList));
+                out.flush();
             }
             catch (InvalidParameters_Exception ex) {
                 response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                out.flush();
             }
         }
     }

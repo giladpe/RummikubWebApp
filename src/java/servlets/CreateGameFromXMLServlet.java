@@ -37,7 +37,7 @@ public class CreateGameFromXMLServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
         
         try (PrintWriter out = response.getWriter()) {
             String xmlData = request.getParameter("xmlData");
@@ -47,10 +47,12 @@ public class CreateGameFromXMLServlet extends HttpServlet {
                 String gameName = rummikubAPI.createGameFromXML(xmlData);
                 response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(gameName));
+                out.flush();
             }
             catch (DuplicateGameName_Exception | InvalidParameters_Exception | InvalidXML_Exception ex) {
                 response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                out.flush();
             }
         }
     }

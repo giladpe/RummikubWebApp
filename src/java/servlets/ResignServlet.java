@@ -12,6 +12,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import rummikubUtils.ServletUtils;
+import rummikubUtils.SessionUtils;
+import ws.rummikub.InvalidParameters_Exception;
+import ws.rummikub.RummikubWebService;
 
 /**
  *
@@ -31,18 +35,25 @@ public class ResignServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+
+        response.setContentType("application/json;charset=UTF-8");
+
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ResignServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ResignServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+
+            RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
+            
+            try {
+                rummikubAPI.resign(SessionUtils.getPlayerId(request));
+                
+                response.setStatus(response.SC_OK);
+                out.print(ServletUtils.GlobalGsonObject.toJson(null));
+                out.flush();
+            }
+            catch (InvalidParameters_Exception ex) {
+                response.setStatus(response.SC_FORBIDDEN);
+                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                out.flush();
+            }
         }
     }
 

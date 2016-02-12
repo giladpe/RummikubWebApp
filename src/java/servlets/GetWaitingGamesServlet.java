@@ -40,6 +40,7 @@ public class GetWaitingGamesServlet extends HttpServlet {
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             response.setStatus(response.SC_OK);
             out.print(ServletUtils.GlobalGsonObject.toJson(rummikubAPI.getWaitingGames()));
+            out.flush();
         }
     }
 

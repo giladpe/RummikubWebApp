@@ -47,10 +47,12 @@ public class GetGameDetailsServlet extends HttpServlet {
                 GameDetails gameDetails = rummikubAPI.getGameDetails(gameName);
                 response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(gameDetails));
+                out.flush();
             }
             catch (GameDoesNotExists_Exception ex) {
                 response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                out.flush();
             }
         }
     }

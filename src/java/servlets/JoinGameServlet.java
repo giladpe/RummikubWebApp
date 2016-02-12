@@ -49,10 +49,12 @@ public class JoinGameServlet extends HttpServlet {
                 SessionUtils.setPlayerId(request, playerId);
                 response.setStatus(response.SC_OK);
                 out.print(ServletUtils.GlobalGsonObject.toJson(playerId));
+                out.flush();
             }
             catch (GameDoesNotExists_Exception | InvalidParameters_Exception ex) {
                 response.setStatus(response.SC_FORBIDDEN);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                out.flush();
             }
         }
     }
