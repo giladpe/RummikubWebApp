@@ -114,9 +114,6 @@ function getWaitingGames()
 
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
-        addSelection(watingGameList[i]);
-    }
-    for (var i = 0; i < watingGameList.length; i++) {
         var gameName = watingGameList[i];
         var gameDetails=getGameDetails(gameName);
         addRowToTable([gameName, gameDetails.humanPlayers,gameDetails.computerizedPlayers, gameDetails.status]);
@@ -161,8 +158,5 @@ function getGameDetails(gameName){
     });
     return gameDetails;
 }
-function addSelection(gameName) {
-    //var selection = $("#selectionBar");
-    $('<option>').val(gameName).text(gameName).appendTo('#selectionBar');
-}
+
 
