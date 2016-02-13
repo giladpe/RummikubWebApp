@@ -12,6 +12,7 @@ $(function () { // onload...do
     getWaitingGames();
     $('#joinBtn').on('click', function (event) {
         joinGame();
+        return false;
     });
     $('#newGamebtn').on('click', function (event) {
         createNewGame();
@@ -26,6 +27,7 @@ $(function () { // onload...do
 //    getWaitingGames();
 //    $('#joinBtn').on('click', function (event) {
 //        joinGame();
+//        return false;
 //    });
 //
 //    $('#newGamebtn').on('click', function (event) {
@@ -156,15 +158,14 @@ function joinGame()
                 dataType: 'json',
                 async: false,
                 success: function (data) {
-                    if (data!=="")
+                    if (!data.isException)
                     {
-                        alert("Joined")
+                        alert("Joined");
                     } 
                     else
                     {
-                        $('#errorMsg').html(data).fadeIn(500).delay(2000).fadeOut(500);
+                        $('#errorMsg').html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
                     }
-
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     console.error(jqXHR + " " + textStatus + " " + errorThrown);

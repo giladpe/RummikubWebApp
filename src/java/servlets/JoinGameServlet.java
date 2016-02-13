@@ -12,9 +12,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import rummikubUtils.IntegerJsonResponse;
 import rummikubUtils.ServletParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import rummikubUtils.SessionUtils;
+import rummikubUtils.VoidAndStringJsonResponse;
 import ws.rummikub.GameDoesNotExists_Exception;
 import ws.rummikub.InvalidParameters_Exception;
 import ws.rummikub.RummikubWebService;
@@ -37,7 +39,8 @@ public class JoinGameServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
-        String[] s = new String[2];
+        IntegerJsonResponse intResposne = new IntegerJsonResponse();
+        VoidAndStringJsonResponse  voidResposne= new VoidAndStringJsonResponse();
         
         try (PrintWriter out = response.getWriter()) {
             String gameName = request.getParameter(ServletParameterNamesConstants.GAME_NAME);
@@ -48,17 +51,17 @@ public class JoinGameServlet extends HttpServlet {
 
             try {
                 int playerId = rummikubAPI.joinGame(gameName, playerName);
+                
                 SessionUtils.setPlayerId(request, playerId);
+                intResposne.setResposne(!ServletUtils.EXCEPTION, playerId);
+                out.print(ServletUtils.GlobalGsonObject.toJson(intResposne));
 
-                s[0] = ServletUtils.GlobalGsonObject.toJson(ServletUtils.VALID_RESUALT);
-                s[1] = ServletUtils.GlobalGsonObject.toJson(playerId);
-                out.print(ServletUtils.GlobalGsonObject.toJson(s));
+ //               out.print(ServletUtils.GlobalGsonObject.toJson(playerId));
             }
             catch (GameDoesNotExists_Exception | InvalidParameters_Exception ex) {
-                s[0] = ServletUtils.GlobalGsonObject.toJson(!ServletUtils.VALID_RESUALT);
-                s[1] = ServletUtils.GlobalGsonObject.toJson(ex.getMessage());
-
-                out.print(ServletUtils.GlobalGsonObject.toJson(s));
+                voidResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
+                out.print(ServletUtils.GlobalGsonObject.toJson(voidResposne));
+ //               out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
             }
             
             out.flush();
