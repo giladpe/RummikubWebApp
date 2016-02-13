@@ -12,7 +12,7 @@
     background-position: center;
 }
 
-.root {
+.gameBody {
     background-image: url("MenuPic1.jpg");
     background-position: center ;
     background-size:100% 100%;
@@ -52,7 +52,7 @@
     width:80%;
     right:10%;
 }
-.buttonTst {
+.gameSettingsBtn {
     width: 130px;
     height: 25px;
     font-family: Georgia;
@@ -63,7 +63,7 @@
     background-position: center;
 }
 
-.buttonTst:hover {
+.gameSettingsBtn:hover {
     background: url(TileMenuButtonHover.png);
     background-size:100% 100%;
     background-position: center;

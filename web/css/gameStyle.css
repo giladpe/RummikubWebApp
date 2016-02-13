@@ -12,11 +12,13 @@
     background-position: center;
 }
 
-.root {
+.gameBody {
     background-image: url("../images/MenuPic1.jpg");
+    height: 600px;
+    position: relative; 
     background-position: center ;
     background-size:100% 100%;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
 }
 .bar{
 
@@ -29,7 +31,6 @@
 }
 .menu {
     height: 600px;
-
     position: relative; 
     background-image: url("../images/MenuBackground.jpg");
     background-position: center ;
@@ -52,7 +53,7 @@
     width:80%;
     right:10%;
 }
-.buttonTst {
+.gameSettingsBtn {
     width: 130px;
     height: 25px;
     font-family: Georgia;
@@ -63,7 +64,7 @@
     background-position: center;
 }
 
-.buttonTst:hover {
+.gameSettingsBtn:hover {
     background: url("../images/TileMenuButtonHover.png");
     background-size:100% 100%;
     background-position: center;
@@ -139,7 +140,7 @@
     font-size: 14px;
     font-weight: bold;
     effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-    
+
 }
 .checkBox {
     font-size: 14px;
@@ -162,7 +163,7 @@
     font-size: 40px;
     font-family: Georgia;
     effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
-    
+
 }
 #gameMsg{
     stroke-width: 1;
@@ -175,7 +176,7 @@
 }
 
 #errorMsg{
-    
+
     display: none;
     font-family: Georgia;
     font-size: 16px;
