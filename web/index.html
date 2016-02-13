@@ -27,19 +27,21 @@ and open the template in the editor.
                 <br>
                 <h1>Game Selection</h1>
 
-                <table id="gamesTable"   >
+                <table id="gamesTable">
                     <thead>
                         <tr>
                             <th>Game Name</th>
                             <th>Humans</th>
                             <th>Computers</th>
                             <th>Game Status</th>
+                            <th>Joined</th>
+                            <th>Loaded Game</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody" style="cursor: pointer;">
                     </tbody>
                     <tfoot>
-                        <tr><td colspan="4" align="center"><button id="refreshGameBtn" class="refreshBtn"/></td></tr>
+                        <tr><td colspan="6" align="center"><button id="refreshGameBtn" class="refreshBtn"/></td></tr>
                     </tfoot>
                 </table>
                 <form id="newGameFileds">
@@ -52,8 +54,7 @@ and open the template in the editor.
                     <input type="text" id="playerName" name="playerName" class="" placeholder="Insert player name" size="46"/>
                     <input type="submit" id="joinBtn" value="JoinGame" class="buttonTst"/>
                 </form >
-                <input type="file" id="myFile" onchange="myFunction()">
-                <p id="demo"></p>
+                <input type="file" id="files" onchange="myFunction()">
                 <br>
                 <div id ="errorMsg"> </div>
             </div>
