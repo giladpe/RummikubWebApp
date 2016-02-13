@@ -37,7 +37,8 @@ public class JoinGameServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
-
+        String[] s = new String[2];
+        
         try (PrintWriter out = response.getWriter()) {
             String gameName = request.getParameter(ServletParameterNamesConstants.GAME_NAME);
             String playerName = request.getParameter(ServletParameterNamesConstants.PLAYER_NAME);
@@ -48,10 +49,16 @@ public class JoinGameServlet extends HttpServlet {
             try {
                 int playerId = rummikubAPI.joinGame(gameName, playerName);
                 SessionUtils.setPlayerId(request, playerId);
-                out.print(ServletUtils.GlobalGsonObject.toJson(playerId));
+
+                s[0] = ServletUtils.GlobalGsonObject.toJson(ServletUtils.VALID_RESUALT);
+                s[1] = ServletUtils.GlobalGsonObject.toJson(playerId);
+                out.print(ServletUtils.GlobalGsonObject.toJson(s));
             }
             catch (GameDoesNotExists_Exception | InvalidParameters_Exception ex) {
-                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                s[0] = ServletUtils.GlobalGsonObject.toJson(!ServletUtils.VALID_RESUALT);
+                s[1] = ServletUtils.GlobalGsonObject.toJson(ex.getMessage());
+
+                out.print(ServletUtils.GlobalGsonObject.toJson(s));
             }
             
             out.flush();

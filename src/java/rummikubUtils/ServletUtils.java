@@ -26,6 +26,8 @@ public class ServletUtils {
     private static final String RUMMIKUB_WS_API = "rummikubWsApi";
     public static final Gson GlobalGsonObject = new Gson();
     public static final String EMPTY_STRING = "";
+    public static final boolean VALID_RESUALT = true;
+
 
     
     public static RummikubWebService getRummikubWsAPI(ServletContext servletContext) {

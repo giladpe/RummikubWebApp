@@ -159,9 +159,9 @@ function joinGame()
                     if (data!=="")
                     {
                         alert("Joined")
-                    } else
+                    } 
+                    else
                     {
-                        
                         $('#errorMsg').html(data).fadeIn(500).delay(2000).fadeOut(500);
                     }
 
