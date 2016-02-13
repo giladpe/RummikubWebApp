@@ -47,12 +47,13 @@ public class CreateGameFromXMLServlet extends HttpServlet {
             
             try {
                 String gameName = rummikubAPI.createGameFromXML(xmlData);
-                out.print(ServletUtils.GlobalGsonObject.toJson(gameName));
+                ServletUtils.voidAndStringResposne.setResposne(!ServletUtils.EXCEPTION, gameName);
             }
             catch (DuplicateGameName_Exception | InvalidParameters_Exception | InvalidXML_Exception ex) {
-                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                ServletUtils.voidAndStringResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
             }
-            
+
+            out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.voidAndStringResposne));
             out.flush();
         }
     }

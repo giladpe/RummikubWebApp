@@ -26,7 +26,15 @@ public class ServletUtils {
     private static final String RUMMIKUB_WS_API = "rummikubWsApi";
     public static final Gson GlobalGsonObject = new Gson();
     public static final String EMPTY_STRING = "";
-    
+    public static final IntegerJsonResponse intResposne = new IntegerJsonResponse();
+    public static final VoidAndStringJsonResponse voidAndStringResposne = new VoidAndStringJsonResponse();
+    public static final GameDetailsJsonResponse gameDetailsResposne = new GameDetailsJsonResponse();
+    public static final StringListJsonResponse stringListResposne = new StringListJsonResponse();
+    public static final PlayerDetailsJsonResponse playerDetailsResposne = new PlayerDetailsJsonResponse();
+    public static final PlayersDetailsListJsonResponse playersDetailsResposne = new PlayersDetailsListJsonResponse();
+    public static final EventListJsonResponse eventListResposne = new EventListJsonResponse();
+
+
     public static final boolean EXCEPTION = true;
     
 //    public static final JsonResponse jasonResponse = new JsonResponse();

@@ -9,17 +9,13 @@ package rummikubUtils;
  *
  * @author Arthur
  */
-public class IntegerJsonResponse  extends JsonResponse {
+public class IntegerJsonResponse extends JsonResponse {
 
     private int intResponse;
 
     public IntegerJsonResponse() {
         super();
         this.intResponse = 0;
-    }
-    
-    public void setIntResponse(int intResponse) {
-        this.intResponse = intResponse;
     }
 
     public int getIntResponse() {
@@ -30,5 +26,4 @@ public class IntegerJsonResponse  extends JsonResponse {
         this.intResponse = intResponse;
         super.setIsException(isException);
     }
-    
 }

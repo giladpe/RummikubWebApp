@@ -42,7 +42,8 @@ public class GetWaitingGamesServlet extends HttpServlet {
             List<String> waitingGamesList = rummikubAPI.getWaitingGames();
 
             response.setStatus(response.SC_OK);
-            out.print(ServletUtils.GlobalGsonObject.toJson(waitingGamesList));
+            ServletUtils.stringListResposne.setResposne(!ServletUtils.EXCEPTION, waitingGamesList);
+            out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.stringListResposne));
             out.flush();
         }
     }

@@ -48,12 +48,13 @@ public class AddTileServlet extends HttpServlet {
 
             try {
                 rummikubAPI.addTile(SessionUtils.getPlayerId(request), tile, sequenceIndex, sequencePosition);
-                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.EMPTY_STRING));
+                ServletUtils.voidAndStringResposne.setResposne(!ServletUtils.EXCEPTION, ServletUtils.EMPTY_STRING);
             }
             catch (InvalidParameters_Exception ex) {
-                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                ServletUtils.voidAndStringResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
             }
             
+            out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.voidAndStringResposne));
             out.flush();
         }
     }

@@ -47,11 +47,13 @@ public class GetEventsServlet extends HttpServlet {
             try {
                 List<Event> eventList = rummikubAPI.getEvents(SessionUtils.getPlayerId(request),
                                                               SessionUtils.getEventId(request));
-
-                out.print(ServletUtils.GlobalGsonObject.toJson(eventList));
+                
+                ServletUtils.eventListResposne.setResposne(!ServletUtils.EXCEPTION, eventList);
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.eventListResposne));                
             }
             catch (InvalidParameters_Exception ex) {
-                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                ServletUtils.voidAndStringResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.voidAndStringResposne));                
             }
 
             out.flush();

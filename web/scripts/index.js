@@ -80,14 +80,14 @@ function loadServlet(file) {
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (data.get(0))//success **************************
+            if (!data.isException) //success 
             {
-                $('#errorMsg').html(data + 'game was created').fadeIn(500).delay(2000).fadeOut(500);
-                var gameTableDetailds = getTableGameDetails(data);
+                $('#errorMsg').html(data.voidAndStringResponse + 'game was created').fadeIn(500).delay(2000).fadeOut(500);
+                var gameTableDetailds = getTableGameDetails(data.data.voidAndStringResponse);
                 addRowToTable(gameTableDetailds);
             } else
             {
-                $("#errorMsg").html(data).fadeIn(500).delay(2000).fadeOut(500);
+                $("#errorMsg").html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
             }
             $('#files').val("");
         },
@@ -192,7 +192,7 @@ function createNewGame()
             timeout: 3000,
             dataType: 'json',
             success: function (data) {
-                if (data === "")//success **************************
+                if (!data.isException)  //success 
                 {
                     $('#errorMsg').html(gameNameJs + ' game was created').fadeIn(500).delay(2000).fadeOut(500);
                     var gameTableDetailds = getTableGameDetails(gameNameJs);
@@ -200,7 +200,7 @@ function createNewGame()
                     clearNewGameFileds();
                 } else
                 {
-                    $("#errorMsg").html(data).fadeIn(500).delay(2000).fadeOut(500);
+                    $("#errorMsg").html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
                     clearNewGameFileds();
                 }
 
@@ -232,7 +232,7 @@ function getWaitingGames()
         dataType: 'json',
         success: function (data) {
             game_selected = "";
-            printTable(data);
+            printTable(data.stringListResposne);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             alert("Error Servlet GetWaiting games");
@@ -258,7 +258,7 @@ function getTableGameDetails(gameName)
 function addRowToTable(gameDetails) {
     var data = "";
     for (var i = 0; i < NUM_OF_COLUMS; i++) {
-        data = data + "<td>" + gameDetails[i] + "</td>"
+        data = data + "<td>" + gameDetails[i] + "</td>";
     }
     $('#gamesTable').append('<tr onclick="OnRowSel(this)">' + data + '</tr>');
 }
@@ -314,11 +314,12 @@ function getPlayersDetailsList(gameName){
         timeout: 5000,
         dataType: 'json',
         success: function (data) {
-            if (data !== "")
+            if (!data.isException)
             {
-                playersDetails = data;
-            }else {
-                 $('#errorMsg').html(data).fadeIn(500).delay(2000).fadeOut(500);
+                playersDetails = data.playersDetailsListResposne;
+            }
+            else {
+                 $('#errorMsg').html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
@@ -341,9 +342,12 @@ function getGameDetails(gameName) {
         timeout: 5000,
         dataType: 'json',
         success: function (data) {
-            if (data !== "")
+            if (!data.isException)
             {
-                gameDetails = data;
+                gameDetails = data.gameDetailsResposne;
+            }
+            else {
+                 $('#errorMsg').html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {

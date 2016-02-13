@@ -48,11 +48,12 @@ public class CreateNewGameServlet extends HttpServlet {
 
             try {
                 rummikubAPI.createGame(gameName, humanPlayers, computerPlayers);
-                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.EMPTY_STRING));
+                ServletUtils.voidAndStringResposne.setResposne(!ServletUtils.EXCEPTION, ServletUtils.EMPTY_STRING);
             } catch (DuplicateGameName_Exception | InvalidParameters_Exception ex) {
-                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                ServletUtils.voidAndStringResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
             }
-            
+
+            out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.voidAndStringResposne));                
             out.flush();
         }
 

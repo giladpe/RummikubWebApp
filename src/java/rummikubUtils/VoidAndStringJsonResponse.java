@@ -17,10 +17,6 @@ public class VoidAndStringJsonResponse extends JsonResponse {
         super();
         this.voidAndStringResponse = ServletUtils.EMPTY_STRING;
     }
-    
-    public void setVoidResponse(String voidResponse) {
-        this.voidAndStringResponse = voidResponse;
-    }
 
     public String getVoidResponse() {
         return voidAndStringResponse;

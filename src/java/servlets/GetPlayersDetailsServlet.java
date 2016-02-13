@@ -46,10 +46,12 @@ public class GetPlayersDetailsServlet extends HttpServlet {
 
             try {
                 List<PlayerDetails> playerDetailsList = rummikubAPI.getPlayersDetails(gameName);
-                out.print(ServletUtils.GlobalGsonObject.toJson(playerDetailsList));
+                ServletUtils.playersDetailsResposne.setResposne(!ServletUtils.EXCEPTION, playerDetailsList);
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.playersDetailsResposne));                
             }
             catch (GameDoesNotExists_Exception ex) {
-                out.print(ServletUtils.GlobalGsonObject.toJson(ex.getMessage()));
+                ServletUtils.voidAndStringResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
+                out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.voidAndStringResposne));                
             }
             
             out.flush();
