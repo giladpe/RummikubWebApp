@@ -1,4 +1,16 @@
+.refreshBtn {
+    width: 50px;
+    height: 50px;
+    background: url(refreshOff.png);
+    background-size:100% 100%;
+    background-position: center;
+}
 
+.refreshBtn:hover {
+    background: url(refreshOn.png);
+    background-size:100% 100%;
+    background-position: center;
+}
 
 .root {
     background-image: url("MenuPic1.jpg");
@@ -163,6 +175,8 @@
 }
 
 #errorMsg{
+    
+    display: none;
     font-family: Georgia;
     font-size: 16px;
     text-fill: #ff0000;
