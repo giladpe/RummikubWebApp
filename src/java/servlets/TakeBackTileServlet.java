@@ -36,7 +36,7 @@ public class TakeBackTileServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType(ParameterNamesConstants.CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
             int sequenceIndex = ServletUtils.getIntParameter(request,ParameterNamesConstants.SEQUENCE_INDEX);

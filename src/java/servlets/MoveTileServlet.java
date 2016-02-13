@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import rummikubUtils.ParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import rummikubUtils.SessionUtils;
 import ws.rummikub.InvalidParameters_Exception;
@@ -35,13 +36,13 @@ public class MoveTileServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType(ParameterNamesConstants.CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
-            int sourceSequenceIndex = ServletUtils.getIntParameter(request,"sourceSequenceIndex");
-            int sourceSequencePosition = ServletUtils.getIntParameter(request,"sourceSequencePosition"); 
-            int targetSequenceIndex = ServletUtils.getIntParameter(request,"targetSequenceIndex");
-            int targetSequencePosition = ServletUtils.getIntParameter(request,"targetSequencePosition"); 
+            int sourceSequenceIndex = ServletUtils.getIntParameter(request,ParameterNamesConstants.SOURCE_SEQUENCE_INDEX);
+            int sourceSequencePosition = ServletUtils.getIntParameter(request,ParameterNamesConstants.SOURCE_SEQUENCE_POSITION); 
+            int targetSequenceIndex = ServletUtils.getIntParameter(request,ParameterNamesConstants.TARGET_SEQUENCE_INDEX);
+            int targetSequencePosition = ServletUtils.getIntParameter(request,ParameterNamesConstants.TARGET_SEQUENCE_POSITION); 
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
             response.setStatus(response.SC_OK);

@@ -36,7 +36,7 @@ public class CreateNewGameServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //PrintWriter out1
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType(ParameterNamesConstants.CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
             String gameName = request.getParameter(ParameterNamesConstants.GAME_NAME);
