@@ -9,49 +9,51 @@ and open the template in the editor.
 
 <html>
     <head>
-        <link rel="stylesheet" href="resource/menusStyle.css"/>
-        <link rel="shortcut icon" href="resource/face.png">
-        <link rel="stylesheet" href="table.css">
+        <link rel="stylesheet" href="css/gameStyle.css"/>
+        <link rel="shortcut icon" href="images/face.png">
+        <link rel="stylesheet" href="css/table.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="jquery.js"></script>
-        <script src="Utils.js"></script>
-        <script src="test.js"></script>
+        <script src="scripts/jquery.js"></script>
+        <script src="scripts/Utils.js"></script>
+        <script src="scripts/index.js"></script>
 
         <title>Menu</title>
 
     </head>
-    <div class="menu">
-        <div class="gameSettings">
-            <br>
-            <h1>Game Selection</h1>
+    <body>
+        <div class="menu">
+            <div class="gameSettings">
+                <br>
+                <h1>Game Selection</h1>
 
-            <table id="gamesTable"   >
-                <thead>
-                    <tr>
-                        <th>Game Name</th>
-                        <th>Humans</th>
-                        <th>Computers</th>
-                        <th>Game Status</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody" style="cursor: pointer;">
-                </tbody>
-            </table>
-            <form >
-                <input type="text" id="gameName" name="gameName" class="" placeholder="Insert game name  "/>
-                <input type="text" id="humanPlayers" name="humanPlayers" class="" placeholder="Humans players"/>
-                <input type="text" id="computerPlayers" name="computerPlayers" class="" placeholder="Computer players"/>
-                <input type="submit" id="newGamebtn" value="Create Game" class="buttonTst"/>
-            </form >
-            <form >
-                <input type="text" id="playerName" name="playerName" class="" placeholder="Insert player name"/>
-                <input type="submit" id="joinBtn" value="JoinGame" class="buttonTst"/>
-            </form >
-            <form >
-                <input type="submit" id="refreshGameBtn" value="Refresh Games" class="buttonTst"/>
-            </form >
-            <div id ="errorMsg"> </div>
+                <table id="gamesTable"   >
+                    <thead>
+                        <tr>
+                            <th>Game Name</th>
+                            <th>Humans</th>
+                            <th>Computers</th>
+                            <th>Game Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" style="cursor: pointer;">
+                    </tbody>
+                    <tfoot>
+                        <tr><td colspan="4" align="center"><button id="refreshGameBtn" class="refreshBtn"/></td></tr>
+                    </tfoot>
+                </table>
+                <form id="newGameFileds">
+                    <input type="text" id="gameName" name="gameName" class="" placeholder="Insert game name  " size="12"/>
+                    <input type="text" id="humanPlayers" name="humanPlayers" class="" placeholder="Humans players" size="12"/>
+                    <input type="text" id="computerPlayers" name="computerPlayers" class="" placeholder="Computer players" size="12"/>
+                    <input type="submit" id="newGamebtn" value="Create Game" class="buttonTst"/>
+                </form >
+                <form >
+                    <input type="text" id="playerName" name="playerName" class="" placeholder="Insert player name" size="46"/>
+                    <input type="submit" id="joinBtn" value="JoinGame" class="buttonTst"/>
+                </form >
+                <div id ="errorMsg"> </div>
+            </div>
         </div>
-    </div>
+    </body>
 </html>

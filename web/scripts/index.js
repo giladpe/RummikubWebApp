@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var game_selected="";
+var game_selected = "";
 $(function () { // onload...do
     getWaitingGames();
     $('#joinBtn').on('click', function (event) {
@@ -11,7 +11,6 @@ $(function () { // onload...do
     });
     $('#newGamebtn').on('click', function (event) {
         createNewGame();
-        getWaitingGames();
         return false;
     });
     $('#refreshGameBtn').on('click', function (event) {
@@ -34,14 +33,15 @@ function joinGame()
                 data: {"gameName": game_selected, "playerName": playerNameJs},
                 timeout: 3000,
                 dataType: 'json',
-                async:false,
+                async: false,
                 success: function (data) {
                     if (data === "")
                     {
                         //document.location.href = "gamePage.html";  //go to the game pager
                     } else
                     {
-                        $("#errorMsg").text(data);
+                        $('#errorMsg').html(data).fadeIn(500).delay(2000).fadeOut(500);
+                        ;
                     }
 
                 },
@@ -58,7 +58,7 @@ function createNewGame()
     var gameNameJs = $("#gameName").val();
     var humanPlayersJs = $("#humanPlayers").val();
     var computerPlayersJs = $("#computerPlayers").val();
-    
+
     if (computerPlayersJs === "") {
         computerPlayersJs = 0;
     }
@@ -66,19 +66,23 @@ function createNewGame()
     {
         $.ajax({
             url: "CreateNewGameServlet", //servlet
-            async:false,
+            async: false,
             data: {"gameName": gameNameJs, "computerPlayers": computerPlayersJs, "humanPlayers": humanPlayersJs},
             timeout: 3000,
             dataType: 'json',
             success: function (data) {
                 if (data === "")//success **************************
                 {
-                    $("#errorMsg").text(gameNameJs + " game was created");
-                    //getWaitingGames();
+                    $('#errorMsg').html(gameNameJs + ' game was created').fadeIn(500).delay(2000).fadeOut(500);
+                    var gameTableDetailds = getTableGameDetails(gameNameJs);
+                    addRowToTable(gameTableDetailds);
+                    clearNewGameFileds();
 
                 } else
                 {
-                    $("#errorMsg").text(data);
+                    $("#errorMsg").html(data).fadeIn(500).delay(2000).fadeOut(500);
+                    clearNewGameFileds();
+
                 }
 
             },
@@ -91,6 +95,15 @@ function createNewGame()
     }
 }
 
+function clearNewGameFileds()
+{
+    
+    
+    var gameNameJs = $("#gameName").val("");
+    var humanPlayersJs = $("#humanPlayers").val("");
+    var computerPlayersJs = $("#computerPlayers").val("");
+}
+
 function getWaitingGames()
 {
     $("#tableBody tr").remove();
@@ -101,7 +114,7 @@ function getWaitingGames()
         timeout: 5000,
         dataType: 'json',
         success: function (data) {
-            game_selected=""
+            game_selected = ""
             printTable(data);
 
         },
@@ -114,41 +127,44 @@ function getWaitingGames()
 
 function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
-        var gameName = watingGameList[i];
-        var gameDetails=getGameDetails(gameName);
-        addRowToTable([gameName, gameDetails.humanPlayers,gameDetails.computerizedPlayers, gameDetails.status]);
+        var gameTableDetailds = getTableGameDetails(watingGameList[i]);
+        addRowToTable(gameTableDetailds);
     }
+}
+function getTableGameDetails(gameName)
+{
+    var gameDetails = getGameDetails(gameName);
+    return ([gameName, gameDetails.humanPlayers, gameDetails.computerizedPlayers, gameDetails.status]);
 }
 
 function addRowToTable(gameDetails) {
-var data="";
-    for (var i = 0; i < 4; i++) {  
-		data=data+"<td>"+gameDetails[i]+"</td>"
+    var data = "";
+    for (var i = 0; i < 4; i++) {
+        data = data + "<td>" + gameDetails[i] + "</td>"
     }
-	$('#gamesTable').append('<tr onclick="OnRowSel(this)">'+data+'</tr>');
+    $('#gamesTable').append('<tr onclick="OnRowSel(this)">' + data + '</tr>');
 }
 
 function OnRowSel(obj)
 {
-    alert(game_selected);
-	$(".rowSelected","#gamesTable").removeClass('rowSelected');
-		$(obj).addClass('rowSelected');
-         var selectedRow=$(".rowSelected","#gamesTable");  
-         game_selected=selectedRow[0].cells[0].innerText;
-    
+    $(".rowSelected", "#gamesTable").removeClass('rowSelected');
+    $(obj).addClass('rowSelected');
+    var selectedRow = $(".rowSelected", "#gamesTable");
+    game_selected = selectedRow[0].cells[0].innerText;
+
 }
-function getGameDetails(gameName){
-    var gameDetails="";
+function getGameDetails(gameName) {
+    var gameDetails = "";
     $.ajax({
         url: "GetGameDetailsServlet", //servlet
         data: {"gameName": gameName},
-        async:false,
+        async: false,
         timeout: 5000,
         dataType: 'json',
         success: function (data) {
             if (data !== "")
             {
-              gameDetails=data;  
+                gameDetails = data;
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
