@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import rummikubUtils.ParameterNamesConstants;
+import rummikubUtils.ServletParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import rummikubUtils.SessionUtils;
 import ws.rummikub.InvalidParameters_Exception;
@@ -36,7 +36,7 @@ public class FinishTurnServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        response.setContentType(ParameterNamesConstants.CONTENT_TYPE);
+        response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());

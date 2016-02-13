@@ -9,7 +9,7 @@ package rummikubUtils;
  *
  * @author Arthur
  */
-public class ParameterNamesConstants {
+public class ServletParameterNamesConstants {
     public static final String TILE = "tile";
     public static final String  SEQUENCE_INDEX = "sequenceIndex";
     public static final String  SEQUENCE_POSITION = "sequencePosition";

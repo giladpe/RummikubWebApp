@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import rummikubUtils.ParameterNamesConstants;
+import rummikubUtils.ServletParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import ws.rummikub.DuplicateGameName_Exception;
 import ws.rummikub.InvalidParameters_Exception;
@@ -36,12 +36,12 @@ public class CreateNewGameServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         //PrintWriter out1
-        response.setContentType(ParameterNamesConstants.CONTENT_TYPE);
+        response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
-            String gameName = request.getParameter(ParameterNamesConstants.GAME_NAME);
-            int computerPlayers = ServletUtils.getIntParameter(request, ParameterNamesConstants.COMPUTER_PLAYER);
-            int humanPlayers = ServletUtils.getIntParameter(request, ParameterNamesConstants.HUMAN_PLAYER);
+            String gameName = request.getParameter(ServletParameterNamesConstants.GAME_NAME);
+            int computerPlayers = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.COMPUTER_PLAYER);
+            int humanPlayers = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.HUMAN_PLAYER);
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
             response.setStatus(response.SC_OK);

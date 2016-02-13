@@ -12,7 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import rummikubUtils.ParameterNamesConstants;
+import rummikubUtils.ServletParameterNamesConstants;
 import rummikubUtils.ServletUtils;
 import rummikubUtils.SessionUtils;
 import ws.rummikub.InvalidParameters_Exception;
@@ -36,11 +36,11 @@ public class TakeBackTileServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        response.setContentType(ParameterNamesConstants.CONTENT_TYPE);
+        response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
-            int sequenceIndex = ServletUtils.getIntParameter(request,ParameterNamesConstants.SEQUENCE_INDEX);
-            int sequencePosition = ServletUtils.getIntParameter(request,ParameterNamesConstants.SEQUENCE_POSITION); 
+            int sequenceIndex = ServletUtils.getIntParameter(request,ServletParameterNamesConstants.SEQUENCE_INDEX);
+            int sequencePosition = ServletUtils.getIntParameter(request,ServletParameterNamesConstants.SEQUENCE_POSITION); 
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
             
             response.setStatus(response.SC_OK);
