@@ -8,18 +8,45 @@ and open the template in the editor.
     Author     : giladPe
 */
 #topBar{
-    height: 80px;      
+    height: 80px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 20px
+        
 }
 #buttonBar{
-    height: 100px;
+    height: 120px;
 }
-.resginCell{ width: 90px;}
-.finishTurnCell{width: 100px;}
+.left{float: left; width: 40%; }
+.center{float: left; width: 40%; }
+.right{float: left; width: 20%; }
+.button {
+    font-family: Georgia;
+    font-weight: bold;
+    padding: 15px 32px;
+    background: url(../images/TileMenuButton.png);
+    background-size:100% 100%;
+    background-position: center;
+    margin: 10px;
+}
+
+
+.addTileDiv{ padding-top: 20px;  float: left; width: 15%;}
+.finishTurnDiv{ padding-top: 20px; float: left; width: 15%; }
+#hand{
+    background-image: url("../images/PlayerHand.png"); 
+    background-position: center ;
+    background-size:100% 100%;
+    background-repeat: no-repeat;
+    float: left; width: 70%;
+    height: 119px;
+}
+
 .playerBar{ width:1100px;}
 
 .gameBoard{
     border: 1px;
-    height: 600px;
+    height: 400px;
     width: 1320px;
 }
 .bar{
@@ -27,8 +54,10 @@ and open the template in the editor.
     background-position: center ;
     background-size:100% 100%;
     background-repeat: no-repeat;
+    align-items: center;
 }
 .nameF{
+    top:5%;
     padding-left: 30px;
     color: white;
     font-family: Georgia;
@@ -36,6 +65,16 @@ and open the template in the editor.
     pref-height: 30;
     effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
 }
+.nameFcurrPlayer{
+    top:5%;
+    padding-left: 30px;
+    color: blue;
+    font-family: Georgia;
+    font-weight: bold;
+    pref-height: 34;
+    effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+
 .gameMsg{
     stroke-width: 1;
     stroke: white;   

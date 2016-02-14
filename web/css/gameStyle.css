@@ -32,7 +32,7 @@
     font-family: Georgia;
 }
 .gameSettings{
-    position: absolute;
+    position: static;
     text-align: center;
     top:5%;
     width:80%;
@@ -67,14 +67,7 @@
 }
 
 
-.button {
-    font-family: Georgia;
-    font-weight: bold;
-    padding: 15px 32px;
-    background: url(../images/TileMenuButton.png);
-    background-size:100% 100%;
-    background-position: center;
-}
+
 
 .button:hover {
     background: url(../images/TileMenuButtonHover.png);
@@ -85,16 +78,6 @@
     font-family: Georgia;
 }
 
-#nameFcurrPlayer{
-
-    text-fill: black;
-    font-family: Georgia;
-    font-weight: bold;
-    background-image: url("../images/nameF_Hover.png");
-    background-size:100% 100%;
-    background-position: center;
-    effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
 
 #orgenaize{
     text-fill: black;
@@ -170,13 +153,7 @@
     effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
 
-#hand{
-    background-image: url("../images/PlayerHand.png"); 
-    background-position: center ;
-    background-size:100% 100%;
-    background-repeat: no-repeat;
-    width: 900px;
-}
+
 
 
 withdrawCard{
