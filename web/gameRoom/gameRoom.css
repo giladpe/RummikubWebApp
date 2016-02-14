@@ -11,12 +11,11 @@ and open the template in the editor.
     height: 80px;      
 }
 #buttonBar{
-    height: 200px;
-    
+    height: 100px;
 }
-.resginCell{ width: 100px;}
+.resginCell{ width: 90px;}
 .finishTurnCell{width: 100px;}
-.playerBar{ width:1300px;}
+.playerBar{ width:1100px;}
 
 .gameBoard{
     border: 1px;
