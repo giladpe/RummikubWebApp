@@ -4,15 +4,17 @@
  * and open the template in the editor.
  */
 
+var gameName="";
 
 function redirect(destAddress)
 {
     window.location=destAddress;
 }
+
 function getGameDetails(gameName) {
     var gameDetails = "";
     $.ajax({
-        url: "GetGameDetailsServlet", //servlet
+        url: "http://localhost:8080/RummikubWebApp/GetGameDetailsServlet", //servlet
         data: {"gameName": gameName},
         async: false,
         timeout: 5000,
@@ -37,7 +39,7 @@ function getGameDetails(gameName) {
 function getPlayersDetailsList(gameName){
         var playersDetails = "";
     $.ajax({
-        url: "GetPlayersDetailsServlet", //servlet
+        url: "http://localhost:8080/RummikubWebApp/GetPlayersDetailsServlet", //servlet
         data: {"gameName": gameName},
         async: false,
         timeout: 5000,
@@ -66,4 +68,13 @@ function getPlayersNamesArray(playersDetailsList){
         }
     }
     return playersNamesArray;
+}
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
 }

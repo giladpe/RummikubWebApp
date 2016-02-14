@@ -1,21 +1,22 @@
-var GAME_START = "GameStart";
-var GAME_OVER = "GameOver";
-var GAME_WINNER = "GameWinner";
-var PLAYER_TURN = "PlayerTurn";
-var PLAYER_FINISHED_TURN = "PlayerFinishedTurn";
-var PLAYER_RESIGNED = "PlayerResigned";
-var SEQUENCE_CREATED = "SequenceCreated";
-var TILE_ADDED = "TileAdded";
-var TILE_RETURNED = "TileReturned";
-var TILE_MOVED = "TileMoved";
-var REVERT = "Revert";
+var GAME_START = "GAME_START";
+var GAME_OVER = "GAME_OVER";
+var GAME_WINNER = "GAME_WINNER";
+var PLAYER_TURN = "PLAYER_TURN";
+var PLAYER_FINISHED_TURN = "PLAYER_FINISHED_TURN";
+var PLAYER_RESIGNED = "PLAYER_RESIGNED";
+var SEQUENCE_CREATED = "SEQUENCE_CREATED";
+var TILE_ADDED = "TILE_ADDED";
+var TILE_RETURNED = "TILE_RETURNED";
+var TILE_MOVED = "TILE_MOVED";
+var REVERT = "REVERT";
 var refreshRate = 1000; //miliseconds
 var eventID;
 var currPlayer = "";
+var gameName;
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
-
+    gameName = getParameterByName('gid');
     //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
 
@@ -32,7 +33,7 @@ function triggerAjaxEventMonitoring() {
 
 function getEvents() {
     $.ajax({
-        url: "GetEventsServlet",
+        url: "http://localhost:8080/RummikubWebApp/GetEventsServlet",
         data: {"eventID": eventID},
         timeout: 1000,
         dataType: 'json',

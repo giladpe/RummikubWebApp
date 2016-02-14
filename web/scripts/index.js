@@ -160,7 +160,8 @@ function joinGame()
                 success: function (data) {
                     if (!data.isException)
                     {
-                        redirect("gameRoom/gameRoom.html")
+                        
+                        redirect("gameRoom/gameRoom.html?gid="+game_selected)
                     } 
                     else
                     {
