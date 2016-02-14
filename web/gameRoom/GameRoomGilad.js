@@ -219,10 +219,14 @@ function initAllComponent() {
 function initPlayersBar() {
     var playersDetailsList = getPlayersDetailsList(gameName);
     var playerBar = $(".nameF");
-
+    var j=0;
+    
     for (var i = 0; i < playersDetailsList.length; i++) {
-        playerBar[i] = (playersDetailsList[i]).name;
-        playerBar[i+1] = (playersDetailsList[i]).numberOfTiles;
+        playerBar[j].innerHTML = (playersDetailsList[i]).name;
+        playerBar[j+1].innerHTML  = (playersDetailsList[i]).numberOfTiles;
+        j+=2;
+        //(playerBar[i * 2]).html((playersDetailsList[i]).name);
+        //(playerBar[i * 2 + 1]).html((playersDetailsList[i]).numberOfTiles);
     }
 }
 

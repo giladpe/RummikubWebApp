@@ -221,10 +221,8 @@ function initPlayersBar() {
     var playerBar = $("#playerBar");
 
     for (var i = 0; i < playersDetailsList.length; i++) {
-        //playerBar[i * 2] = (playersDetailsList[i]).name;
-        //playerBar[i * 2 + 1] = (playersDetailsList[i]).numberOfTiles;
-        playerBar[i * 2].html((playersDetailsList[i]).name);
-        playerBar[i * 2 + 1].html((playersDetailsList[i]).numberOfTiles);
+        playerBar[i * 2] = (playersDetailsList[i]).name;
+        playerBar[i * 2 + 1] = (playersDetailsList[i]).numberOfTiles;
     }
 }
 
