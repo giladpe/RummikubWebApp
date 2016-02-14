@@ -13,29 +13,22 @@
 }
 
 .gameBody {
-    background-image: url("../images/MenuPic1.jpg");
-    height: 600px;
+    min-height: 600px;
     position: relative; 
+    background-image: url("../images/MenuPic1.jpg");
     background-position: center ;
     background-size:100% 100%;
     background-repeat: repeat;
 }
-.bar{
 
-    background-image: url("../images/Bar.png");
-    background-position: center ;
-    background-size:100% 100%;
-    background-repeat: no-repeat;
-
-
-}
 .menu {
     height: 600px;
+    min-height: 600px;
     position: relative; 
     background-image: url("../images/MenuBackground.jpg");
     background-position: center ;
     background-size:100% 100%;
-    background-repeat: no-repeat;
+    background-repeat: repeat;
     font-family: Georgia;
 }
 .gameSettings{
@@ -91,13 +84,7 @@
     color: white;
     font-family: Georgia;
 }
-#nameF{
-    color: white;
-    font-family: Georgia;
-    font-weight: bold;
-    pref-height: 30;
-    effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
+
 #nameFcurrPlayer{
 
     text-fill: black;
@@ -165,15 +152,7 @@
     effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 
 }
-#gameMsg{
-    stroke-width: 1;
-    stroke: white;   
-    font-family: Georgia;
-    font-size: 16px;
-    text-fill: greenyellow;
-    font-weight: bold;
-    effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
-}
+
 
 #errorMsg{
 
@@ -192,10 +171,11 @@
 }
 
 #hand{
-    background-image: url("../images/PlayerHand.png");
+    background-image: url("../images/PlayerHand.png"); 
     background-position: center ;
     background-size:100% 100%;
     background-repeat: no-repeat;
+    width: 900px;
 }
 
 

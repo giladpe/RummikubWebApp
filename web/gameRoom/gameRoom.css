@@ -1,0 +1,48 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 14-Feb-2016, 12:20:33
+    Author     : giladPe
+*/
+#topBar{
+    height: 80px;      
+}
+#buttonBar{
+    height: 200px;
+    
+}
+.resginCell{ width: 100px;}
+.finishTurnCell{width: 100px;}
+.playerBar{ width:1300px;}
+
+.gameBoard{
+    border: 1px;
+    height: 600px;
+    width: 1320px;
+}
+.bar{
+    background-image: url("../images/Bar.png");
+    background-position: center ;
+    background-size:100% 100%;
+    background-repeat: no-repeat;
+}
+.nameF{
+    padding-left: 30px;
+    color: white;
+    font-family: Georgia;
+    font-weight: bold;
+    pref-height: 30;
+    effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+}
+.gameMsg{
+    stroke-width: 1;
+    stroke: white;   
+    font-family: Georgia;
+    font-size: 16px;
+    text-fill: greenyellow;
+    font-weight: bold;
+    effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}
