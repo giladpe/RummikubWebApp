@@ -33,9 +33,8 @@ function triggerAjaxEventMonitoring() {
 function getEvents() {
     $.ajax({
         url: "GetEventsServlet",
-        async: false,
         data: {"eventID": eventID},
-        timeout: 3000,
+        timeout: 1000,
         dataType: 'json',
         success: function (data) {
             if (!data.isException) //success 
