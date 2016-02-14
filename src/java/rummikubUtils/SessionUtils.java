@@ -31,28 +31,27 @@ public class SessionUtils {
         session.setAttribute(PLAYED_ID, playerID);
     }
     
-    public static Integer getEventId (HttpServletRequest request) {
-        Integer eventID;
-        HttpSession session = request.getSession(!CREATE_NEW_SESSION_IF_ABSENT);        
-        Object sessionAttribute = session != null ? session.getAttribute(PLAYED_ID) : null;
-        
-        if (sessionAttribute != null) {
-            eventID = (Integer)sessionAttribute;
-        }
-        else {
-            eventID = 0;
-            setEventId(request,eventID);
-        }
-        
-        return eventID;
-    }
+//    public static Integer getEventId (HttpServletRequest request) {
+//        Integer eventID;
+//        HttpSession session = request.getSession(!CREATE_NEW_SESSION_IF_ABSENT);        
+//        Object sessionAttribute = session != null ? session.getAttribute(PLAYED_ID) : null;
+//        
+//        if (sessionAttribute != null) {
+//            eventID = (Integer)sessionAttribute;
+//        }
+//        else {
+//            eventID = 0;
+//            setEventId(request,eventID);
+//        }
+//        
+//        return eventID;
+//    }
+//    
+//    public static void setEventId (HttpServletRequest request, int eventID) {
+//        HttpSession session = request.getSession(CREATE_NEW_SESSION_IF_ABSENT);        
+//        session.setAttribute(PLAYED_ID, eventID);
+//    }
     
-    public static void setEventId (HttpServletRequest request, int eventID) {
-        HttpSession session = request.getSession(CREATE_NEW_SESSION_IF_ABSENT);        
-        session.setAttribute(PLAYED_ID, eventID);
-    }
-    
-
     public static void clearSession (HttpServletRequest request) {
         request.getSession().invalidate();
     }

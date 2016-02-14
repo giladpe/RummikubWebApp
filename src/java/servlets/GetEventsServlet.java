@@ -45,8 +45,9 @@ public class GetEventsServlet extends HttpServlet {
             response.setStatus(response.SC_OK);
 
             try {
-                List<Event> eventList = rummikubAPI.getEvents(SessionUtils.getPlayerId(request),
-                                                              SessionUtils.getEventId(request));
+                int eventID = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.EVENT_ID);
+
+                List<Event> eventList = rummikubAPI.getEvents(SessionUtils.getPlayerId(request), eventID);
                 
                 ServletUtils.eventListResposne.setResposne(!ServletUtils.EXCEPTION, eventList);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.eventListResposne));                

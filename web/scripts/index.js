@@ -275,6 +275,7 @@ function OnRowSel(obj)
     }
     $('#playerName').attr('placeholder', placeHolder);
 }
+
 function isLoadedFromXml(selectedRow) {
     var retVal = false;
     if (selectedRow[0].cells[NUM_OF_COLUMS - 1].innerText === "true") {

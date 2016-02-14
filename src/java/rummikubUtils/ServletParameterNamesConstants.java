@@ -11,6 +11,7 @@ package rummikubUtils;
  */
 public class ServletParameterNamesConstants {
     public static final String TILE = "tile";
+    public static final String EVENT_ID = "eventID";
     public static final String SEQUENCE_INDEX = "sequenceIndex";
     public static final String SEQUENCE_POSITION = "sequencePosition";
     public static final String XML_DATA = "xmlData";
