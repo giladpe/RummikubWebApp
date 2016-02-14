@@ -217,7 +217,7 @@ function initAllComponent() {
 }
 
 function initPlayersBar() {
-    var playersDetailsList = getPlayersDetailsList();
+    var playersDetailsList = getPlayersDetailsList(gameName);
     var playerBar = $("#playerBar");
 
     for (var i = 0; i < playersDetailsList.length; i++) {
