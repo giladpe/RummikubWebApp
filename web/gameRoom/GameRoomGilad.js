@@ -9,7 +9,7 @@ var TILE_ADDED = "TILE_ADDED";
 var TILE_RETURNED = "TILE_RETURNED";
 var TILE_MOVED = "TILE_MOVED";
 var REVERT = "REVERT";
-var refreshRate = 1000; //miliseconds
+var refreshRate = 10000000; //miliseconds
 var eventID;
 var currPlayer = "";
 var gameName;
@@ -221,9 +221,8 @@ function initPlayersBar() {
     var playerBar = $(".nameF");
 
     for (var i = 0; i < playersDetailsList.length; i++) {
-        playerBar[i * 2] = (playersDetailsList[i]).name;
-        playerBar[i * 2 + 1] = (playersDetailsList[i]).numberOfTiles;
-        var test=playerBar[i * 2];
+        playerBar[i] = (playersDetailsList[i]).name;
+        playerBar[i+1] = (playersDetailsList[i]).numberOfTiles;
     }
 }
 
