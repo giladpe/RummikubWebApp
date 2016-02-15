@@ -9,14 +9,27 @@ var TILE_ADDED = "TILE_ADDED";
 var TILE_RETURNED = "TILE_RETURNED";
 var TILE_MOVED = "TILE_MOVED";
 var REVERT = "REVERT";
-var refreshRate = 10000000; //miliseconds
+var refreshRate = 1000; //miliseconds
+var GAME_URL = "http://localhost:8080/RummikubWebApp/";
+var MAIN_SCREEN = "index.html";
+var WINNER_SCREEN = "WinnderScreen.html";
+var EMPTY_STRING = "";
+var GAME_OVER_MSG = "Game Is Over";
+var PLAYER_DONE = " done his Turn";
+
+var currPlayerName;
 var eventID;
-var currPlayer = "";
 var gameName;
+var gameButtonsList;
+var myDetails;
+
+
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
+    currPlayerName = EMPTY_STRING;
     gameName = getParameterByName('gid');
+    gameButtonsList = $(".button");
     //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
 
@@ -33,7 +46,7 @@ function triggerAjaxEventMonitoring() {
 
 function getEvents() {
     $.ajax({
-        url: "http://localhost:8080/RummikubWebApp/GetEventsServlet",
+        url:  GAME_URL + "GetEventsServlet",
         data: {"eventID": eventID},
         timeout: 1000,
         dataType: 'json',
@@ -130,21 +143,19 @@ function handleRummikubWsEvent(event) {
 
 
 function onResign() {
-
+   redirect(GAME_URL + MAIN_SCREEN);
 }
 
 function onFinishTurn() {
  $.ajax({
-        url: "FinishTurnServlet",
+        url: GAME_URL + "FinishTurnServlet",
         async: false,
         data: {},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (!data.isException) //success 
+            if (data.isException) //success 
             {
-
-            } else {
                 setGameMessage(data.voidAndStringResponse);
             }
 
@@ -154,29 +165,83 @@ function onFinishTurn() {
             triggerAjaxEventMonitoring();
         }
     });
-
-    
 }
 
 function onAddSerie() {
-    initPlayersBar();
+     // test:
+    //initPlayersBar();
 }
 
 function handleGameOverEvent(event) {
-
+    
+            disableButtons();
+//            resetPlayersBar(); // in javafx it does nothing
+            setGameMessage(GAME_OVER_MSG);
 }
 
 function handleGameStartEvent(event) {
+    myDetails = getMyDetails();
+            //not sure about the next lines prefer u gild to check it
+            //logicBoard = new Board();
+           //setPlayersBarWs();
+            //initPlayerLabelWs();
     initAllComponent();
 }
 
 function handleGameWinnerEvent(event) {
-
+    redirect(GAME_URL + WINNER_SCREEN);
+    //game event screen need to get the result from event,playerName
 }
 
 function handlePlayerFinishedTurnEvent(event) {
+    showPlayerHandWs();
+    setGameMessage(event.getPlayerName + PLAYER_DONE);
+}
+
+function showPlayerHandWs() {
+    myDetails = getMyDetails();
+    createPlayerHandWs(myDetails.getTiles());
+}
+
+function createPlayerHandWs(tiles) {
+    var hand = $(".hand");
+    var newButton, currTile;
+        hand.empty();
     
+    for(tile in tiles){
+        currTile = tiles[tile];
+        newButton = document.createElement('input');
+        newButton.type = 'button';
+        newButton.value = currTile.value;
+        newButton.class = "tile" + currTile.color;
+        newButton.id = "tile";
+        newButton.onclick = function() {
+            onTileClick();
+        };
+        hand.appendChild(newButton);
+    }
     
+//        var i, buttonsToCreate, buttonContainer, newButton;
+//        buttonsToCreate = ['button1','button2','button3','button4','button5'];
+//        buttonContainer = document.getElementById('this_element_contains_my_buttons');
+//        for (i = 0; i < buttonsToCreate.length; i++) {
+//          newButton = document.createElement('input');
+//          newButton.type = 'button';
+//          newButton.value = buttonsToCreate[i];
+//          newButton.id = buttonsToCreate[i];
+//          newButton.onclick = function () {
+//            alert('You pressed '+this.id);
+//            arrayToModify[arrayToModify.length] = this.id;
+//          };
+//          buttonContainer.appendChild(newButton);
+//      }
+    
+//        this.handTile.getChildren().clear();
+//        for (rummikub.client.ws.Tile currWsTile : handWsTiles) {
+//            AnimatedTilePane viewTile = new AnimatedTilePane(convertWsTileToLogicTile(currWsTile));
+//            initTileListeners(viewTile);
+//            this.handTile.getChildren().add(viewTile);
+//        }
 }
 
 function handlePlayerResignedEvent(event) {
@@ -184,7 +249,7 @@ function handlePlayerResignedEvent(event) {
 }
 
 function handlePlayerTurnEvent(event) {
-
+    
 }
 
 function handleRevertEvent(event) {
@@ -214,7 +279,7 @@ function setGameMessage(msg) {
 function initAllComponent() {
     initPlayersBar();
     initBoard();
-    initPlayerHand()
+    initPlayerHand();
 }
 
 function initPlayersBar() {
@@ -229,15 +294,13 @@ function initPlayersBar() {
     }
 }
 
-function setCurrPlayerClass(newCurrPlayer)
-{
-
-    if (currPlayer !== "") {
-        $(currPlayer, "#playerBar").currPlayer.removeClass('nameFcurrPlayer').addClass('nameF');
+function setCurrPlayerClass(newCurrPlayer) {
+    if (currPlayerName !== EMPTY_STRING) {
+        $(currPlayerName, "#playerBar").currPlayer.removeClass('nameFcurrPlayer').addClass('nameF');
     }
     $(newCurrPlayer, "#playerBar").removeClass('nameF').addClass('nameFcurrPlayer');
-    
 }
+
 function initPlayerHand(){
   
 }
@@ -245,4 +308,48 @@ function initPlayerHand(){
 function initBoard() {
 
 }
+function onTileClick() {
+    
+}
 
+function getMyDetails() {
+    var myDetails = EMPTY_STRING;
+
+    $.ajax({
+        url: GAME_URL + "GetPlayerDetailsServlet",
+        async: false,
+        data: {},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (!data.isException) { //success 
+                myDetails = data.playerDetailsResposne;
+            } 
+            else {
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+            triggerAjaxEventMonitoring();
+        },
+        error: function (error) {
+            triggerAjaxEventMonitoring();
+        }
+    });
+    
+    return myDetails;
+}
+
+function disableButtons() {
+        initButtons(true);
+    }
+
+function enableButtons() {
+        initButtons(false);
+    }
+
+function initButtons(disableButtons) {
+    for(button in gameButtonsList){
+        var currButton = gameButtonsList[button];
+        currButton.disable = disableButtons;
+    }
+}

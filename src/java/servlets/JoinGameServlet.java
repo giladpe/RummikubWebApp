@@ -36,7 +36,7 @@ public class JoinGameServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
+        response.setContentType(ServletParameterNamesConstants.JSON_CONTENT_TYPE);
 
         
         try (PrintWriter out = response.getWriter()) {

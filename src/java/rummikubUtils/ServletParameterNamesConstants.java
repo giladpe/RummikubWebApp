@@ -24,5 +24,5 @@ public class ServletParameterNamesConstants {
     public static final String SOURCE_SEQUENCE_POSITION = "sourceSequencePosition"; 
     public static final String TARGET_SEQUENCE_INDEX = "targetSequenceIndex";
     public static final String TARGET_SEQUENCE_POSITION = "targetSequencePosition";
-    public static final String CONTENT_TYPE = "application/json;charset=UTF-8";
+    public static final String JSON_CONTENT_TYPE = "application/json;charset=UTF-8";
 }

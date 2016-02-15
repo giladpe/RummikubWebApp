@@ -38,7 +38,7 @@ public class GetPlayerDetailsServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         
-        response.setContentType(ServletParameterNamesConstants.CONTENT_TYPE);
+        response.setContentType(ServletParameterNamesConstants.JSON_CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
