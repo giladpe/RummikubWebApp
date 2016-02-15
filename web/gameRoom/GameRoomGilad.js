@@ -16,13 +16,13 @@ var WINNER_SCREEN = "WinnderScreen.html";
 var EMPTY_STRING = "";
 var GAME_OVER_MSG = "Game Is Over";
 var PLAYER_DONE = " done his Turn";
-
 var currPlayerName;
 var eventID;
 var gameName;
 var gameButtonsList;
 var myDetails;
-
+var PLAY = " Play";
+var WAIT = " Wait";
 
 //activate the timer calls after the page is loaded
 $(function () {//onload function
@@ -168,8 +168,7 @@ function onFinishTurn() {
 }
 
 function onAddSerie() {
-     // test:
-    //initPlayersBar();
+    setCurrPlayerClass();
 }
 
 function handleGameOverEvent(event) {
@@ -181,7 +180,7 @@ function handleGameOverEvent(event) {
 
 function handleGameStartEvent(event) {
     myDetails = getMyDetails();
-            //not sure about the next lines prefer u gild to check it
+            //not sure about the next lines prefer u gilad to check it
             //logicBoard = new Board();
            //setPlayersBarWs();
             //initPlayerLabelWs();
@@ -200,25 +199,29 @@ function handlePlayerFinishedTurnEvent(event) {
 
 function showPlayerHandWs() {
     myDetails = getMyDetails();
-    createPlayerHandWs(myDetails.getTiles());
+    createPlayerHandWs(myDetails.tiles);
 }
 
 function createPlayerHandWs(tiles) {
-    var hand = $(".hand");
+    var hand = $("#handTileDiv");
     var newButton, currTile;
         hand.empty();
     
     for(tile in tiles){
-        currTile = tiles[tile];
-        newButton = document.createElement('input');
-        newButton.type = 'button';
-        newButton.value = currTile.value;
-        newButton.class = "tile" + currTile.color;
-        newButton.id = "tile";
-        newButton.onclick = function() {
-            onTileClick();
-        };
-        hand.appendChild(newButton);
+        hand.append('<button id="tile" onclick="onTileClick()" class="tile ' + tiles[tile].color +'">'+tiles[tile].value +'</button>');
+//          currTile = tiles[tile];
+//          var value = currTile.value;
+//          var color = currTile.color;
+//        currTile = tiles[tile];
+//        newButton = document.createElement('input');
+//        newButton.type = 'button';
+//        newButton.value = currTile.value;
+//        newButton.class = "tile" + currTile.color;
+//        newButton.id = "tile";
+//        newButton.onclick = function() {
+//            onTileClick();
+//        };
+//        hand.append(newButton);
     }
     
 //        var i, buttonsToCreate, buttonContainer, newButton;
@@ -249,8 +252,31 @@ function handlePlayerResignedEvent(event) {
 }
 
 function handlePlayerTurnEvent(event) {
-    
+    currPlayerName = event.name;
+    setFirstTurnMsg();//todo!!!!
+    setCurrPlayerClass();
+    setGameMessage(getTurnMsg())
+    showPlayerHandWs();
+        if (myDetails.name === currPlayerName){
+                enableButtons();
+        }
+        else{
+                disableButtons();
+        }
 }
+
+function setFirstTurnMsg(){}
+
+function getTurnMsg() {
+        var myName = myDetails.name;
+        if (myName === currPlayerName) {
+            myName += PLAY;
+        } else {
+            myName += WAIT;
+        }
+        return myName;
+}
+
 
 function handleRevertEvent(event) {
 
@@ -279,7 +305,6 @@ function setGameMessage(msg) {
 function initAllComponent() {
     initPlayersBar();
     initBoard();
-    initPlayerHand();
 }
 
 function initPlayersBar() {
@@ -294,16 +319,14 @@ function initPlayersBar() {
     }
 }
 
-function setCurrPlayerClass(newCurrPlayer) {
+function setCurrPlayerClass() {
     if (currPlayerName !== EMPTY_STRING) {
-        $(currPlayerName, "#playerBar").currPlayer.removeClass('nameFcurrPlayer').addClass('nameF');
+        $('nameFcurrPlayer', "#playerBar").currPlayer.removeClass('nameFcurrPlayer');
     }
-    $(newCurrPlayer, "#playerBar").removeClass('nameF').addClass('nameFcurrPlayer');
+    $(currPlayerName, "#playerBar").addClass('nameFcurrPlayer');
 }
 
-function initPlayerHand(){
-  
-}
+
 
 function initBoard() {
 

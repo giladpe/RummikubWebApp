@@ -77,11 +77,8 @@ and open the template in the editor.
     font-weight: bold;
 }
 .nameFcurrPlayer{
-    top:5%;
-    padding-left: 30px;
-    color: blue;
-    font-family: Georgia;
-    font-weight: bold;
+    padding-left: 32px !important ;
+    color: blue !important;
 }
 
 .gameMsg{
