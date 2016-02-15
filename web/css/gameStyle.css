@@ -67,39 +67,6 @@
 }
 
 
-
-
-.button:hover {
-    background: url(../images/TileMenuButtonHover.png);
-    background-size:100% 100%;
-    background-position: center;
-    border-top-color: #edcba8;
-    color: white;
-    font-family: Georgia;
-}
-
-
-#orgenaize{
-    text-fill: black;
-    font-family: Georgia;
-    font-weight: bold;
-    background-color: linear-gradient(#ebd6ba, #a9957d);
-    background-image: url("../images/Orgenaize.png");
-    background-size:100% 100%;
-    background-position: center;
-    effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
-#orgenaize:hover{
-
-    text-fill: black;
-    font-family: Georgia;
-    font-weight: bold;
-    background-image: url("../images/OrgenaizeHover_1.png");
-    background-size:100% 100%;
-    background-position: center;
-    effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
-}
-
 .label {
     font-size: 14px;
     font-weight: bold;
@@ -111,11 +78,6 @@
     font-weight: bold;
     effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
 
-}
-.checkBox {
-    font-size: 14px;
-    font-weight: bold;
-    text-fill: #333333;
 }
 
 #GamesSettings-text {
@@ -152,31 +114,6 @@
     font-weight: bold;
     effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
 }
-
-
-
-
-withdrawCard{
-    font-size: 24px;
-    font-weight: bold;
-}
-.tile {
-    background-image: url("../images/tile.png");
-    background-size:100% 100%;
-    background-position: center;
-    effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-    pref-tile-height: 40;
-    pref-tile-width: 30;
-}
-.tileText {
-    font-size: 14px;
-    font-weight: bold;
-    effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );
-}
-
-/*.tile:hover {
-    font-size: 18px;
-}*/
 
 
 /*.tileText:hover {

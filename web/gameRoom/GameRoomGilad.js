@@ -214,6 +214,7 @@ function setGameMessage(msg) {
 function initAllComponent() {
     initPlayersBar();
     initBoard();
+    initPlayerHand()
 }
 
 function initPlayersBar() {
@@ -225,8 +226,6 @@ function initPlayersBar() {
         playerBar[j].innerHTML = (playersDetailsList[i]).name;
         playerBar[j+1].innerHTML  = (playersDetailsList[i]).numberOfTiles;
         j+=2;
-        //(playerBar[i * 2]).html((playersDetailsList[i]).name);
-        //(playerBar[i * 2 + 1]).html((playersDetailsList[i]).numberOfTiles);
     }
 }
 
@@ -239,7 +238,9 @@ function setCurrPlayerClass(newCurrPlayer)
     $(newCurrPlayer, "#playerBar").removeClass('nameF').addClass('nameFcurrPlayer');
     
 }
-
+function initPlayerHand(){
+  
+}
 
 function initBoard() {
 

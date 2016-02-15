@@ -23,19 +23,25 @@ and open the template in the editor.
                     <text id="PlayerF1" class="nameF"></text><text id="TileF1" class="nameF"></text>
                     <text id="PlayerF3" class="nameF"></text><text id="TileF3" class="nameF"></text><br>
                     <text id="PlayerF2" class="nameF"></text><text id="TileF2" class="nameF"></text>
-                    <text id="PlayerF4" class="nameF"></text><text id="TileF4" class="nameF"></text></div>
-                <div class="center"><text class="gameMsg"></text></div>
+                    <text id="PlayerF4" class="nameF"></text><text id="TileF4" class="nameF"></text>
+                </div>
+                <div class="center"> <text class="gameMsg"></text></div>
                 <div class="right"> <button  id="resign" class="button floatFr" onclick="onResign()">Resign</button></div>          
 
             </div>
             <div class="gameBoard">
             </div>
-
             <div class="bar" id="buttonBar">
                 <div class="finishTurnDiv">
                     <button class="button"  onclick="onFinishTurn()">Finish Turn</button>
                 </div>
-                <div class="hand"  id= "hand">g</div>
+                <div class="hand"  id= "hand">
+                    <div id="handTileDiv">
+                        <button id="tile" class="tile blue" onclick="onTileClick()" >7</button>
+                        <button id="tile" class="tile red" onclick="onTileClick()" >3</button>
+                        <button id="tile" class="tile yellow" onclick="onTileClick()" >2</button>
+                    </div>
+                </div>
                 <div class="addTileDiv"><button id="AddSerie" class="button" onclick="onAddSerie()" >Add Series</button></div>          
 
             </div>
