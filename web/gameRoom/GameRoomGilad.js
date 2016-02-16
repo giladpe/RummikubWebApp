@@ -204,47 +204,11 @@ function showPlayerHandWs() {
 
 function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
-    var newButton, currTile;
         hand.empty();
     
     for(tile in tiles){
         hand.append('<button id="tile" onclick="onTileClick()" class="tile ' + tiles[tile].color +'">'+tiles[tile].value +'</button>');
-//          currTile = tiles[tile];
-//          var value = currTile.value;
-//          var color = currTile.color;
-//        currTile = tiles[tile];
-//        newButton = document.createElement('input');
-//        newButton.type = 'button';
-//        newButton.value = currTile.value;
-//        newButton.class = "tile" + currTile.color;
-//        newButton.id = "tile";
-//        newButton.onclick = function() {
-//            onTileClick();
-//        };
-//        hand.append(newButton);
     }
-    
-//        var i, buttonsToCreate, buttonContainer, newButton;
-//        buttonsToCreate = ['button1','button2','button3','button4','button5'];
-//        buttonContainer = document.getElementById('this_element_contains_my_buttons');
-//        for (i = 0; i < buttonsToCreate.length; i++) {
-//          newButton = document.createElement('input');
-//          newButton.type = 'button';
-//          newButton.value = buttonsToCreate[i];
-//          newButton.id = buttonsToCreate[i];
-//          newButton.onclick = function () {
-//            alert('You pressed '+this.id);
-//            arrayToModify[arrayToModify.length] = this.id;
-//          };
-//          buttonContainer.appendChild(newButton);
-//      }
-    
-//        this.handTile.getChildren().clear();
-//        for (rummikub.client.ws.Tile currWsTile : handWsTiles) {
-//            AnimatedTilePane viewTile = new AnimatedTilePane(convertWsTileToLogicTile(currWsTile));
-//            initTileListeners(viewTile);
-//            this.handTile.getChildren().add(viewTile);
-//        }
 }
 
 function handlePlayerResignedEvent(event) {
@@ -252,10 +216,10 @@ function handlePlayerResignedEvent(event) {
 }
 
 function handlePlayerTurnEvent(event) {
-    currPlayerName = event.name;
+    currPlayerName = event.playerName;
     setFirstTurnMsg();//todo!!!!
     setCurrPlayerClass();
-    setGameMessage(getTurnMsg())
+    setGameMessage(getTurnMsg());
     showPlayerHandWs();
         if (myDetails.name === currPlayerName){
                 enableButtons();
@@ -268,13 +232,13 @@ function handlePlayerTurnEvent(event) {
 function setFirstTurnMsg(){}
 
 function getTurnMsg() {
-        var myName = myDetails.name;
-        if (myName === currPlayerName) {
-            myName += PLAY;
-        } else {
-            myName += WAIT;
-        }
-        return myName;
+    var myName = myDetails.name;
+    if (myName === currPlayerName) {
+        myName += PLAY;
+    } else {
+        myName += WAIT;
+    }
+    return myName;
 }
 
 
@@ -320,8 +284,9 @@ function initPlayersBar() {
 }
 
 function setCurrPlayerClass() {
-    if (currPlayerName !== EMPTY_STRING) {
-        $('nameFcurrPlayer', "#playerBar").currPlayer.removeClass('nameFcurrPlayer');
+    
+    if (currPlayerName !== EMPTY_STRING && (currPlayerName, "#playerBar").attr("class") !== 'nameFcurrPlayer') {
+        $('nameFcurrPlayer', "#playerBar").currPlayerName.removeClass('nameFcurrPlayer');
     }
     $(currPlayerName, "#playerBar").addClass('nameFcurrPlayer');
 }
