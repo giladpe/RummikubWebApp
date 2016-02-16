@@ -12,7 +12,7 @@ and open the template in the editor.
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="../scripts/jquery.js"></script>
-        <script src="GameRoomGilad.js"></script>
+        <script src="tst.js"></script>
         <script src="../scripts/Utils.js"></script>
 
     </head>
@@ -20,10 +20,10 @@ and open the template in the editor.
         <div>
             <div class="bar" id="topBar">
                 <div class="left"  id="playerBar" > 
-                    <text id="PlayerF1" class="nameF"></text><text id="TileF1" class="nameF"></text>
-                    <text id="PlayerF3" class="nameF"></text><text id="TileF3" class="nameF"></text><br>
+                    <text id="PlayerF0" class="nameF"></text><text id="TileF0" class="nameF"></text>
+                    <text id="PlayerF1" class="nameF"></text><text id="TileF1" class="nameF"></text><br>
                     <text id="PlayerF2" class="nameF"></text><text id="TileF2" class="nameF"></text>
-                    <text id="PlayerF4" class="nameF"></text><text id="TileF4" class="nameF"></text>
+                    <text id="PlayerF3" class="nameF"></text><text id="TileF3" class="nameF"></text>
                 </div>
                 <div class="center"> <text class="gameMsg"></text></div>
                 <div class="right"> <button  id="resign" class="button floatFr" onclick="onResign()">Resign</button></div>          
@@ -40,7 +40,7 @@ and open the template in the editor.
                     </div>
                 </div>
                 <div class="addTileDiv">
-                <div  id="turnMsg">Played Sequens</div>
+                <div  id="turnMsg"></div>
                     <button id="AddSerie" class="button" onclick="onAddSerie()" >Add Series</button>
                 </div>          
 

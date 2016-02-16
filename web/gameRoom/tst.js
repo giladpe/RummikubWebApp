@@ -23,7 +23,7 @@ var gameButtonsList;
 var myDetails;
 var PLAY = " Play";
 var WAIT = " Wait";
-
+var playersDetailsList="";
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
@@ -164,6 +164,7 @@ function onFinishTurn() {
             triggerAjaxEventMonitoring();
         }
     });
+    return false;
 }
 
 function onAddSerie() {
@@ -179,6 +180,7 @@ function handleGameOverEvent(event) {
 
 function handleGameStartEvent(event) {
     myDetails = getMyDetails();
+    playersDetailsList=getPlayersDetailsList(gameName);
             //not sure about the next lines prefer u gilad to check it
             //logicBoard = new Board();
            //setPlayersBarWs();
@@ -252,7 +254,7 @@ function handlePlayerResignedEvent(event) {
 
 function handlePlayerTurnEvent(event) {
     
-    setFirstTurnMsg();//todo!!!!
+    setFirstSequenceTurnMsg();//todo!!!!
     setCurrPlayerClass(event.playerName);
     setGameMessage(getTurnMsg())
     showPlayerHandWs();
@@ -264,7 +266,15 @@ function handlePlayerTurnEvent(event) {
         }
 }
 
-function setFirstTurnMsg(){}
+function setFirstSequenceTurnMsg(){
+    
+    if(myDetails.playedFirstSequence){
+        $('#turnMsg').html("Played Sequence")
+    }
+    else{
+        $('#turnMsg').html("Didn't Played Sequence")
+    }
+}
 
 function getTurnMsg() {
         var myName = myDetails.name;
@@ -320,19 +330,31 @@ function initPlayersBar() {
 
 function setCurrPlayerClass(currPlayer) {
     if (currPlayerName!== undefined && currPlayerName !== EMPTY_STRING) {
-        $('nameFcurrPlayer', "#playerBar").removeClass('nameFcurrPlayer');
+        $('.nameFcurrPlayer').removeClass('nameFcurrPlayer');
     }
-    var test =$('nameFcurrPlayer', "#playerBar");
-    var playersFileds=$('nameFcurrPlayer', "#playerBar");
-    
-    currPlayerName = currPlayer;
-    
-    var name=$.inArray(currPlayerName, playersFileds);
-    //var name=$("div:contains("+currPlayerName+"), "#playerBar");
-    name.addClass('nameFcurrPlayer');
+    currPlayerName=currPlayer;
+
+    $(getPlayerNameFiled(currPlayer)).addClass('nameFcurrPlayer');
+    $(getPlayerTileFiled(currPlayer)).addClass('nameFcurrPlayer');
 }
 
+function getPlayerNameFiled(name){
+    return  "#PlayerF"+getPlayerIndexByName(name);
+}
+function getPlayerTileFiled(name){
+    return  "#TileF"+getPlayerIndexByName(name);
+}
 
+function getPlayerIndexByName(playerName){
+    var retVal=-1;
+    for(player in playersDetailsList){
+        if (playerName==playersDetailsList[player].name){
+            retVal=player;
+        }
+        
+    }
+    return retVal;
+}
 
 function initBoard() {
 
