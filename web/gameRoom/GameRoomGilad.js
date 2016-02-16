@@ -16,18 +16,17 @@ var WINNER_SCREEN = "WinnderScreen.html";
 var EMPTY_STRING = "";
 var GAME_OVER_MSG = "Game Is Over";
 var PLAYER_DONE = " done his Turn";
-var currPlayerName;
+var currPlayerName="";
 var eventID;
 var gameName;
 var gameButtonsList;
 var myDetails;
 var PLAY = " Play";
 var WAIT = " Wait";
-
+var playersDetailsList="";
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
-    currPlayerName = EMPTY_STRING;
     gameName = getParameterByName('gid');
     gameButtonsList = $(".button");
     //prevent IE from caching ajax calls
@@ -165,6 +164,7 @@ function onFinishTurn() {
             triggerAjaxEventMonitoring();
         }
     });
+    return false;
 }
 
 function onAddSerie() {
@@ -180,6 +180,7 @@ function handleGameOverEvent(event) {
 
 function handleGameStartEvent(event) {
     myDetails = getMyDetails();
+    playersDetailsList=getPlayersDetailsList(gameName);
             //not sure about the next lines prefer u gilad to check it
             //logicBoard = new Board();
            //setPlayersBarWs();
@@ -204,11 +205,47 @@ function showPlayerHandWs() {
 
 function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
+    var newButton, currTile;
         hand.empty();
     
     for(tile in tiles){
         hand.append('<button id="tile" onclick="onTileClick()" class="tile ' + tiles[tile].color +'">'+tiles[tile].value +'</button>');
+//          currTile = tiles[tile];
+//          var value = currTile.value;
+//          var color = currTile.color;
+//        currTile = tiles[tile];
+//        newButton = document.createElement('input');
+//        newButton.type = 'button';
+//        newButton.value = currTile.value;
+//        newButton.class = "tile" + currTile.color;
+//        newButton.id = "tile";
+//        newButton.onclick = function() {
+//            onTileClick();
+//        };
+//        hand.append(newButton);
     }
+    
+//        var i, buttonsToCreate, buttonContainer, newButton;
+//        buttonsToCreate = ['button1','button2','button3','button4','button5'];
+//        buttonContainer = document.getElementById('this_element_contains_my_buttons');
+//        for (i = 0; i < buttonsToCreate.length; i++) {
+//          newButton = document.createElement('input');
+//          newButton.type = 'button';
+//          newButton.value = buttonsToCreate[i];
+//          newButton.id = buttonsToCreate[i];
+//          newButton.onclick = function () {
+//            alert('You pressed '+this.id);
+//            arrayToModify[arrayToModify.length] = this.id;
+//          };
+//          buttonContainer.appendChild(newButton);
+//      }
+    
+//        this.handTile.getChildren().clear();
+//        for (rummikub.client.ws.Tile currWsTile : handWsTiles) {
+//            AnimatedTilePane viewTile = new AnimatedTilePane(convertWsTileToLogicTile(currWsTile));
+//            initTileListeners(viewTile);
+//            this.handTile.getChildren().add(viewTile);
+//        }
 }
 
 function handlePlayerResignedEvent(event) {
@@ -216,10 +253,10 @@ function handlePlayerResignedEvent(event) {
 }
 
 function handlePlayerTurnEvent(event) {
-    currPlayerName = event.playerName;
-    setFirstTurnMsg();//todo!!!!
-    setCurrPlayerClass();
-    setGameMessage(getTurnMsg());
+    
+    setFirstSequenceTurnMsg();//todo!!!!
+    setCurrPlayerClass(event.playerName);
+    setGameMessage(getTurnMsg())
     showPlayerHandWs();
         if (myDetails.name === currPlayerName){
                 enableButtons();
@@ -229,16 +266,24 @@ function handlePlayerTurnEvent(event) {
         }
 }
 
-function setFirstTurnMsg(){}
+function setFirstSequenceTurnMsg(){
+    
+    if(myDetails.playedFirstSequence){
+        $('#turnMsg').html("Played Sequence")
+    }
+    else{
+        $('#turnMsg').html("Didn't Played Sequence")
+    }
+}
 
 function getTurnMsg() {
-    var myName = myDetails.name;
-    if (myName === currPlayerName) {
-        myName += PLAY;
-    } else {
-        myName += WAIT;
-    }
-    return myName;
+        var myName = myDetails.name;
+        if (myName === currPlayerName) {
+            myName += PLAY;
+        } else {
+            myName += WAIT;
+        }
+        return myName;
 }
 
 
@@ -283,15 +328,33 @@ function initPlayersBar() {
     }
 }
 
-function setCurrPlayerClass() {
-    
-    if (currPlayerName !== EMPTY_STRING && (currPlayerName, "#playerBar").attr("class") !== 'nameFcurrPlayer') {
-        $('nameFcurrPlayer', "#playerBar").currPlayerName.removeClass('nameFcurrPlayer');
+function setCurrPlayerClass(currPlayer) {
+    if (currPlayerName!== undefined && currPlayerName !== EMPTY_STRING) {
+        $('.nameFcurrPlayer').removeClass('nameFcurrPlayer');
     }
-    $(currPlayerName, "#playerBar").addClass('nameFcurrPlayer');
+    currPlayerName=currPlayer;
+
+    $(getPlayerNameFiled(currPlayer)).addClass('nameFcurrPlayer');
+    $(getPlayerTileFiled(currPlayer)).addClass('nameFcurrPlayer');
 }
 
+function getPlayerNameFiled(name){
+    return  "#PlayerF"+getPlayerIndexByName(name);
+}
+function getPlayerTileFiled(name){
+    return  "#TileF"+getPlayerIndexByName(name);
+}
 
+function getPlayerIndexByName(playerName){
+    var retVal=-1;
+    for(player in playersDetailsList){
+        if (playerName==playersDetailsList[player].name){
+            retVal=player;
+        }
+        
+    }
+    return retVal;
+}
 
 function initBoard() {
 
