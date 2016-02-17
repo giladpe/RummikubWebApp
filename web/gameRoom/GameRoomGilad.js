@@ -37,7 +37,7 @@ $(function () {//onload function
     $("#serie").droppable({
         accept: ".tile"
     });
-    
+
     //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
 
@@ -203,7 +203,11 @@ function handleGameStartEvent(event) {
     playersDetailsList = getPlayersDetailsList(gameName);
     $(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
     $("#serie").droppable({
-        accept: ".tile"
+        accept: ".tile",
+        drop: function (event, ui) {
+            //resize the element
+            return true;
+        }
     });
     
             //not sure about the next lines prefer u gilad to check it
@@ -232,16 +236,49 @@ function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
         hand.empty();
     
+//    for(var tile in tiles){
+//        var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "j";
+        //hand.append('<button id="tile" onclick="onTileClick(this)" class="tile ' + tiles[tile].color +'">'+tileValue +'</button>');
+//    }
+
     for(var tile in tiles){
-        hand.append('<button id="tile" onclick="onTileClick(this)" class="tile ' + tiles[tile].color +'">'+tiles[tile].value +'</button>');
+        var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "J";
+            //Create an input type dynamically.   
+        var tileToAdd = document.createElement('input');
+
+        tileToAdd.type = 'button';
+        tileToAdd.value = tileValue; // Really? You want the default value to be the type string?
+        tileToAdd.className = "tile " + tiles[tile].color;  // And the name too?
+
+        hand.append(tileToAdd);
     }
-    
-    var buttonsList = hand.children();
-    
-    for (var button in buttonsList) {
-        var t = buttonsList[button];
-        t.draggable();
+
+    if(currPlayerName === myDetails.name){
+
+        
+        $(".tile").draggable({ 
+            cancel: false,
+            revert: 'invalid',
+            iframeFix: true
+        });
     }
+        //$(".tile").draggable({});
+//        $(".tile").onclick = function() { // Note this is a function
+//            //alert("blabla");
+//        };
+    
+    
+//    if(currPlayerName === myDetails.name){
+//        var test = $(".tile");
+//        $("#tile").draggable({addClasses: false});
+//    } 
+
+//    var buttonsList = hand.children();
+//    
+//    for (var button in buttonsList) {
+//        var t = buttonsList[button];
+//        t.draggable();
+//    }
     
 }
 
@@ -367,8 +404,8 @@ function initBoard() {
 function onTileClick(clickedElement) {
     //not sure about it
     // make tiles active only in my turn
-    if(currPlayerName === myDetails.name){
-    } 
+//    if(currPlayerName === myDetails.name){
+//    } 
 }
 
 
