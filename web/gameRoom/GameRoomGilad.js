@@ -254,7 +254,6 @@ function createPlayerHandWs(tiles) {
     }
 
     if(currPlayerName === myDetails.name){
-
         
         $(".tile").draggable({ 
             cancel: false,
