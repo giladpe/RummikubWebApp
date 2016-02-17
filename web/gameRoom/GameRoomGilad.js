@@ -12,10 +12,12 @@ var REVERT = "REVERT";
 var refreshRate = 1000; //miliseconds
 var GAME_URL = "http://localhost:8080/RummikubWebApp/";
 var MAIN_SCREEN = "index.html";
-var WINNER_SCREEN = "WinnderScreen.html";
+var WINNER_SCREEN = "WinnerScreen.html";
 var EMPTY_STRING = "";
 var GAME_OVER_MSG = "Game Is Over";
 var PLAYER_DONE = " done his Turn";
+var PLAYER_RESIGNED = " decided to quite";
+
 var currPlayerName="";
 var eventID;
 var gameName;
@@ -24,26 +26,30 @@ var myDetails;
 var PLAY = " Play";
 var WAIT = " Wait";
 var playersDetailsList="";
+var intervalTimer;
+var timeOutTimer;
+
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
     gameName = getParameterByName('gid');
     gameButtonsList = $(".button");
+    $("#serie").droppable({
+        accept: ".tile"
+    });
+    
     //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
 
-    //The users list is refreshed automatically every second
-    setInterval(getEvents, refreshRate);
-    //The chat content is refreshed only once (using a timeout) but
-    //on each call it triggers another execution of itself later (1 second later)
+    intervalTimer = setInterval(getEventsWs, refreshRate);
     triggerAjaxEventMonitoring();
 });
 
 function triggerAjaxEventMonitoring() {
-    setTimeout(getEvents, refreshRate);
+    timeOutTimer = setTimeout(getEventsWs, refreshRate);
 }
 
-function getEvents() {
+function getEventsWs() {
     $.ajax({
         url:  GAME_URL + "GetEventsServlet",
         data: {"eventID": eventID},
@@ -66,7 +72,7 @@ function getEvents() {
 
             triggerAjaxEventMonitoring();
         },
-        error: function (error) {
+        error: function (jqXHR, textStatus, errorThrown) {
             triggerAjaxEventMonitoring();
         }
     });
@@ -142,11 +148,28 @@ function handleRummikubWsEvent(event) {
 
 
 function onResign() {
-   redirect(GAME_URL + MAIN_SCREEN);
+   $.ajax({
+        url: GAME_URL + "ResignServlet",
+        async: false,
+        data: {},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) //success 
+            {
+                setGameMessage(data.voidAndStringResponse);
+            }else {
+                redirect(GAME_URL + MAIN_SCREEN);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
 }
 
 function onFinishTurn() {
- $.ajax({
+    $.ajax({
         url: GAME_URL + "FinishTurnServlet",
         async: false,
         data: {},
@@ -157,11 +180,8 @@ function onFinishTurn() {
             {
                 setGameMessage(data.voidAndStringResponse);
             }
-
-            triggerAjaxEventMonitoring();
         },
-        error: function (error) {
-            triggerAjaxEventMonitoring();
+        error: function (jqXHR, textStatus, errorThrown) {
         }
     });
     return false;
@@ -179,8 +199,13 @@ function handleGameOverEvent(event) {
 }
 
 function handleGameStartEvent(event) {
-    myDetails = getMyDetails();
-    playersDetailsList=getPlayersDetailsList(gameName);
+    myDetails = getMyDetailsWs();
+    playersDetailsList = getPlayersDetailsList(gameName);
+    $(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
+    $("#serie").droppable({
+        accept: ".tile"
+    });
+    
             //not sure about the next lines prefer u gilad to check it
             //logicBoard = new Board();
            //setPlayersBarWs();
@@ -190,73 +215,52 @@ function handleGameStartEvent(event) {
 
 function handleGameWinnerEvent(event) {
     redirect(GAME_URL + WINNER_SCREEN);
-    //game event screen need to get the result from event,playerName
+    //game event screen need to get the result from event.playerName
 }
 
 function handlePlayerFinishedTurnEvent(event) {
-    showPlayerHandWs();
     setGameMessage(event.getPlayerName + PLAYER_DONE);
+    showPlayerHandWs();
 }
 
 function showPlayerHandWs() {
-    myDetails = getMyDetails();
+    myDetails = getMyDetailsWs();
     createPlayerHandWs(myDetails.tiles);
 }
 
 function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
-    var newButton, currTile;
         hand.empty();
     
-    for(tile in tiles){
-        hand.append('<button id="tile" onclick="onTileClick()" class="tile ' + tiles[tile].color +'">'+tiles[tile].value +'</button>');
-//          currTile = tiles[tile];
-//          var value = currTile.value;
-//          var color = currTile.color;
-//        currTile = tiles[tile];
-//        newButton = document.createElement('input');
-//        newButton.type = 'button';
-//        newButton.value = currTile.value;
-//        newButton.class = "tile" + currTile.color;
-//        newButton.id = "tile";
-//        newButton.onclick = function() {
-//            onTileClick();
-//        };
-//        hand.append(newButton);
+    for(var tile in tiles){
+        hand.append('<button id="tile" onclick="onTileClick(this)" class="tile ' + tiles[tile].color +'">'+tiles[tile].value +'</button>');
     }
     
-//        var i, buttonsToCreate, buttonContainer, newButton;
-//        buttonsToCreate = ['button1','button2','button3','button4','button5'];
-//        buttonContainer = document.getElementById('this_element_contains_my_buttons');
-//        for (i = 0; i < buttonsToCreate.length; i++) {
-//          newButton = document.createElement('input');
-//          newButton.type = 'button';
-//          newButton.value = buttonsToCreate[i];
-//          newButton.id = buttonsToCreate[i];
-//          newButton.onclick = function () {
-//            alert('You pressed '+this.id);
-//            arrayToModify[arrayToModify.length] = this.id;
-//          };
-//          buttonContainer.appendChild(newButton);
-//      }
+    var buttonsList = hand.children();
     
-//        this.handTile.getChildren().clear();
-//        for (rummikub.client.ws.Tile currWsTile : handWsTiles) {
-//            AnimatedTilePane viewTile = new AnimatedTilePane(convertWsTileToLogicTile(currWsTile));
-//            initTileListeners(viewTile);
-//            this.handTile.getChildren().add(viewTile);
-//        }
+    for (var button in buttonsList) {
+        var t = buttonsList[button];
+        t.draggable();
+    }
+    
 }
 
 function handlePlayerResignedEvent(event) {
-
+    var playerResignedName = event.playerName;
+    setGameMessage(playerResignedName + PLAYER_RESIGNED);
+    
+        if (myDetails.name === playerResignedName) {
+            clearTimeout(intervalTimer);
+            clearTimeout(timeOutTimer);
+            redirect(GAME_URL + MAIN_SCREEN);
+        }
 }
 
 function handlePlayerTurnEvent(event) {
     
-    setFirstSequenceTurnMsg();//todo!!!!
+    setFirstSequenceTurnMsg();
     setCurrPlayerClass(event.playerName);
-    setGameMessage(getTurnMsg())
+    setGameMessage(getTurnMsg());
     showPlayerHandWs();
         if (myDetails.name === currPlayerName){
                 enableButtons();
@@ -269,21 +273,21 @@ function handlePlayerTurnEvent(event) {
 function setFirstSequenceTurnMsg(){
     
     if(myDetails.playedFirstSequence){
-        $('#turnMsg').html("Played Sequence")
+        $('#turnMsg').html("Played Sequence");
     }
     else{
-        $('#turnMsg').html("Didn't Played Sequence")
+        $('#turnMsg').html("Didn't Played Sequence");
     }
 }
 
 function getTurnMsg() {
-        var myName = myDetails.name;
-        if (myName === currPlayerName) {
-            myName += PLAY;
-        } else {
-            myName += WAIT;
-        }
-        return myName;
+    var myName = myDetails.name;
+    if (myName === currPlayerName) {
+        myName += PLAY;
+    } else {
+        myName += WAIT;
+    }
+    return myName;
 }
 
 
@@ -347,8 +351,8 @@ function getPlayerTileFiled(name){
 
 function getPlayerIndexByName(playerName){
     var retVal=-1;
-    for(player in playersDetailsList){
-        if (playerName==playersDetailsList[player].name){
+    for(var player in playersDetailsList){
+        if (playerName === playersDetailsList[player].name){
             retVal=player;
         }
         
@@ -359,11 +363,17 @@ function getPlayerIndexByName(playerName){
 function initBoard() {
 
 }
-function onTileClick() {
-    
+
+function onTileClick(clickedElement) {
+    //not sure about it
+    // make tiles active only in my turn
+    if(currPlayerName === myDetails.name){
+    } 
 }
 
-function getMyDetails() {
+
+
+function getMyDetailsWs() {
     var myDetails = EMPTY_STRING;
 
     $.ajax({
@@ -379,11 +389,8 @@ function getMyDetails() {
             else {
                 setGameMessage(data.voidAndStringResponse);
             }
-
-            triggerAjaxEventMonitoring();
         },
-        error: function (error) {
-            triggerAjaxEventMonitoring();
+        error: function (jqXHR, textStatus, errorThrown) {
         }
     });
     
@@ -399,8 +406,85 @@ function enableButtons() {
     }
 
 function initButtons(disableButtons) {
-    for(button in gameButtonsList){
+    for(var button in gameButtonsList){
         var currButton = gameButtonsList[button];
         currButton.disable = disableButtons;
     }
+}
+
+
+function createSequenceWs(tiles) {
+    $.ajax({
+        url: GAME_URL + "CreateSequenceServlet",
+        async: false,
+        data: {"tiles": tiles},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function addTileWs(tile, sequenceIndex, sequencePosition) {
+    $.ajax({
+        url: GAME_URL + "AddTileServlet",
+        async: false,
+        data: {"tile": tile, "sequenceIndex":sequenceIndex, "sequencePosition":sequencePosition},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition) {
+    $.ajax({
+        url: GAME_URL + "MoveTileServlet",
+        async: false,
+        data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition":sourceSequencePosition,
+               "targetSequenceIndex":targetSequenceIndex, "targetSequencePosition":targetSequencePosition},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function takeBackTileToHandWs(sequenceIndex, sequencePosition) {
+    $.ajax({
+        url: GAME_URL + "TakeBackTileServlet",
+        async: false,
+        data: {"sequenceIndex":sequenceIndex, "sequencePosition":sequencePosition},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
 }
