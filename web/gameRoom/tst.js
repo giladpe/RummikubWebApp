@@ -27,16 +27,15 @@ var playersDetailsList="";
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
-    gameName = getParameterByName('gid');
     gameButtonsList = $(".button");
     //prevent IE from caching ajax calls
-    $.ajaxSetup({cache: false});
+    //$.ajaxSetup({cache: false});
 
     //The users list is refreshed automatically every second
-    setInterval(getEvents, refreshRate);
+    //setInterval(getEvents, refreshRate);
     //The chat content is refreshed only once (using a timeout) but
     //on each call it triggers another execution of itself later (1 second later)
-    triggerAjaxEventMonitoring();
+    //triggerAjaxEventMonitoring();
 });
 
 function triggerAjaxEventMonitoring() {

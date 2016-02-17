@@ -20,9 +20,6 @@ redipsInit = function () {
 	rd.mark.exception.greenc0 = 'green_cell';
 	rd.mark.exception.greenc1 = 'green_cell';
 	// define orange elements for orange cells
-	rd.mark.exception.orange = 'orange_cell';
-	rd.mark.exception.orangec0 = 'orange_cell';
-	rd.mark.exception.orangec1 = 'orange_cell';
 	// this function (event handler) is called after element is dropped
 	rd.event.dropped = function () {
 		// message text
