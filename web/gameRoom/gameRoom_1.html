@@ -13,69 +13,22 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <script src="../scripts/jquery.js"></script>
-        <script src="script.js"></script>
-
-        <script src="tst.js"></script>
-        <script src="../rapid_drug/redips-drag-min.js"></script>
-        <script src="../rapid_drug/redips-drag-source.js"></script>
-        <script src="../jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+        <script src="GameRoomGilad_1.js"></script>
+        <script src="../scripts/Utils.js"></script>
+        <script src="../jquery-ui-1.11.4.custom/jquery-ui.min.js" type = "text/javascript"></script>
+        <script src="../jquery-ui-1.11.4.custom/jquery-ui.js" type = "text/javascript"></script>
 
 
     </head>
-    <body class="gameBody" id="redips-drag">
-        <div>
-            <div class="bar" id="topBar">
-                <div class="left"  id="playerBar" > 
-                    <text id="PlayerF0" class="nameF"></text><text id="TileF0" class="nameF"></text>
-                    <text id="PlayerF1" class="nameF"></text><text id="TileF1" class="nameF"></text><br>
-                    <text id="PlayerF2" class="nameF"></text><text id="TileF2" class="nameF"></text>
-                    <text id="PlayerF3" class="nameF"></text><text id="TileF3" class="nameF"></text>
-                </div>
-                <div class="center"> <text class="gameMsg"></text></div>
-                <div class="right"> <button  id="resign" class="button floatFr" onclick="onResign()">Resign</button></div>          
+    <body>
+        <div id="testDiv"></div>
 
-            </div>
-            <div class="gameBoard">
-                <div>
-                    <table>
-                        <colgroup>
-                            <col>
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <td class="serie">Add Series</td>>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="bar" id="buttonBar">
-                <div class="finishTurnDiv">
-                    <button class="button"  onclick="onFinishTurn()">Finish Turn</button>
 
-                </div>
-                <div class="hand"  id= "hand">
-                    <table id="handTileDiv">
-                        <colgroup>
-                            <col >
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <td id="handTileDiv">
-                                    <div class="redips-drag tile BLUE" style="    text-align: center; cursor: move; border-style: none;">6</div>
-                                    <div class="redips-drag tile BLUE" style=" cursor: move;">7</div>
-                                    <div  class="redips-drag tile BLUE" style=" cursor: move;">8</div>
-                                    </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="addTileDiv">
-                    <div  id="turnMsg"></div>
-                    <button id="AddSerie" class="button" onclick="onAddSerie()" >Add Series</button>
-                </div>          
-
+            <div class = "serie" id = serie>
+                new Series
             </div>
+        <div id="handTileDiv">
         </div>
-    </body>
+
+</body>
 </html>

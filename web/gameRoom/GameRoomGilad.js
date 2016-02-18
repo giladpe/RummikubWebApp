@@ -18,24 +18,27 @@ var GAME_OVER_MSG = "Game Is Over";
 var PLAYER_DONE = " done his Turn";
 var PLAYER_RESIGNED = " decided to quite";
 
-var currPlayerName="";
+var currPlayerName = "";
 var eventID;
 var gameName;
 var gameButtonsList;
 var myDetails;
 var PLAY = " Play";
 var WAIT = " Wait";
-var playersDetailsList="";
+var playersDetailsList = "";
 var intervalTimer;
 var timeOutTimer;
+var tileId=0;
 
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     eventID = 0;
+    tileId=0;
     gameName = getParameterByName('gid');
     gameButtonsList = $(".button");
     $("#serie").droppable({
-        accept: ".tile"
+        accept: ".tile",
+        drop: handleDropOnNewSerieEvent
     });
 
     //prevent IE from caching ajax calls
@@ -45,13 +48,28 @@ $(function () {//onload function
     triggerAjaxEventMonitoring();
 });
 
+
+function handleDropOnNewSerieEvent(event, ui) {
+
+    //var draggable = ui.draggable;
+    //alert($(this).data('name'));
+    var test=$('#'+ui.draggable.prop('id'));
+    var sourceId = $(test).closest("div").attr("id");
+    $('.gameBoard').append(test);
+    createNewSerieServlet();//todo 
+}
+function createNewSerieServlet(){
+    //toDO
+    
+}
+
 function triggerAjaxEventMonitoring() {
     timeOutTimer = setTimeout(getEventsWs, refreshRate);
 }
 
 function getEventsWs() {
     $.ajax({
-        url:  GAME_URL + "GetEventsServlet",
+        url: GAME_URL + "GetEventsServlet",
         data: {"eventID": eventID},
         timeout: 1000,
         dataType: 'json',
@@ -148,7 +166,7 @@ function handleRummikubWsEvent(event) {
 
 
 function onResign() {
-   $.ajax({
+    $.ajax({
         url: GAME_URL + "ResignServlet",
         async: false,
         data: {},
@@ -158,7 +176,7 @@ function onResign() {
             if (data.isException) //success 
             {
                 setGameMessage(data.voidAndStringResponse);
-            }else {
+            } else {
                 redirect(GAME_URL + MAIN_SCREEN);
             }
         },
@@ -192,10 +210,10 @@ function onAddSerie() {
 }
 
 function handleGameOverEvent(event) {
-    
-            disableButtons();
+
+    disableButtons();
 //            resetPlayersBar(); // in javafx it does nothing
-            setGameMessage(GAME_OVER_MSG);
+    setGameMessage(GAME_OVER_MSG);
 }
 
 function handleGameStartEvent(event) {
@@ -203,17 +221,15 @@ function handleGameStartEvent(event) {
     playersDetailsList = getPlayersDetailsList(gameName);
     $(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
     $("#serie").droppable({
-        accept: ".tile",
-        drop: function (event, ui) {
-            //resize the element
-            return true;
-        }
+       accept: ".tile",
+        drop: handleDropOnNewSerieEvent
+        
     });
-    
-            //not sure about the next lines prefer u gilad to check it
-            //logicBoard = new Board();
-           //setPlayersBarWs();
-            //initPlayerLabelWs();
+
+    //not sure about the next lines prefer u gilad to check it
+    //logicBoard = new Board();
+    //setPlayersBarWs();
+    //initPlayerLabelWs();
     initAllComponent();
 }
 
@@ -234,39 +250,40 @@ function showPlayerHandWs() {
 
 function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
-        hand.empty();
-    
+    hand.empty();
+
 //    for(var tile in tiles){
 //        var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "j";
-        //hand.append('<button id="tile" onclick="onTileClick(this)" class="tile ' + tiles[tile].color +'">'+tileValue +'</button>');
+    //hand.append('<button id="tile" onclick="onTileClick(this)" class="tile ' + tiles[tile].color +'">'+tileValue +'</button>');
 //    }
 
-    for(var tile in tiles){
+    for (var tile in tiles) {
         var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "J";
-            //Create an input type dynamically.   
+        //Create an input type dynamically.   
         var tileToAdd = document.createElement('input');
-
         tileToAdd.type = 'button';
         tileToAdd.value = tileValue; // Really? You want the default value to be the type string?
         tileToAdd.className = "tile " + tiles[tile].color;  // And the name too?
-
+        tileToAdd.id="tile"+tileId;
+        tileId++;
         hand.append(tileToAdd);
+        //tileToAdd.data('color', tiles[tile].color);
     }
 
-    if(currPlayerName === myDetails.name){
-        
-        $(".tile").draggable({ 
+    if (currPlayerName === myDetails.name) {
+
+        $(".tile").draggable({
             cancel: false,
             revert: 'invalid',
             iframeFix: true
         });
     }
-        //$(".tile").draggable({});
+    //$(".tile").draggable({});
 //        $(".tile").onclick = function() { // Note this is a function
 //            //alert("blabla");
 //        };
-    
-    
+
+
 //    if(currPlayerName === myDetails.name){
 //        var test = $(".tile");
 //        $("#tile").draggable({addClasses: false});
@@ -278,40 +295,38 @@ function createPlayerHandWs(tiles) {
 //        var t = buttonsList[button];
 //        t.draggable();
 //    }
-    
+
 }
 
 function handlePlayerResignedEvent(event) {
     var playerResignedName = event.playerName;
     setGameMessage(playerResignedName + PLAYER_RESIGNED);
-    
-        if (myDetails.name === playerResignedName) {
-            clearTimeout(intervalTimer);
-            clearTimeout(timeOutTimer);
-            redirect(GAME_URL + MAIN_SCREEN);
-        }
+
+    if (myDetails.name === playerResignedName) {
+        clearTimeout(intervalTimer);
+        clearTimeout(timeOutTimer);
+        redirect(GAME_URL + MAIN_SCREEN);
+    }
 }
 
 function handlePlayerTurnEvent(event) {
-    
+
     setFirstSequenceTurnMsg();
     setCurrPlayerClass(event.playerName);
     setGameMessage(getTurnMsg());
     showPlayerHandWs();
-        if (myDetails.name === currPlayerName){
-                enableButtons();
-        }
-        else{
-                disableButtons();
-        }
+    if (myDetails.name === currPlayerName) {
+        enableButtons();
+    } else {
+        disableButtons();
+    }
 }
 
-function setFirstSequenceTurnMsg(){
-    
-    if(myDetails.playedFirstSequence){
+function setFirstSequenceTurnMsg() {
+
+    if (myDetails.playedFirstSequence) {
         $('#turnMsg').html("Played Sequence");
-    }
-    else{
+    } else {
         $('#turnMsg').html("Didn't Played Sequence");
     }
 }
@@ -359,39 +374,39 @@ function initAllComponent() {
 function initPlayersBar() {
     var playersDetailsList = getPlayersDetailsList(gameName);
     var playerBar = $(".nameF");
-    var j=0;
-    
+    var j = 0;
+
     for (var i = 0; i < playersDetailsList.length; i++) {
         playerBar[j].innerHTML = (playersDetailsList[i]).name;
-        playerBar[j+1].innerHTML  = (playersDetailsList[i]).numberOfTiles;
-        j+=2;
+        playerBar[j + 1].innerHTML = (playersDetailsList[i]).numberOfTiles;
+        j += 2;
     }
 }
 
 function setCurrPlayerClass(currPlayer) {
-    if (currPlayerName!== undefined && currPlayerName !== EMPTY_STRING) {
+    if (currPlayerName !== undefined && currPlayerName !== EMPTY_STRING) {
         $('.nameFcurrPlayer').removeClass('nameFcurrPlayer');
     }
-    currPlayerName=currPlayer;
+    currPlayerName = currPlayer;
 
     $(getPlayerNameFiled(currPlayer)).addClass('nameFcurrPlayer');
     $(getPlayerTileFiled(currPlayer)).addClass('nameFcurrPlayer');
 }
 
-function getPlayerNameFiled(name){
-    return  "#PlayerF"+getPlayerIndexByName(name);
+function getPlayerNameFiled(name) {
+    return  "#PlayerF" + getPlayerIndexByName(name);
 }
-function getPlayerTileFiled(name){
-    return  "#TileF"+getPlayerIndexByName(name);
+function getPlayerTileFiled(name) {
+    return  "#TileF" + getPlayerIndexByName(name);
 }
 
-function getPlayerIndexByName(playerName){
-    var retVal=-1;
-    for(var player in playersDetailsList){
-        if (playerName === playersDetailsList[player].name){
-            retVal=player;
+function getPlayerIndexByName(playerName) {
+    var retVal = -1;
+    for (var player in playersDetailsList) {
+        if (playerName === playersDetailsList[player].name) {
+            retVal = player;
         }
-        
+
     }
     return retVal;
 }
@@ -421,28 +436,27 @@ function getMyDetailsWs() {
         success: function (data) {
             if (!data.isException) { //success 
                 myDetails = data.playerDetailsResposne;
-            } 
-            else {
+            } else {
                 setGameMessage(data.voidAndStringResponse);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }
     });
-    
+
     return myDetails;
 }
 
 function disableButtons() {
-        initButtons(true);
-    }
+    initButtons(true);
+}
 
 function enableButtons() {
-        initButtons(false);
-    }
+    initButtons(false);
+}
 
 function initButtons(disableButtons) {
-    for(var button in gameButtonsList){
+    for (var button in gameButtonsList) {
         var currButton = gameButtonsList[button];
         currButton.disable = disableButtons;
     }
@@ -472,7 +486,7 @@ function addTileWs(tile, sequenceIndex, sequencePosition) {
     $.ajax({
         url: GAME_URL + "AddTileServlet",
         async: false,
-        data: {"tile": tile, "sequenceIndex":sequenceIndex, "sequencePosition":sequencePosition},
+        data: {"tile": tile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
@@ -490,8 +504,8 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
     $.ajax({
         url: GAME_URL + "MoveTileServlet",
         async: false,
-        data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition":sourceSequencePosition,
-               "targetSequenceIndex":targetSequenceIndex, "targetSequencePosition":targetSequencePosition},
+        data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition": sourceSequencePosition,
+            "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
@@ -510,7 +524,7 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition) {
     $.ajax({
         url: GAME_URL + "TakeBackTileServlet",
         async: false,
-        data: {"sequenceIndex":sequenceIndex, "sequencePosition":sequencePosition},
+        data: {"sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {

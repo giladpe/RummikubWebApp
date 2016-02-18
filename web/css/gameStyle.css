@@ -14,7 +14,6 @@
 
 .gameBody {
     min-height: 600px;
-    position: relative; 
     background-image: url("../images/MenuPic1.jpg");
     background-position: center ;
     background-size:100% 100%;
@@ -24,7 +23,6 @@
 .menu {
     height: 600px;
     min-height: 600px;
-    position: relative; 
     background-image: url("../images/MenuBackground.jpg");
     background-position: center ;
     background-size:100% 100%;
