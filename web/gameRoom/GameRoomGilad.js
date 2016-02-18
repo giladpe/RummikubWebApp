@@ -29,9 +29,10 @@ var playersDetailsList = "";
 var intervalTimer;
 var timeOutTimer;
 var tileId=0;
-
+var serieId=0;
 //activate the timer calls after the page is loaded
 $(function () {//onload function
+    serieId=0;
     eventID = 0;
     tileId=0;
     gameName = getParameterByName('gid');
@@ -55,8 +56,12 @@ function handleDropOnNewSerieEvent(event, ui) {
     //alert($(this).data('name'));
     var test=$('#'+ui.draggable.prop('id'));
     var sourceId = $(test).closest("div").attr("id");
+    //create html elment which represent the serie with ID 
+    
     $('.gameBoard').append(test);
-    createNewSerieServlet();//todo 
+    
+    test.removeAttr("style");
+    //createNewSerieServlet();
 }
 function createNewSerieServlet(){
     //toDO

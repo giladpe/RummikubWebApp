@@ -62,7 +62,7 @@ and open the template in the editor.
 .playerBar{ width:1100px;}
 
 .gameBoard{
-    border: 1px;
+    border: 1px; 
     height: 400px;
     width: 1320px;
 }
