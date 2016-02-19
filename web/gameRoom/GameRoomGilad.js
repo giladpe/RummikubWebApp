@@ -39,7 +39,6 @@ $(function () {//onload function
     gameButtonsList = $(".button");
     $("#addSerieArea").droppable({
         accept: ".tile",
-        hoverClass: 'hovered',
         drop: handleDropOnNewSerieEvent
     });
 
@@ -54,19 +53,14 @@ $(function () {//onload function
 function handleDropOnNewSerieEvent(event, ui) {
 
     var newSerieId = createNewSerieWithId(droppedTile);
-    //var draggable = ui.draggable;
-    //alert($(this).data('name'));
     var droppedTile = $('#' + ui.draggable.prop('id'));
     var droppedTileParentId = $(droppedTile).closest("div").attr("id");
-    //create html elment which represent the serie with ID 
-
-
+    
+    //need to remove the parent if its an empty serie 
 
 
     $("#serie" + newSerieId).append(droppedTile);
 
-    //test.removeAttr("style");
-    //createNewSerieServlet();
 }
 function createNewSerieServlet() {
     //toDO
@@ -112,12 +106,12 @@ function createNewSerieWithId() {
 
     var serieToAdd = document.createElement('span');
     serieToAdd.type = 'span';
-    serieToAdd.className = "seire";
+    serieToAdd.className = "serie";
     serieToAdd.id = "serie" + serieId;
     serieArea.append(serieToAdd);
     serieId++;
-
-    return serieToAdd;
+    
+    return newSerieId;
 
 }
 
