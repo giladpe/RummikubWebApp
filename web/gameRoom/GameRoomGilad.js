@@ -28,17 +28,18 @@ var WAIT = " Wait";
 var playersDetailsList = "";
 var intervalTimer;
 var timeOutTimer;
-var tileId=0;
-var serieId=0;
+var tileId = 0;
+var serieId = 0;
 //activate the timer calls after the page is loaded
 $(function () {//onload function
-    serieId=0;
+    serieId = 0;
     eventID = 0;
-    tileId=0;
+    tileId = 0;
     gameName = getParameterByName('gid');
     gameButtonsList = $(".button");
-    $("#serie").droppable({
+    $("#addSerieArea").droppable({
         accept: ".tile",
+        hoverClass: 'hovered',
         drop: handleDropOnNewSerieEvent
     });
 
@@ -52,20 +53,24 @@ $(function () {//onload function
 
 function handleDropOnNewSerieEvent(event, ui) {
 
+    var newSerieId = createNewSerieWithId(droppedTile);
     //var draggable = ui.draggable;
     //alert($(this).data('name'));
-    var test=$('#'+ui.draggable.prop('id'));
-    var sourceId = $(test).closest("div").attr("id");
+    var droppedTile = $('#' + ui.draggable.prop('id'));
+    var droppedTileParentId = $(droppedTile).closest("div").attr("id");
     //create html elment which represent the serie with ID 
-    
-    $('.gameBoard').append(test);
-    
-    test.removeAttr("style");
+
+
+
+
+    $("#serie" + newSerieId).append(droppedTile);
+
+    //test.removeAttr("style");
     //createNewSerieServlet();
 }
-function createNewSerieServlet(){
+function createNewSerieServlet() {
     //toDO
-    
+
 }
 
 function triggerAjaxEventMonitoring() {
@@ -100,6 +105,23 @@ function getEventsWs() {
         }
     });
 }
+
+function createNewSerieWithId() {
+    var newSerieId = serieId;
+    var serieArea = $("#seriesArea");
+
+    var serieToAdd = document.createElement('span');
+    serieToAdd.type = 'span';
+    serieToAdd.className = "seire";
+    serieToAdd.id = "serie" + serieId;
+    serieArea.append(serieToAdd);
+    serieId++;
+
+    return serieToAdd;
+
+}
+
+
 
 function getLastEventID(eventList) {
     return (eventList[eventList.length - 1]).id;
@@ -224,12 +246,12 @@ function handleGameOverEvent(event) {
 function handleGameStartEvent(event) {
     myDetails = getMyDetailsWs();
     playersDetailsList = getPlayersDetailsList(gameName);
-    $(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
-    $("#serie").droppable({
-       accept: ".tile",
-        drop: handleDropOnNewSerieEvent
-        
-    });
+    //$(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
+    //$("#serie").droppable({
+//       accept: ".tile",
+//        drop: handleDropOnNewSerieEvent
+//        
+//    });
 
     //not sure about the next lines prefer u gilad to check it
     //logicBoard = new Board();
@@ -269,7 +291,7 @@ function createPlayerHandWs(tiles) {
         tileToAdd.type = 'button';
         tileToAdd.value = tileValue; // Really? You want the default value to be the type string?
         tileToAdd.className = "tile " + tiles[tile].color;  // And the name too?
-        tileToAdd.id="tile"+tileId;
+        tileToAdd.id = "tile" + tileId;
         tileId++;
         hand.append(tileToAdd);
         //tileToAdd.data('color', tiles[tile].color);
@@ -280,7 +302,8 @@ function createPlayerHandWs(tiles) {
         $(".tile").draggable({
             cancel: false,
             revert: 'invalid',
-            iframeFix: true
+            helper: 'clone'
+
         });
     }
     //$(".tile").draggable({});
