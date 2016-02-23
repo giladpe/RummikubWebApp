@@ -49,20 +49,8 @@ $(function () {//onload function
     triggerAjaxEventMonitoring();
 });
 
-var tile = new function Tile(tileValue,tileColor) {
-    this.value = tileValue;
-    this.color = tileColor;
-    
-    this.getInfo = function () {
-        return this.color + ' ' + this.value;
-    };
-    this.getColor = function () {
-        return this.color;
-    };
-    this.getValue = function () {
-        return this.value;
-    };
-}
+
+
 
 
 function handleDropOnNewSerieEvent(event, ui) {
@@ -70,16 +58,33 @@ function handleDropOnNewSerieEvent(event, ui) {
     var newSerieId = createNewSerieWithId(droppedTile);
     var droppedTile = $('#' + ui.draggable.prop('id'));
     var droppedTileParentId = $(droppedTile).closest("div").attr("id");
-    //var color = droppedTile.className;
-    //alert(color);
-    //color = color.split(" ");
-    //alert(color[1]);
-    //need to remove the parent if its an empty serie 
-
-
-    $("#serie" + newSerieId).append(droppedTile);
-
+    var tile=createTileObj(droppedTile);
+    if(createSequenceWs(tile)){
+        $("#serie" + newSerieId).append(droppedTile);
+    }
+    
 }
+
+function createTileObj(tileButton){
+  
+    var classes = (tileButton.attr("class")).split(" ");
+    var color = classes[1];
+    var value= tileButton.attr("value");
+    var tile=new Tile(color,value);
+    return tile;
+}
+function Tile(color,value){
+
+   // Add object properties like this
+   this.color = color;
+   this.value = value;
+}
+Tile.info = function(){
+    return this.color+" "+this.value;
+};
+
+
+
 function createNewSerieServlet() {
     //toDO
 
@@ -504,6 +509,7 @@ function initButtons(disableButtons) {
 
 
 function createSequenceWs(tiles) {
+    var retVal=false;
     $.ajax({
         url: GAME_URL + "CreateSequenceServlet",
         async: false,
@@ -513,13 +519,14 @@ function createSequenceWs(tiles) {
         success: function (data) {
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
+                retVal=true;
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }
     });
-    return false;
+    return retVal;
 }
 
 function addTileWs(tile, sequenceIndex, sequencePosition) {
