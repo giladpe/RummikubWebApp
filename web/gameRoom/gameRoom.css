@@ -156,9 +156,9 @@ and open the template in the editor.
 
 .serie
 {
-    background-image: url("../images/Bar.png"); 
+    
     background-position: center ;
-    padding: 5px;
+    padding: 10px;
     background-size:100% 100%;
     background-repeat: no-repeat;
 }

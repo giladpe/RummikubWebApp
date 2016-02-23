@@ -44,6 +44,7 @@ public class CreateSequenceServlet extends HttpServlet {
             ArrayList<ws.rummikub.Tile> tiles = new ArrayList<>();
 
             for (String strVal : strVals) {
+                System.out.println(strVal);
                 ws.rummikub.Tile tile = ServletUtils.parseTileStringToWsTile(strVal);
                 tiles.add(tile);
             }

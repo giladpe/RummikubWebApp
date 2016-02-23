@@ -55,33 +55,41 @@ $(function () {//onload function
 
 function handleDropOnNewSerieEvent(event, ui) {
 
-    var newSerieId = createNewSerieWithId(droppedTile);
     var droppedTile = $('#' + ui.draggable.prop('id'));
     var droppedTileParentId = $(droppedTile).closest("div").attr("id");
-    var tile=createTileObj(droppedTile);
-    if(createSequenceWs(tile)){
-        $("#serie" + newSerieId).append(droppedTile);
-    }
     
+    if (droppedTileParentId === "handTileDiv") {
+        var tiles = [];
+        tiles.push(createTileObj(droppedTile));
+        if( createSequenceWs(tiles)){
+            droppedTile.remove();   
+        }
+    }
+    //    var newSerieId = createNewSerieWithId(droppedTile);
+    //$("#serie" + newSerieId).append(droppedTile);
 }
 
-function createTileObj(tileButton){
-  
+
+
+function createTileObj(tileButton) {
+
     var classes = (tileButton.attr("class")).split(" ");
     var color = classes[1];
-    var value= tileButton.attr("value");
-    var tile=new Tile(color,value);
+    var value = tileButton.attr("value");
+    var tile = new Tile(color, value);
     return tile;
 }
-function Tile(color,value){
 
-   // Add object properties like this
-   this.color = color;
-   this.value = value;
+function Tile(color, value) {
+
+    // Add object properties like this
+    this.color = color;
+    this.value = value;
 }
-Tile.info = function(){
-    return this.color+" "+this.value;
-};
+
+//Tile.info = function(){
+//    return this.color+" "+this.value;
+//};
 
 
 
@@ -133,7 +141,7 @@ function createNewSerieWithId() {
     serieToAdd.id = "serie" + serieId;
     serieArea.append(serieToAdd);
     serieId++;
-    
+
     return newSerieId;
 
 }
@@ -292,28 +300,17 @@ function showPlayerHandWs() {
     createPlayerHandWs(myDetails.tiles);
 }
 
-function createPlayerHandWs(tiles) {
-    var hand = $("#handTileDiv");
-    hand.empty();
-
-//    for(var tile in tiles){
-//        var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "j";
-    //hand.append('<button id="tile" onclick="onTileClick(this)" class="tile ' + tiles[tile].color +'">'+tileValue +'</button>');
-//    }
-
+function printTilesInParent(tiles,parent) {
     for (var tile in tiles) {
         var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "J";
-        //Create an input type dynamically.   
         var tileToAdd = document.createElement('input');
         tileToAdd.type = 'button';
-        tileToAdd.value = tileValue; // Really? You want the default value to be the type string?
-        tileToAdd.className = "tile " + tiles[tile].color;  // And the name too?
+        tileToAdd.value = tileValue; 
+        tileToAdd.className = "tile " + tiles[tile].color;
         tileToAdd.id = "tile" + tileId;
         tileId++;
-        hand.append(tileToAdd);
-        //tileToAdd.data('color', tiles[tile].color);
+        parent.append(tileToAdd);
     }
-
     if (currPlayerName === myDetails.name) {
 
         $(".tile").draggable({
@@ -323,25 +320,57 @@ function createPlayerHandWs(tiles) {
 
         });
     }
-    //$(".tile").draggable({});
-//        $(".tile").onclick = function() { // Note this is a function
-//            //alert("blabla");
-//        };
-
-
-//    if(currPlayerName === myDetails.name){
-//        var test = $(".tile");
-//        $("#tile").draggable({addClasses: false});
-//    } 
-
-//    var buttonsList = hand.children();
-//    
-//    for (var button in buttonsList) {
-//        var t = buttonsList[button];
-//        t.draggable();
-//    }
-
 }
+function createPlayerHandWs(tiles) {
+     var hand = $("#handTileDiv");
+     hand.empty();
+     printTilesInParent(tiles,hand);   
+}
+//function createPlayerHandWs(tiles) {
+//    var hand = $("#handTileDiv");
+//    hand.empty();
+//
+//    for (var tile in tiles) {
+//        var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "J";
+//        //Create an input type dynamically.   
+//        var tileToAdd = document.createElement('input');
+//        tileToAdd.type = 'button';
+//        tileToAdd.value = tileValue; // Really? You want the default value to be the type string?
+//        tileToAdd.className = "tile " + tiles[tile].color;  // And the name too?
+//        tileToAdd.id = "tile" + tileId;
+//        tileId++;
+//        hand.append(tileToAdd);
+//        //tileToAdd.data('color', tiles[tile].color);
+//    }
+//
+//    if (currPlayerName === myDetails.name) {
+//
+//        $(".tile").draggable({
+//            cancel: false,
+//            revert: 'invalid',
+//            helper: 'clone'
+//
+//        });
+//    }
+//    //$(".tile").draggable({});
+////        $(".tile").onclick = function() { // Note this is a function
+////            //alert("blabla");
+////        };
+//
+//
+////    if(currPlayerName === myDetails.name){
+////        var test = $(".tile");
+////        $("#tile").draggable({addClasses: false});
+////    } 
+//
+////    var buttonsList = hand.children();
+////    
+////    for (var button in buttonsList) {
+////        var t = buttonsList[button];
+////        t.draggable();
+////    }
+//
+//}
 
 function handlePlayerResignedEvent(event) {
     var playerResignedName = event.playerName;
@@ -388,11 +417,15 @@ function getTurnMsg() {
 
 
 function handleRevertEvent(event) {
-
+    $("#seriesArea").empty();
 }
 
 function handleSequenceCreatedEvent(event) {
-
+       var newSerieId = createNewSerieWithId();
+       var serie=$("#serie" + newSerieId);
+       printTilesInParent(event.tiles,serie);
+       
+    //$("#serie" + newSerieId).append(droppedTile);
 }
 
 function handleTileAddedEvent(event) {
@@ -417,7 +450,7 @@ function initAllComponent() {
 }
 
 function initPlayersBar() {
-    var playersDetailsList = getPlayersDetailsList(gameName);
+    playersDetailsList = getPlayersDetailsList(gameName);
     var playerBar = $(".nameF");
     var j = 0;
 
@@ -509,17 +542,18 @@ function initButtons(disableButtons) {
 
 
 function createSequenceWs(tiles) {
-    var retVal=false;
+    var test=JSON.stringify(tiles);
+    var retVal = true;
     $.ajax({
         url: GAME_URL + "CreateSequenceServlet",
         async: false,
-        data: {"tiles": tiles},
+        data: {"tiles": test},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
-                retVal=true;
+                retVal = !retVal;
             }
 
         },
