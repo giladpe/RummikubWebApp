@@ -49,13 +49,31 @@ $(function () {//onload function
     triggerAjaxEventMonitoring();
 });
 
+var tile = new function Tile(tileValue,tileColor) {
+    this.value = tileValue;
+    this.color = tileColor;
+    
+    this.getInfo = function () {
+        return this.color + ' ' + this.value;
+    };
+    this.getColor = function () {
+        return this.color;
+    };
+    this.getValue = function () {
+        return this.value;
+    };
+}
+
 
 function handleDropOnNewSerieEvent(event, ui) {
 
     var newSerieId = createNewSerieWithId(droppedTile);
     var droppedTile = $('#' + ui.draggable.prop('id'));
     var droppedTileParentId = $(droppedTile).closest("div").attr("id");
-    
+    //var color = droppedTile.className;
+    //alert(color);
+    //color = color.split(" ");
+    //alert(color[1]);
     //need to remove the parent if its an empty serie 
 
 
