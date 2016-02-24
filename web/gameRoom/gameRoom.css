@@ -183,7 +183,17 @@ and open the template in the editor.
 .addSerieArea div.hovered {
   background: #aaa;
 }
-
+li
+{
+       background-image: url("../images/tile.png");
+    background-size:100% 100%;
+    background-position: center;
+    height: 50px;
+    width: 35px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 1px
+}
 
 .serie
 {
