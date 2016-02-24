@@ -106,6 +106,7 @@ function getEventsWs() {
     $.ajax({
         url: GAME_URL + "GetEventsServlet",
         data: {"eventID": eventID},
+        async: false,
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
@@ -191,6 +192,7 @@ function handleRummikubWsEvent(event) {
         }
         case SEQUENCE_CREATED:
         {
+            eventID;
             handleSequenceCreatedEvent(event);
             break;
         }
