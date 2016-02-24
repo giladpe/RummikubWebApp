@@ -130,7 +130,10 @@ and open the template in the editor.
     padding-right: 20px;
     width: 100%;
     min-height: 50px;
-
+    
+    float: left;
+    list-style-type: none; 
+    margin: 0; 
 }
 
 .tile {
@@ -154,19 +157,38 @@ and open the template in the editor.
 }
 
 .BLUE{
-    color: blue !important;
-
+    color: blue;
+    
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 .RED{
     color: red;
+    
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
 .BLACK{
     color: black;
+    
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
 .YELLOW{
     color: yellow;
+    
+    display: inline-block;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
 }
 
 .addSerieArea {
@@ -183,9 +205,9 @@ and open the template in the editor.
 .addSerieArea div.hovered {
   background: #aaa;
 }
-li
-{
-       background-image: url("../images/tile.png");
+
+li {
+    background-image: url("../images/tile.png");
     background-size:100% 100%;
     background-position: center;
     height: 50px;
@@ -195,15 +217,53 @@ li
     margin: 1px
 }
 
-.serie
-{
-    float: left; 
+.serie {
+    
     background-position: center ;
     padding: 10px;
     background-size:100% 100%;
     background-repeat: no-repeat;
+    float: left;
+    list-style-type: none; 
+    margin: 0; 
 }
 
 .serie div.hovered {
-  background: #aaa;
+    background: #aaa;
 }
+
+//test:
+ul {     
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}   
+
+/*#sortable {  
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+}*/
+
+ li {  
+    float: left;
+    background-image: url("../images/tile.png");
+    background-size:100% 100%;
+    background-position: center;
+    height: 50px;
+    width: 35px;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 1px
+}
+
+li a {
+    display: inline-block;
+    color: blue;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+//#sortable li span {  }

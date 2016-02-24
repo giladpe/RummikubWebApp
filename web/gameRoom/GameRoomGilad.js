@@ -38,10 +38,16 @@ $(function () {//onload function
     tileId = 0;
     gameName = getParameterByName('gid');
     gameButtonsList = $(".button");
-    $("#addSerieArea").droppable({
+    
+    $("#addSerieArea").sortable({
         accept: ".tile",
         drop: handleDropOnNewSerieEvent
     });
+    
+//    $("#addSerieArea").droppable({
+//        accept: ".tile",
+//        drop: handleDropOnNewSerieEvent
+//    });
 
     //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
@@ -52,7 +58,6 @@ $(function () {//onload function
 
 
 function handleDropOnNewSerieEvent(event, ui) {
-
     var droppedTile = $('#' + ui.draggable.prop('id'));
     var droppedTileParentId = $(droppedTile).closest("div").attr("id");
 
@@ -61,6 +66,7 @@ function handleDropOnNewSerieEvent(event, ui) {
         tiles.push(createTileObj(droppedTile));
         if (createSequenceWs(tiles)) {
             droppedTile.remove();
+            $(droppedTile.attr('id')).draggable("destroy");
         }
     }
     //    var newSerieId = createNewSerieWithId(droppedTile);
@@ -77,12 +83,9 @@ function createTileObj(tileButton) {
 }
 
 function Tile(color, value) {
-
-    // Add object properties like this
     this.color = color;
     this.value = value;
 }
-
 
 function triggerAjaxEventMonitoring() {
     timeOutTimer = setTimeout(getEventsWs, refreshRate);
@@ -122,8 +125,8 @@ function createNewSerieWithId() {
     var newSerieId = serieId;
     var serieArea = $("#seriesArea");
 
-    var serieToAdd = document.createElement('span');
-    serieToAdd.type = 'span';
+    var serieToAdd = document.createElement('ul');
+    serieToAdd.type = 'ul';
     serieToAdd.className = "serie";
     serieToAdd.id = "serie" + serieId;
     serieArea.append(serieToAdd);
@@ -131,7 +134,8 @@ function createNewSerieWithId() {
     
     if (currPlayerName === myDetails.name) {
         $(".serie").sortable({
-            cancel: null
+            connectWith: "ul"
+            //cancel: null
         });
     }
     //$( ".serie" ).sortable({
@@ -140,14 +144,32 @@ function createNewSerieWithId() {
 //    }).disableSelection();
 
     return newSerieId;
-
 }
 
-//$(function() {
-//    $( "#sortable1, #sortable2" ).sortable({
-//      connectWith: ".connectedSortable"
-//    }).disableSelection();
-//  });
+//old version:
+//function createNewSerieWithId() {
+//    var newSerieId = serieId;
+//    var serieArea = $("#seriesArea");
+//
+//    var serieToAdd = document.createElement('span');
+//    serieToAdd.type = 'span';
+//    serieToAdd.className = "serie";
+//    serieToAdd.id = "serie" + serieId;
+//    serieArea.append(serieToAdd);
+//    serieId++;
+//    
+//    if (currPlayerName === myDetails.name) {
+//        $(".serie").sortable({
+//            cancel: null
+//        });
+//    }
+//    //$( ".serie" ).sortable({
+////    serieToAdd.sortable({
+////      connectWith: ".tile"
+////    }).disableSelection();
+//
+//    return newSerieId;
+//}
 
 function getLastEventID(eventList) {
     return (eventList[eventList.length - 1]).id;
@@ -301,20 +323,38 @@ function showPlayerHandWs() {
     createPlayerHandWs(myDetails.tiles);
 }
 
-function createTileButton(tileToCreate) {
+function createViewTile(tileToCreate) {
     var tileValue = tileToCreate.value !== 0 ? tileToCreate.value : "J";
-    var tileButton = document.createElement('input');
-    tileButton.type = 'button';
-    tileButton.value = tileValue;
-    tileButton.className = "tile " + tileToCreate.color;
-    tileButton.id = "tile" + tileId;
+    var tile = document.createElement('li');
+    tile.type = 'li';
+    tile.className = "tile";
+    tile.id = "tile" + tileId;
     tileId++;
-    return tileButton;
+    
+    var tileValueLabel = document.createElement('a');
+    tileValueLabel.className = tileToCreate.color;
+    //tileValueLabel.value = tileValue;
+    tileValueLabel.innerHTML = tileValue;
+    tile.appendChild(tileValueLabel);
+
+    return tile;
 }
+
+//old version
+//function createTileButton(tileToCreate) {
+//    var tileValue = tileToCreate.value !== 0 ? tileToCreate.value : "J";
+//    var tileButton = document.createElement('input');
+//    tileButton.type = 'button';
+//    tileButton.value = tileValue;
+//    tileButton.className = "tile " + tileToCreate.color;
+//    tileButton.id = "tile" + tileId;
+//    tileId++;
+//    return tileButton;
+//}
 
 function printTilesInParent(tiles, parent) {
     for (var tile in tiles) {
-        var tileToAdd = createTileButton(tiles[tile]);
+        var tileToAdd = createViewTile(tiles[tile]);
 //        var tileValue = tiles[tile].value !== 0 ? tiles[tile].value : "J";
 //        var tileToAdd = document.createElement('input');
 //        tileToAdd.type = 'button';
@@ -438,9 +478,9 @@ function handleSequenceCreatedEvent(event) {
     var newSerieId = createNewSerieWithId();
     var serie = $("#serie" + newSerieId);
     printTilesInParent(event.tiles, serie);
-    $(".serie").sortable({
-            revert: true
-    });
+//    $(".serie").sortable({
+//        revert: true
+//    });
     //$("#serie" + newSerieId).append(droppedTile);
 }
 function insertTileAtIndex(serie, tile, index) {
@@ -454,7 +494,7 @@ function insertTileAtIndex(serie, tile, index) {
 function handleTileAddedEvent(event) {
     //var seriesList=$('#seriesArea');
     var serie = $('#seriesArea').children().eq(event.targetSequenceIndex);
-    var tileToAdd = createTileButton(event.tiles[0]);
+    var tileToAdd = createViewTile(event.tiles[0]);
     insertTileAtIndex(serie, tileToAdd, event.targetSequencePosition);
 
 
