@@ -42,6 +42,8 @@ and open the template in the editor.
     background-position: center;
     margin-top: 20px;
     margin-left: 34px;
+    padding-left: 0.3px;
+    padding-right: 0.3px;
 
 }
 
@@ -117,6 +119,7 @@ and open the template in the editor.
     width: 35px;
     font-size: 14px;
     font-weight: bold;
+    margin: 1px
 }
 .tile:hover {
     font-size: 18px;
@@ -156,7 +159,7 @@ and open the template in the editor.
 
 .serie
 {
-    
+    float: left; 
     background-position: center ;
     padding: 10px;
     background-size:100% 100%;
