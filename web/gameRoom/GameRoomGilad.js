@@ -30,6 +30,7 @@ var intervalTimer;
 var timeOutTimer;
 var tileId = 0;
 var serieId = 0;
+
 //activate the timer calls after the page is loaded
 $(function () {//onload function
     serieId = 0;
@@ -50,9 +51,6 @@ $(function () {//onload function
 });
 
 
-
-
-
 function handleDropOnNewSerieEvent(event, ui) {
 
     var droppedTile = $('#' + ui.draggable.prop('id'));
@@ -68,8 +66,6 @@ function handleDropOnNewSerieEvent(event, ui) {
     //    var newSerieId = createNewSerieWithId(droppedTile);
     //$("#serie" + newSerieId).append(droppedTile);
 }
-
-
 
 function createTileObj(tileButton) {
 
@@ -132,6 +128,12 @@ function createNewSerieWithId() {
     serieToAdd.id = "serie" + serieId;
     serieArea.append(serieToAdd);
     serieId++;
+    
+    if (currPlayerName === myDetails.name) {
+        $(".serie").sortable({
+            cancel: null
+        });
+    }
     //$( ".serie" ).sortable({
 //    serieToAdd.sortable({
 //      connectWith: ".tile"
@@ -322,6 +324,7 @@ function printTilesInParent(tiles, parent) {
 //        tileId++;
         parent.append(tileToAdd);
     }
+    
     if (currPlayerName === myDetails.name) {
 
         $(".tile").draggable({
