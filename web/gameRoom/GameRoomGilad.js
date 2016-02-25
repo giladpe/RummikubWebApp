@@ -37,7 +37,7 @@ $(function () {//onload function
     eventID = 0;
     tileId = 0;
     gameName = getParameterByName('gid');
-    gameButtonsList = $(".button");
+    gameButtonsList = $(".GameButton");
     
     $("#addSerieArea").sortable({
         connectWith: 'ul',
@@ -116,13 +116,22 @@ function handleDropOnSerieEvent(event, ui){
      var sequenceIndex = $(this).index();
      //var targetSize = $("#"+targetID+" li").length;
      //if(toIndex===0||targetSize-1===toIndex){
-        if(sourceID==="handTileDiv"){
-            var tile=createTileObj(droppedTile);
-            addTileWs(tile, sequenceIndex, sequencePosition);
+        if(sourceID === "handTileDiv"){
+            var tile = createTileObj(droppedTile);
+            var isTileAdded = addTileWs(tile, sequenceIndex, sequencePosition);
+
+            if(isTileAdded) {
+                $(ui.sender).sortable('cancel'); // we have to cancel the sortable action and the remove the tile
+                droppedTile.remove();
+            }
+            else {
+                $(ui.sender).sortable('cancel');
+            }
         }else {  ///arrive from serie
             var sourceSequenceIndex = $('#' + sourceID).index();
             var sourceSequencePosition =  ui.item.startPos;//may be need to remove and find this tile in hand
             moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition); 
+            $(ui.sender).sortable('cancel');
         }
      //}else{  ///split  
      //}
@@ -131,7 +140,8 @@ function handleDropOnSerieEvent(event, ui){
 //        //remove sender if have no tiles in it  
 //        $("#"+sourceID).remove();
 //    }
-    $(ui.sender).sortable('cancel');
+
+    
 }
 
 function createTileObj(tileView) {
@@ -402,9 +412,8 @@ function handleTileReturnedEvent(event) {
 }
 
 function setGameMessage(msg) {
-    $("#gameMsg").html(msg).fadeIn(500).delay(2000).fadeOut(500);
+    $("#gameMsg").html(msg).fadeIn(500).delay(3000).fadeOut(500);
 }
-
 function initAllComponent() {
     initPlayersBar();
     initBoard();
@@ -486,9 +495,15 @@ function enableButtons() {
 }
 
 function initButtons(disableButtons) {
+    
+//    for(var i=0; i < gameButtonsList.length ;i++ ) {
+//        var currButton = gameButtonsList[i];
+//        currButton.disabled = disableButtons;        
+//    }
+
     for (var button in gameButtonsList) {
         var currButton = gameButtonsList[button];
-        currButton.disable = disableButtons;
+        currButton.disabled = disableButtons;
     }
 }
 
@@ -517,23 +532,25 @@ function createSequenceWs(tiles) {
 }
 
 function addTileWs(tile, sequenceIndex, sequencePosition) {
-    var test = JSON.stringify(tile);
-    var retVal = true;
+    var stringifiedTile = JSON.stringify(tile);
+    var isTileAdded;
     $.ajax({
         url: GAME_URL + "AddTileServlet",
         async: false,
-        data: {"tile": tile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition}, 
+        data: {"tile": stringifiedTile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition}, 
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (data.isException) { //success 
+            isTileAdded = !data.isException;
+            
+            if (data.isException) { 
                 setGameMessage(data.voidAndStringResponse);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }
     });
-    return false;
+    return isTileAdded;
 }
 
 function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition) {
@@ -545,7 +562,7 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (data.isException) { //success 
+            if (data.isException) { 
                 setGameMessage(data.voidAndStringResponse);
             }
 
@@ -564,7 +581,7 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition) {
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (data.isException) { //success 
+            if (data.isException) { 
                 setGameMessage(data.voidAndStringResponse);
             }
 
@@ -617,7 +634,7 @@ function onResign() {
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (data.isException) //success 
+            if (data.isException)
             {
                 setGameMessage(data.voidAndStringResponse);
             } else {
@@ -633,12 +650,12 @@ function onResign() {
 function onFinishTurn() {
     $.ajax({
         url: GAME_URL + "FinishTurnServlet",
-        async: false,
+        async: true,
         data: {},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
-            if (data.isException) //success 
+            if (data.isException)
             {
                 setGameMessage(data.voidAndStringResponse);
             }

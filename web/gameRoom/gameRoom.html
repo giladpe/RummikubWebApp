@@ -13,7 +13,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <script src="../scripts/jquery.js"></script>
-        <script src="GameRoom.js"></script>
+        <script src="GameRoomGilad.js"></script>
         <script src="../scripts/Utils.js"></script>
         <script src="../jquery-ui-1.11.4.custom/jquery-ui.min.js" type = "text/javascript"></script>
         <script src="../jquery-ui-1.11.4.custom/jquery-ui.js" type = "text/javascript"></script>
@@ -29,8 +29,8 @@ and open the template in the editor.
                     <text id="PlayerF2" class="nameF"></text><text id="TileF2" class="nameF"></text>
                     <text id="PlayerF3" class="nameF"></text><text id="TileF3" class="nameF"></text>
                 </div>
-                <div class="center"> <text class="gameMsg"></text></div>
-                <div class="right"> <button  id="resign" class="button floatFr" onclick="onResign()">Resign</button></div>          
+                <div class="center"> <text id = "gameMsg" class = "gameMsg" ></text></div>
+                <div class="right"> <button  id="resign" class="GameButton floatFr" onclick="onResign()">Resign</button></div>          
             </div>
             <div class="gameBoard">
                 <ul id = "addSerieArea" class="addSerieArea" ></ul>
@@ -38,7 +38,7 @@ and open the template in the editor.
             </div>
             <div class="bar" id="buttonBar">
                 <div class="finishTurnDiv">
-                    <button class="button"  onclick="onFinishTurn()">Finish Turn</button>
+                    <button class="GameButton"  onclick="onFinishTurn()">Finish Turn</button>
                 </div>
                 <div class="hand"  id= "hand">
                     <ul id="handTileDiv">

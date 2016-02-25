@@ -8,6 +8,7 @@ var game_selected = "";
 var NUM_OF_COLUMS = 6;
 var CHOOSE_PLAYER = "Choose Player name: ";
 var NAME_PLACEHOLDER = 'Insert player name';
+
 $(function () { // onload...do
     $('#joinBtn').on('click', function (event) {
         joinGame();
@@ -47,8 +48,6 @@ function processFile(e) {
     var file = e.target.result;
     loadServlet(file);
 }
-
-
 
 function onLoadGame() {
     var fileInput = $('#files');
@@ -100,7 +99,6 @@ function loadServlet(file) {
     });
 }
 
-
 function convertXmlToString(file) {
 //    var fileAsString = (new XMLSerializer()).serializeToString(file);
 //    var xmlTextArray = file.split('\n');
@@ -147,8 +145,7 @@ function convertXmlToString(file) {
 //    document.getElementById("demo").innerHTML = x;
 //}
 
-function joinGame()
-{
+function joinGame() {
     var playerNameJs = $("#playerName").val();
     if (game_selected !== "" && playerNameJs !== "")
     {
@@ -178,8 +175,7 @@ function joinGame()
     }
 }
 
-function createNewGame()
-{
+function createNewGame() {
     var gameNameJs = $("#gameName").val();
     var humanPlayersJs = $("#humanPlayers").val();
     var computerPlayersJs = $("#computerPlayers").val();
@@ -217,15 +213,13 @@ function createNewGame()
     }
 }
 
-function clearNewGameFileds()
-{
+function clearNewGameFileds() {
     var gameNameJs = $("#gameName").val("");
     var humanPlayersJs = $("#humanPlayers").val("");
     var computerPlayersJs = $("#computerPlayers").val("");
 }
 
-function getWaitingGames()
-{
+function getWaitingGames() {
     $("#tableBody tr").remove();
     $("#selectionBar option").remove();
     $.ajax({
@@ -243,16 +237,14 @@ function getWaitingGames()
     });
 }
 
-function printTable(watingGameList)
-{
+function printTable(watingGameList) {
     for (var i = 0; i < watingGameList.length; i++) {
         var gameTableDetailds = getTableGameDetails(watingGameList[i]);
         addRowToTable(gameTableDetailds);
     }
 }
 
-function getTableGameDetails(gameName)
-{
+function getTableGameDetails(gameName) {
     var gameDetails = getGameDetails(gameName);
     return ([gameName, gameDetails.humanPlayers, gameDetails.computerizedPlayers, gameDetails.status, gameDetails.joinedHumanPlayers, gameDetails.loadedFromXML]);
 }
@@ -265,8 +257,7 @@ function addRowToTable(gameDetails) {
     $('#gamesTable').append('<tr onclick="OnRowSel(this)">' + data + '</tr>');
 }
 
-function OnRowSel(obj)
-{
+function OnRowSel(obj) {
     var placeHolder = NAME_PLACEHOLDER;
     $(".rowSelected", "#gamesTable").removeClass('rowSelected');
     $(obj).addClass('rowSelected');
@@ -285,6 +276,7 @@ function isLoadedFromXml(selectedRow) {
     }
     return retVal;
 }
+
 function getXMLPlayersNames(gameName) {
     var res = "";
     var playersDetailsList = getPlayersDetailsList(gameName);

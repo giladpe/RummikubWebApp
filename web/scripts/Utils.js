@@ -6,8 +6,7 @@
 
 var gameName="";
 
-function redirect(destAddress)
-{
+function redirect(destAddress) {
     window.location=destAddress;
 }
 
@@ -60,6 +59,7 @@ function getPlayersDetailsList(gameName){
     });
     return playersDetails;
 }
+
 function getPlayersNamesArray(playersDetailsList){
     var playersNamesArray = [];
     for(var i=0;i<playersDetailsList.length;i++){
@@ -69,6 +69,7 @@ function getPlayersNamesArray(playersDetailsList){
     }
     return playersNamesArray;
 }
+
 function getParameterByName(name, url) {
     if (!url) url = window.location.href;
     name = name.replace(/[\[\]]/g, "\\$&");
