@@ -72,6 +72,10 @@ function handleDropOnNewSerieEvent(event, ui) {
             droppedTile.remove();
         }
     }
+    else{
+        //may be need to change to handle drop from board to new serie
+        $(ui.sender).sortable('cancel');
+    }
     //    var newSerieId = createNewSerieWithId(droppedTile);
     //$("#serie" + newSerieId).append(droppedTile);
 }
@@ -92,6 +96,7 @@ function createNewSerieWithId() {
             helper:"clone", 
             opacity:0.5,
             cursor:"pointer",
+           start: function(event, ui) {ui.item.startPos = ui.item.index();},
             receive: handleDropOnSerieEvent 
             //cancel: null
         });
@@ -115,12 +120,13 @@ function handleDropOnSerieEvent(event, ui){
             var tile=createTileObj(droppedTile);
             addTileWs(tile, sequenceIndex, sequencePosition);
         }else {  ///arrive from serie
-            
+            var sourceSequenceIndex = $('#' + sourceID).index();
+            var sourceSequencePosition =  ui.item.startPos;//may be need to remove and find this tile in hand
+            moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition); 
         }
      //}else{  ///split  
      //}
 //     var sourceSize = $("#"+sourceID+" li").length;
-
 //    if(sourceSize===0&&sourceID!=="handTileDiv"){
 //        //remove sender if have no tiles in it  
 //        $("#"+sourceID).remove();
@@ -386,6 +392,9 @@ function handleTileMovedEvent(event) {
     var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
     var serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
     insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
+    if(serieSource.find("li").length < 1){
+        serieSource.remove();
+    }
 }
 
 function handleTileReturnedEvent(event) {

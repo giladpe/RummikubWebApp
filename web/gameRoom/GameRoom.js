@@ -10,58 +10,183 @@ var TILE_RETURNED = "TILE_RETURNED";
 var TILE_MOVED = "TILE_MOVED";
 var REVERT = "REVERT";
 var refreshRate = 1000; //miliseconds
+var GAME_URL = "http://localhost:8080/RummikubWebApp/";
+var MAIN_SCREEN = "index.html";
+var WINNER_SCREEN = "WinnerScreen.html";
+var EMPTY_STRING = "";
+var GAME_OVER_MSG = "Game Is Over";
+var PLAYER_DONE = " done his Turn";
+var PLAYER_RESIGNED = " decided to quite";
+
+var currPlayerName = "";
 var eventID;
-var currPlayer = "";
 var gameName;
+var gameButtonsList;
+var myDetails;
+var PLAY = " Play";
+var WAIT = " Wait";
+var playersDetailsList = "";
+var intervalTimer;
+var timeOutTimer;
+var tileId = 0;
+var serieId = 0;
+
 //activate the timer calls after the page is loaded
 $(function () {//onload function
+    serieId = 0;
     eventID = 0;
+    tileId = 0;
     gameName = getParameterByName('gid');
+    gameButtonsList = $(".button");
+    
+    $("#addSerieArea").sortable({
+        connectWith: 'ul',
+        helper:"clone", 
+        opacity:0.5,
+        cursor:"pointer",
+        receive: handleDropOnNewSerieEvent
+    });
+    
+//    $("#addSerieArea").droppable({
+//        accept: ".tile",
+//        drop: handleDropOnNewSerieEvent
+//    });
+
     //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
 
-    //The users list is refreshed automatically every second
-    setInterval(getEvents, refreshRate);
-    //The chat content is refreshed only once (using a timeout) but
-    //on each call it triggers another execution of itself later (1 second later)
+    intervalTimer = setInterval(getEventsWs, refreshRate);
     triggerAjaxEventMonitoring();
 });
 
-function triggerAjaxEventMonitoring() {
-    setTimeout(getEvents, refreshRate);
-}
 
-function getEvents() {
-    $.ajax({
-        url: "http://localhost:8080/RummikubWebApp/GetEventsServlet",
-        data: {"eventID": eventID},
-        timeout: 1000,
-        dataType: 'json',
-        success: function (data) {
-            if (!data.isException) //success 
-            {
-                var eventList = data.eventListResposne;
+function handleDropOnNewSerieEvent(event, ui) {
+    //var droppedTile = $('#' + ui.draggable.prop('id'));
+    var droppedTile = $('#' + ui.item.attr('id'));
+    var droppedTileParentId = $(ui.sender).attr('id');
 
-                if (eventList.length !== 0) {
-                    for (var i = 0; i < eventList.length; i++) {
-                        handleRummikubWsEvent(eventList[i]);
-                    }
-                    eventID = getLastEventID(eventList);
-                }
-            } else {
-                setGameMessage(data.voidAndStringResponse);
-            }
-
-            triggerAjaxEventMonitoring();
-        },
-        error: function (error) {
-            triggerAjaxEventMonitoring();
+    if (droppedTileParentId === "handTileDiv") {
+        var tiles = [];
+        tiles.push(createTileObj(droppedTile));
+        if (createSequenceWs(tiles)) {
+            droppedTile.remove();
         }
-    });
+    }
+    else{
+        //may be need to change to handle drop from board to new serie
+        $(ui.sender).sortable('cancel');
+    }
+    //    var newSerieId = createNewSerieWithId(droppedTile);
+    //$("#serie" + newSerieId).append(droppedTile);
+}
+function createNewSerieWithId() {
+    var newSerieId = serieId;
+    var serieArea = $("#seriesArea");
+
+    var serieToAdd = document.createElement('ul');
+    serieToAdd.type = 'ul';
+    serieToAdd.className = "serie";
+    serieToAdd.id = "serie" + serieId;
+    serieArea.append(serieToAdd);
+    serieId++;
+    
+    if (currPlayerName === myDetails.name) {
+        $(".serie").sortable({
+            connectWith: "ul",
+            helper:"clone", 
+            opacity:0.5,
+            cursor:"pointer",
+           start: function(event, ui) {ui.item.startPos = ui.item.index();},
+            receive: handleDropOnSerieEvent 
+            //cancel: null
+        });
+    }
+
+    return newSerieId;
 }
 
-function getLastEventID(eventList) {
-    return (eventList[eventList.length - 1]).id;
+function handleDropOnSerieEvent(event, ui){
+    //        if($(ui.sender).attr('id')==='sort1' 
+    //       && $('#sort2').children('li').length>3){
+    //      $(ui.sender).sortable('cancel');
+     var droppedTile = $('#' + ui.item.attr('id'));
+     var sourceID = $(ui.sender).attr('id');
+     //var targetID = $(this).attr('id');
+     var sequencePosition = droppedTile.index();
+     var sequenceIndex = $(this).index();
+     //var targetSize = $("#"+targetID+" li").length;
+     //if(toIndex===0||targetSize-1===toIndex){
+        if(sourceID==="handTileDiv"){
+            var tile=createTileObj(droppedTile);
+            addTileWs(tile, sequenceIndex, sequencePosition);
+        }else {  ///arrive from serie
+            var sourceSequenceIndex = $('#' + sourceID).index();
+            var sourceSequencePosition =  ui.item.startPos;//may be need to remove and find this tile in hand
+            moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition); 
+        }
+     //}else{  ///split  
+     //}
+//     var sourceSize = $("#"+sourceID+" li").length;
+//    if(sourceSize===0&&sourceID!=="handTileDiv"){
+//        //remove sender if have no tiles in it  
+//        $("#"+sourceID).remove();
+//    }
+    $(ui.sender).sortable('cancel');
+}
+
+function createTileObj(tileView) {
+
+    //var classes = (tileButton.attr("class")).split(" ");
+    var color = (tileView.children().eq(0).attr("class"));
+    //var color = classes[0];
+    var value = tileView.children().eq(0).text();
+    var tile = new Tile(color, value);
+    return tile;
+}
+
+function Tile(color, value) {
+    this.color = color;
+    this.value = value;
+}
+
+
+function createViewTile(tileToCreate) {
+    var tileValue = tileToCreate.value !== 0 ? tileToCreate.value : "J";
+    var tile = document.createElement('li');
+    tile.type = 'li';
+    tile.className = "tile";
+    tile.id = "tile" + tileId;
+    tileId++;
+    
+    var tileValueLabel = document.createElement('span');
+    tileValueLabel.className = tileToCreate.color;
+    tileValueLabel.innerHTML = tileValue;
+    tile.appendChild(tileValueLabel);
+
+    return tile;
+}
+
+
+function printTilesInParent(tiles, parent) {
+    for (var tile in tiles) {
+        var tileToAdd = createViewTile(tiles[tile]);
+        parent.append(tileToAdd);
+    }
+    
+    if (currPlayerName === myDetails.name) {
+
+    }
+}
+function createPlayerHandWs(tiles) {
+    var hand = $("#handTileDiv");
+    hand.empty();
+    printTilesInParent(tiles, hand);
+    hand.sortable({
+        connectWith: 'ul',
+        helper:"clone", 
+        opacity:0.5,
+        cursor:"pointer"
+    });
 }
 
 function handleRummikubWsEvent(event) {
@@ -128,79 +253,148 @@ function handleRummikubWsEvent(event) {
     }
 }
 
-
-function onResign() {
-
-}
-
-function onFinishTurn() {
- $.ajax({
-        url: "FinishTurnServlet",
-        async: false,
-        data: {},
-        timeout: 3000,
-        dataType: 'json',
-        success: function (data) {
-            if (!data.isException) //success 
-            {
-
-            } else {
-                setGameMessage(data.voidAndStringResponse);
-            }
-
-            triggerAjaxEventMonitoring();
-        },
-        error: function (error) {
-            triggerAjaxEventMonitoring();
-        }
-    });
-
-    
-}
-
-function onAddSerie() {
-    initPlayersBar();
-}
-
 function handleGameOverEvent(event) {
 
+    disableButtons();
+//            resetPlayersBar(); // in javafx it does nothing
+    setGameMessage(GAME_OVER_MSG);
 }
 
 function handleGameStartEvent(event) {
+    myDetails = getMyDetailsWs();
+    playersDetailsList = getPlayersDetailsList(gameName);
+    //$(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
+    //$("#serie").droppable({
+//       accept: ".tile",
+//        drop: handleDropOnNewSerieEvent
+//        
+//    });
+
+    //not sure about the next lines prefer u gilad to check it
+    //logicBoard = new Board();
+    //setPlayersBarWs();
+    //initPlayerLabelWs();
     initAllComponent();
 }
 
 function handleGameWinnerEvent(event) {
-
+    redirect(GAME_URL + WINNER_SCREEN);
+    //game event screen need to get the result from event.playerName
 }
 
 function handlePlayerFinishedTurnEvent(event) {
-    
-    
+    setGameMessage(event.getPlayerName + PLAYER_DONE);
+    showPlayerHandWs();
+}
+
+function showPlayerHandWs() {
+    myDetails = getMyDetailsWs();
+    createPlayerHandWs(myDetails.tiles);
 }
 
 function handlePlayerResignedEvent(event) {
+    var playerResignedName = event.playerName;
+    setGameMessage(playerResignedName + PLAYER_RESIGNED);
 
+    if (myDetails.name === playerResignedName) {
+        clearTimeout(intervalTimer);
+        clearTimeout(timeOutTimer);
+        redirect(GAME_URL + MAIN_SCREEN);
+    }
 }
 
 function handlePlayerTurnEvent(event) {
 
+    setFirstSequenceTurnMsg();
+    setCurrPlayerClass(event.playerName);
+    setGameMessage(getTurnMsg());
+    showPlayerHandWs();
+    if (myDetails.name === currPlayerName) {
+        enableButtons();
+    } else {
+        disableButtons();
+    }
 }
 
-function handleRevertEvent(event) {
+function setFirstSequenceTurnMsg() {
 
+    if (myDetails.playedFirstSequence) {
+        $('#turnMsg').html("Played Sequence");
+    } else {
+        $('#turnMsg').html("Didn't Played Sequence");
+    }
+}
+
+function getTurnMsg() {
+    var myName = myDetails.name;
+    if (myName === currPlayerName) {
+        myName += PLAY;
+    } else {
+        myName += WAIT;
+    }
+    return myName;
+}
+
+
+function handleRevertEvent(event) {
+    $("#seriesArea").empty();
 }
 
 function handleSequenceCreatedEvent(event) {
-
+    var newSerieId = createNewSerieWithId();
+    var serie = $("#serie" + newSerieId);
+    printTilesInParent(event.tiles, serie);
+//    $(".serie").sortable({
+//        revert: true
+//    });
+    //$("#serie" + newSerieId).append(droppedTile);
 }
-
+function insertTileAtIndex(serie, tile, index) {
+    if (index === 0) {
+        serie.prepend(tile);
+    } else {
+        var tileBefor = serie.children().eq(index - 1);
+        tileBefor.after(tile);
+    }
+}
 function handleTileAddedEvent(event) {
+    //var seriesList=$('#seriesArea');
+    var serie = $('#seriesArea').children().eq(event.targetSequenceIndex);
+    var tileToAdd = createViewTile(event.tiles[0]);
+    insertTileAtIndex(serie, tileToAdd, event.targetSequencePosition);
+
+
+    //protected int targetSequenceIndex;
+    //protected int targetSequencePosition;
+    // printTilesInParent(,)
 
 }
+//    private void handleTileAddedEvent(Event event) {
+//
+//        rummikub.client.ws.Tile tileToAdd = event.getTiles().get(0);
+//        int targetSerie = event.getTargetSequenceIndex();
+//        int targetPosition = event.getTargetSequencePosition();
+//        Serie toSerie = this.logicBoard.getSeries(targetSerie);
+//
+//        if (toSerie.getSizeOfSerie() == targetPosition) {
+//            toSerie.addSpecificTileToSerie(convertWsTileToLogicTile(tileToAdd));
+//        } else {
+//            toSerie.addSpecificTileToSerie(convertWsTileToLogicTile(tileToAdd), targetPosition); //maybe need to check if to add to end 
+//        }
+//        Platform.runLater(() -> {
+//            showGameBoard();
+//            showPlayerHandWs();
+//        });
+
 
 function handleTileMovedEvent(event) {
-
+    var serieSource = $('#seriesArea').children().eq(event.sourceSequenceIndex);
+    var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
+    var serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
+    insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
+    if(serieSource.find("li").length < 1){
+        serieSource.remove();
+    }
 }
 
 function handleTileReturnedEvent(event) {
@@ -217,27 +411,246 @@ function initAllComponent() {
 }
 
 function initPlayersBar() {
-    var playersDetailsList = getPlayersDetailsList(gameName);
-    var playerBar = $("#playerBar");
+    playersDetailsList = getPlayersDetailsList(gameName);
+    var playerBar = $(".nameF");
+    var j = 0;
 
     for (var i = 0; i < playersDetailsList.length; i++) {
-        playerBar[i * 2] = (playersDetailsList[i]).name;
-        playerBar[i * 2 + 1] = (playersDetailsList[i]).numberOfTiles;
+        playerBar[j].innerHTML = (playersDetailsList[i]).name;
+        playerBar[j + 1].innerHTML = (playersDetailsList[i]).numberOfTiles;
+        j += 2;
     }
 }
 
-function setCurrPlayerClass(newCurrPlayer)
-{
-
-    if (currPlayer !== "") {
-        $(currPlayer, "#playerBar").currPlayer.removeClass('nameFcurrPlayer').addClass('nameF');
+function setCurrPlayerClass(currPlayer) {
+    if (currPlayerName !== undefined && currPlayerName !== EMPTY_STRING) {
+        $('.nameFcurrPlayer').removeClass('nameFcurrPlayer');
     }
-    $(newCurrPlayer, "#playerBar").removeClass('nameF').addClass('nameFcurrPlayer');
-    
+    currPlayerName = currPlayer;
+
+    $(getPlayerNameFiled(currPlayer)).addClass('nameFcurrPlayer');
+    $(getPlayerTileFiled(currPlayer)).addClass('nameFcurrPlayer');
 }
 
+function getPlayerNameFiled(name) {
+    return  "#PlayerF" + getPlayerIndexByName(name);
+}
+function getPlayerTileFiled(name) {
+    return  "#TileF" + getPlayerIndexByName(name);
+}
+
+function getPlayerIndexByName(playerName) {
+    var retVal = -1;
+    for (var player in playersDetailsList) {
+        if (playerName === playersDetailsList[player].name) {
+            retVal = player;
+        }
+
+    }
+    return retVal;
+}
 
 function initBoard() {
 
 }
 
+function getMyDetailsWs() {
+    var myDetails = EMPTY_STRING;
+
+    $.ajax({
+        url: GAME_URL + "GetPlayerDetailsServlet",
+        async: false,
+        data: {},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (!data.isException) { //success 
+                myDetails = data.playerDetailsResposne;
+            } else {
+                setGameMessage(data.voidAndStringResponse);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+
+    return myDetails;
+}
+
+function disableButtons() {
+    initButtons(true);
+}
+
+function enableButtons() {
+    initButtons(false);
+}
+
+function initButtons(disableButtons) {
+    for (var button in gameButtonsList) {
+        var currButton = gameButtonsList[button];
+        currButton.disable = disableButtons;
+    }
+}
+
+// <editor-fold defaultstate="collapsed" desc="function calling servlets">
+
+function createSequenceWs(tiles) {
+    var test = JSON.stringify(tiles);
+    var retVal = true;
+    $.ajax({
+        url: GAME_URL + "CreateSequenceServlet",
+        async: false,
+        data: {"tiles": test},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+                retVal = !retVal;
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return retVal;
+}
+
+function addTileWs(tile, sequenceIndex, sequencePosition) {
+    var test = JSON.stringify(tile);
+    var retVal = true;
+    $.ajax({
+        url: GAME_URL + "AddTileServlet",
+        async: false,
+        data: {"tile": tile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition}, 
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition) {
+    $.ajax({
+        url: GAME_URL + "MoveTileServlet",
+        async: false,
+        data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition": sourceSequencePosition,
+            "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function takeBackTileToHandWs(sequenceIndex, sequencePosition) {
+    $.ajax({
+        url: GAME_URL + "TakeBackTileServlet",
+        async: false,
+        data: {"sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) { //success 
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function triggerAjaxEventMonitoring() {
+    timeOutTimer = setTimeout(getEventsWs, refreshRate);
+}
+
+function getEventsWs() {
+    $.ajax({
+        url: GAME_URL + "GetEventsServlet",
+        data: {"eventID": eventID},
+        async: false,
+        timeout: 1000,
+        dataType: 'json',
+        success: function (data) {
+            if (!data.isException) //success 
+            {
+                var eventList = data.eventListResposne;
+
+                if (eventList.length !== 0) {
+                    for (var i = 0; i < eventList.length; i++) {
+                        handleRummikubWsEvent(eventList[i]);
+                    }
+                    eventID = getLastEventID(eventList);
+                }
+            } else {
+                setGameMessage(data.voidAndStringResponse);
+            }
+
+            triggerAjaxEventMonitoring();
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            triggerAjaxEventMonitoring();
+        }
+    });
+}
+
+function onResign() {
+    $.ajax({
+        url: GAME_URL + "ResignServlet",
+        async: false,
+        data: {},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) //success 
+            {
+                setGameMessage(data.voidAndStringResponse);
+            } else {
+                redirect(GAME_URL + MAIN_SCREEN);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function onFinishTurn() {
+    $.ajax({
+        url: GAME_URL + "FinishTurnServlet",
+        async: false,
+        data: {},
+        timeout: 3000,
+        dataType: 'json',
+        success: function (data) {
+            if (data.isException) //success 
+            {
+                setGameMessage(data.voidAndStringResponse);
+            }
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+        }
+    });
+    return false;
+}
+
+function getLastEventID(eventList) {
+    return (eventList[eventList.length - 1]).id;
+}
+
+// </editor-fold>
