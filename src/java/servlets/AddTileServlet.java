@@ -38,22 +38,23 @@ public class AddTileServlet extends HttpServlet {
         response.setContentType(ServletParameterNamesConstants.JSON_CONTENT_TYPE);
 
         try (PrintWriter out = response.getWriter()) {
-            String strVal = request.getParameter(ServletParameterNamesConstants.TILE);
-            ws.rummikub.Tile tile = ServletUtils.parseTileStringToWsTile(strVal);
-            int sequenceIndex = ServletUtils.getIntParameter(request,ServletParameterNamesConstants.SEQUENCE_INDEX);
-            int sequencePosition = ServletUtils.getIntParameter(request,ServletParameterNamesConstants.SEQUENCE_POSITION); 
             RummikubWebService rummikubAPI = ServletUtils.getRummikubWsAPI(getServletContext());
-            
+
+            String strVal = request.getParameter(ServletParameterNamesConstants.TILE);
+            int sequenceIndex = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.SEQUENCE_INDEX);
+            int sequencePosition = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.SEQUENCE_POSITION);
+            ws.rummikub.Tile tile = ServletUtils.parseTileStringToWsTile(strVal);
+
+
             response.setStatus(response.SC_OK);
 
             try {
                 rummikubAPI.addTile(SessionUtils.getPlayerId(request), tile, sequenceIndex, sequencePosition);
                 ServletUtils.voidAndStringResposne.setResposne(!ServletUtils.EXCEPTION, ServletUtils.EMPTY_STRING);
-            }
-            catch (InvalidParameters_Exception ex) {
+            } catch (InvalidParameters_Exception ex) {
                 ServletUtils.voidAndStringResposne.setResposne(ServletUtils.EXCEPTION, ex.getMessage());
             }
-            
+
             out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.voidAndStringResposne));
             out.flush();
         }

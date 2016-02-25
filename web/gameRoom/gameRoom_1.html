@@ -13,8 +13,8 @@
     margin: 0;
     padding: 0;
     overflow: hidden;}   
-  #sortable {  list-style-type: none; margin: 0; padding: 0; }
-  #sortable li {  
+  .sortable {  list-style-type: none; margin: 0; padding: 0; }
+  .sortable li {  
     float: left;
     background-image: url("../images/tile.png");
     background-size:100% 100%;
@@ -25,31 +25,38 @@
     font-weight: bold;
     margin: 1px
   }
-  li a {
+  .BLUE {
     display: inline-block;
     color: blue;
     text-align: center;
     padding: 14px 16px;
     text-decoration: none;
 }
-  #sortable li span {  }
+  .sortable li span {  }
   </style>
   <script>
   $(function() {
-    $( "#sortable" ).sortable();
-    $( "#sortable" ).disableSelection();
+    $( ".sortable" ).sortable({
+        connectWith: "ul"
+    });
+    //$( ".sortable" ).disableSelection();
   });
   </script>
 </head>
 <body>
  
-<ul id="sortable">
+<ul class="sortable">
   
-         <li><a>2</a></li>
-         <li><a>3</a></li>
-         <li><a>5</a></li>
+         <li class="BLUE">4</li>
+         <li><a class="BLUE">5</a></li>
+         <li><a class="BLUE">6</a></li>
 </ul>
- 
- 
+<br> 
+ <ul class="sortable">
+  
+         <li><a class="BLUE">1</a></li>
+         <li><a class="BLUE">2</a></li>
+         <li><a class="BLUE">3</a></li>
+</ul>
 </body>
 </html>

@@ -232,7 +232,7 @@ li {
     background: #aaa;
 }
 
-//test:
+
 ul {     
     list-style-type: none;
     margin: 0;
@@ -258,7 +258,7 @@ ul {
     margin: 1px
 }
 
-li a {
+li span {
     display: inline-block;
     color: blue;
     text-align: center;
@@ -266,4 +266,4 @@ li a {
     text-decoration: none;
 }
 
-//#sortable li span {  }
+
