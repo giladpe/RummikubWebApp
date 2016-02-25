@@ -402,7 +402,7 @@ function handleTileReturnedEvent(event) {
 }
 
 function setGameMessage(msg) {
-    $("#gameMsg").html(msg).fadeIn(500).delay(2000).fadeOut(500);
+    $(".gameMsg").html(msg).fadeIn(500).delay(2000).fadeOut(500);
 }
 
 function initAllComponent() {

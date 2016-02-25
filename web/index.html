@@ -38,12 +38,13 @@ and open the template in the editor.
                             <th>Loaded Game</th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody" style="cursor: pointer;">
-                    </tbody>
+                        <tbody id="tableBody" style="cursor: pointer;">
+                        </tbody>
                     <tfoot>
                         <tr><td colspan="6" align="center"><button id="refreshGameBtn" class="refreshBtn"/></td></tr>
                     </tfoot>
                 </table>
+
                 <form id="newGameFileds">
                     <input type="text" id="gameName" name="gameName" class="" placeholder="Insert game name  " size="12"/>
                     <input type="text" id="humanPlayers" name="humanPlayers" class="" placeholder="Humans players" size="12"/>
@@ -54,7 +55,7 @@ and open the template in the editor.
                     <input type="text" id="playerName" name="playerName" class="" placeholder="Insert player name" size="46"/>
                     <input type="submit" id="joinBtn" value="JoinGame" class="gameSettingsBtn"/>
                 </form >
-                <input type="file" id="files" onchange="myFunction()">
+                <input type="file" id="files" onchange="onLoadGame()">
                 <br>
                 <div id ="errorMsg"> </div>
             </div>

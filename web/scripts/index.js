@@ -9,7 +9,6 @@ var NUM_OF_COLUMS = 6;
 var CHOOSE_PLAYER = "Choose Player name: ";
 var NAME_PLACEHOLDER = 'Insert player name';
 $(function () { // onload...do
-    getWaitingGames();
     $('#joinBtn').on('click', function (event) {
         joinGame();
         return false;
@@ -22,6 +21,7 @@ $(function () { // onload...do
         getWaitingGames();
         return false;
     });
+    getWaitingGames();
 });
 //window.onload  = function() { 
 //    getWaitingGames();
@@ -50,7 +50,7 @@ function processFile(e) {
 
 
 
-function myFunction() {
+function onLoadGame() {
     var fileInput = $('#files');
     //var uploadButton = $('#upload');
     if (!window.FileReader) {
@@ -66,6 +66,7 @@ function myFunction() {
     } else {
         alert('Please upload a file before continuing')
     }
+   
 //var txt = "";
 
 //document.getElementById("demo").innerHTML = txt;
@@ -85,6 +86,7 @@ function loadServlet(file) {
                 $('#errorMsg').html(data.voidAndStringResponse + 'game was created').fadeIn(500).delay(2000).fadeOut(500);
                 var gameTableDetailds = getTableGameDetails(data.data.voidAndStringResponse);
                 addRowToTable(gameTableDetailds);
+                getWaitingGames();
             } else
             {
                 $("#errorMsg").html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
@@ -236,7 +238,6 @@ function getWaitingGames()
             printTable(data.stringListResposne);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert("Error Servlet GetWaiting games");
             console.error(jqXHR + " " + textStatus + " " + errorThrown);
         }
     });

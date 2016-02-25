@@ -30,13 +30,22 @@
     font-family: Georgia;
 }
 .gameSettings{
-    position: fixed;
+    position: absolute;
     text-align: center;
     top:8%;
-   
     width:80%;
     right:10%;
 }
+
+.winnerPage{
+    position: fixed;
+    text-align: center;
+    top:8%;
+    width:80%;
+    right:10%;
+}
+
+
 .dvCenter{
     position: absolute;
     text-align: center;
@@ -126,6 +135,7 @@
     margin-top: 20px;
     margin-left: 34px;
 }
+
 
 
 /*.tileText:hover {

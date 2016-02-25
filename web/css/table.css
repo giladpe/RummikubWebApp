@@ -1,4 +1,6 @@
 
+
+
 .rowSelected
 {
     background-color: rgba(255, 247, 0, 0.44) !important;
@@ -46,27 +48,6 @@ th {
     text-shadow: 0 1px 0 #000;	
 }
 
-/* th:after {
-        background: linear-gradient(rgba(255,255,255,0), rgba(255,255,255,.08));
-        content: '';
-        display: block;
-        height: 25%;
-        left: 0;
-        margin: 1px 0 0 0;
-        position: absolute;
-        top: 25%;
-        width: 100%;
-} */
-
-/* th:first-child {
-        border-left: 1px solid #777;	
-        box-shadow: inset 1px 1px 0 #999;
-}
-
-th:last-child {
-        box-shadow: inset -1px 1px 0 #999;
-} */
-
 td {
     border-right: 1px solid #fff;
     border-left: 1px solid #e8e8e8;
@@ -86,31 +67,6 @@ td:last-child {
     box-shadow: inset -1px 0 0 #fff;
 }	
 
-tr {
-
-}
-
-/* tr:nth-child(odd) td {
-        background: #f1f1f1 	
-}
-
-tr:last-of-type td {
-        box-shadow: inset 0 -1px 0 #fff; 
-}
-
-tr:last-of-type td:first-child {
-        box-shadow: inset 1px -1px 0 #fff;
-}	
-
-tr:last-of-type td:last-child {
-        box-shadow: inset -1px -1px 0 #fff;
-}
-tr:cell-selection {
-        color: blue;
-        text-shadow: 0 2px 0 #fff;
-    
-} */
-
 tbody:hover td {
     color: black;
     text-shadow: 0 0 1px #aaa;
@@ -119,4 +75,11 @@ tbody:hover td {
 tbody:hover tr:hover td {
     color: blue;
     text-shadow: 0 2px 0 #fff;
+}
+
+
+tbody {
+    height: 100px;       /* Just for the demo          */
+    overflow-y: auto;    /* Trigger vertical scroll    */
+    overflow-x: hidden;  /* Hide the horizontal scroll */
 }
