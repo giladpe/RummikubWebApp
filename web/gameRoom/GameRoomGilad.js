@@ -176,28 +176,52 @@ function createViewTile(tileToCreate) {
     return tile;
 }
 
-
+/////TEST VERSION - added: the hand is sortable only if it is my turn
 function printTilesInParent(tiles, parent) {
     for (var tile in tiles) {
         var tileToAdd = createViewTile(tiles[tile]);
         parent.append(tileToAdd);
     }
-    
-    if (currPlayerName === myDetails.name) {
-
-    }
 }
+
 function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
     hand.empty();
     printTilesInParent(tiles, hand);
-    hand.sortable({
-        connectWith: 'ul',
-        helper:"clone", 
-        opacity:0.5,
-        cursor:"pointer"
-    });
+    
+    if (currPlayerName === myDetails.name) {
+        hand.sortable({
+            connectWith: 'ul',
+            helper:"clone", 
+            opacity:0.5,
+            cursor:"pointer"
+        });
+    }
 }
+//END OF TEST
+
+
+//function printTilesInParent(tiles, parent) {
+//    for (var tile in tiles) {
+//        var tileToAdd = createViewTile(tiles[tile]);
+//        parent.append(tileToAdd);
+//    }
+//    
+//    if (currPlayerName === myDetails.name) {
+//
+//    }
+//}
+//function createPlayerHandWs(tiles) {
+//    var hand = $("#handTileDiv");
+//    hand.empty();
+//    printTilesInParent(tiles, hand);
+//    hand.sortable({
+//        connectWith: 'ul',
+//        helper:"clone", 
+//        opacity:0.5,
+//        cursor:"pointer"
+//    });
+//}
 
 function handleRummikubWsEvent(event) {
     switch (event.type) {
@@ -459,10 +483,6 @@ function getPlayerIndexByName(playerName) {
     return retVal;
 }
 
-function initBoard() {
-
-}
-
 function getMyDetailsWs() {
     var myDetails = EMPTY_STRING;
 
@@ -510,12 +530,12 @@ function initButtons(disableButtons) {
 // <editor-fold defaultstate="collapsed" desc="function calling servlets">
 
 function createSequenceWs(tiles) {
-    var test = JSON.stringify(tiles);
+    var JSONStringifiedTiles = JSON.stringify(tiles);
     var retVal = true;
     $.ajax({
         url: GAME_URL + "CreateSequenceServlet",
         async: false,
-        data: {"tiles": test},
+        data: {"tiles": JSONStringifiedTiles},
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
@@ -532,12 +552,12 @@ function createSequenceWs(tiles) {
 }
 
 function addTileWs(tile, sequenceIndex, sequencePosition) {
-    var stringifiedTile = JSON.stringify(tile);
+    var JSONStringifiedTile = JSON.stringify(tile);
     var isTileAdded;
     $.ajax({
         url: GAME_URL + "AddTileServlet",
         async: false,
-        data: {"tile": stringifiedTile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition}, 
+        data: {"tile": JSONStringifiedTile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition}, 
         timeout: 3000,
         dataType: 'json',
         success: function (data) {
@@ -650,7 +670,7 @@ function onResign() {
 function onFinishTurn() {
     $.ajax({
         url: GAME_URL + "FinishTurnServlet",
-        async: true,
+        async: true,  //IMPORTANT: async: true because gui is reponsive
         data: {},
         timeout: 3000,
         dataType: 'json',
