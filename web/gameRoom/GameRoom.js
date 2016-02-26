@@ -407,7 +407,6 @@ function setGameMessage(msg) {
 
 function initAllComponent() {
     initPlayersBar();
-    initBoard();
 }
 
 function initPlayersBar() {
@@ -448,10 +447,6 @@ function getPlayerIndexByName(playerName) {
 
     }
     return retVal;
-}
-
-function initBoard() {
-
 }
 
 function getMyDetailsWs() {

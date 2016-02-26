@@ -440,7 +440,6 @@ function setGameMessage(msg) {
 }
 function initAllComponent() {
     initPlayersBar();
-    initBoard();
 }
 
 function initPlayersBar() {
