@@ -121,6 +121,7 @@ and open the template in the editor.
     border-top-color: #edcba8;
     color: white;
     font-family: Georgia;
+    cursor: pointer;
 }
 
 #handTileDiv{
@@ -147,6 +148,7 @@ and open the template in the editor.
 
 .tile:hover {
     font-size: 18px;
+    cursor: pointer;
 }
 
 .tileSelected{
@@ -228,6 +230,7 @@ li {
 
 .serie div.hovered {
     background: #aaa;
+    cursor: pointer;
 }
 
 

@@ -47,12 +47,6 @@ $(function () {//onload function
         receive: handleDropOnNewSerieEvent
     });
     
-//    $("#addSerieArea").droppable({
-//        accept: ".tile",
-//        drop: handleDropOnNewSerieEvent
-//    });
-
-    //prevent IE from caching ajax calls
     $.ajaxSetup({cache: false});
 
     intervalTimer = setInterval(getEventsWs, refreshRate);
@@ -63,7 +57,6 @@ function handleDropOnNewSerieEvent(event, ui) {
     
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
-    //var droppedTileParentId = $(ui.sender).attr('id');
     var droppedTileParentId = sender.attr('id');
     if (droppedTileParentId === "handTileDiv") {
         var tiles = [];
@@ -74,29 +67,8 @@ function handleDropOnNewSerieEvent(event, ui) {
     }
         //may be need to change to handle drop from board to new serie
         sender.sortable('cancel');
-    //}
-    //    var newSerieId = createNewSerieWithId(droppedTile);
-    //$("#serie" + newSerieId).append(droppedTile);
 }
-//function handleDropOnNewSerieEvent(event, ui) {
-//    //var droppedTile = $('#' + ui.draggable.prop('id'));
-//    var droppedTile = $('#' + ui.item.attr('id'));
-//    var droppedTileParentId = $(ui.sender).attr('id');
-//
-//    if (droppedTileParentId === "handTileDiv") {
-//        var tiles = [];
-//        tiles.push(createTileObj(droppedTile));
-//        if (createSequenceWs(tiles)) {
-//            droppedTile.remove();
-//        }
-//    }
-//    else{
-//        //may be need to change to handle drop from board to new serie
-//        $(ui.sender).sortable('cancel');
-//    }
-//    //    var newSerieId = createNewSerieWithId(droppedTile);
-//    //$("#serie" + newSerieId).append(droppedTile);
-//}
+
 function createNewSerieWithId() {
     var newSerieId = serieId;
     var serieArea = $("#seriesArea");
@@ -116,7 +88,6 @@ function createNewSerieWithId() {
             cursor:"pointer",
            start: function(event, ui) {ui.item.startPos = ui.item.index();},
             receive: handleDropOnSerieEvent 
-            //cancel: null
         });
     }
 
@@ -124,16 +95,11 @@ function createNewSerieWithId() {
 }
 
 function handleDropOnSerieEvent(event, ui){
-    //        if($(ui.sender).attr('id')==='sort1' 
-    //       && $('#sort2').children('li').length>3){
-    //      $(ui.sender).sortable('cancel');
+
      var droppedTile = $('#' + ui.item.attr('id'));
      var sourceID = $(ui.sender).attr('id');
-     //var targetID = $(this).attr('id');
      var sequencePosition = droppedTile.index();
      var sequenceIndex = $(this).index();
-     //var targetSize = $("#"+targetID+" li").length;
-     //if(toIndex===0||targetSize-1===toIndex){
         if(sourceID === "handTileDiv"){
             var tile = createTileObj(droppedTile);
             var isTileAdded = addTileWs(tile, sequenceIndex, sequencePosition);
@@ -151,54 +117,9 @@ function handleDropOnSerieEvent(event, ui){
             moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition); 
             $(ui.sender).sortable('cancel');
         }
-     //}else{  ///split  
-     //}
-//     var sourceSize = $("#"+sourceID+" li").length;
-//    if(sourceSize===0&&sourceID!=="handTileDiv"){
-//        //remove sender if have no tiles in it  
-//        $("#"+sourceID).remove();
-//    }
-
     
 }
-function handleDropOnSerieEvent(event, ui){
-    //        if($(ui.sender).attr('id')==='sort1' 
-    //       && $('#sort2').children('li').length>3){
-    //      $(ui.sender).sortable('cancel');
-     var droppedTile = $('#' + ui.item.attr('id'));
-     var sourceID = $(ui.sender).attr('id');
-     //var targetID = $(this).attr('id');
-     var sequencePosition = droppedTile.index();
-     var sequenceIndex = $(this).index();
-     //var targetSize = $("#"+targetID+" li").length;
-     //if(toIndex===0||targetSize-1===toIndex){
-        if(sourceID === "handTileDiv"){
-            var tile = createTileObj(droppedTile);
-            var isTileAdded = addTileWs(tile, sequenceIndex, sequencePosition);
 
-            if(isTileAdded) {
-                $(ui.sender).sortable('cancel'); // we have to cancel the sortable action and the remove the tile
-                droppedTile.remove();
-            }
-            else {
-                $(ui.sender).sortable('cancel');
-            }
-        }else {  ///arrive from serie
-            var sourceSequenceIndex = $('#' + sourceID).index();
-            var sourceSequencePosition =  ui.item.startPos;//may be need to remove and find this tile in hand
-            moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition); 
-            $(ui.sender).sortable('cancel');
-        }
-     //}else{  ///split  
-     //}
-//     var sourceSize = $("#"+sourceID+" li").length;
-//    if(sourceSize===0&&sourceID!=="handTileDiv"){
-//        //remove sender if have no tiles in it  
-//        $("#"+sourceID).remove();
-//    }
-
-    
-}
 
 function createTileObj(tileView) {
 
