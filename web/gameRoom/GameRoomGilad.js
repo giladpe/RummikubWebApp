@@ -489,7 +489,7 @@ function getMyDetailsWs() {
         url: GAME_URL + "GetPlayerDetailsServlet",
         async: false,
         data: {},
-        timeout: 3000,
+        timeout: 1500,
         dataType: 'json',
         success: function (data) {
             if (!data.isException) { //success 
@@ -535,7 +535,7 @@ function createSequenceWs(tiles) {
         url: GAME_URL + "CreateSequenceServlet",
         async: false,
         data: {"tiles": JSONStringifiedTiles},
-        timeout: 3000,
+        timeout: 1000   ,
         dataType: 'json',
         success: function (data) {
             if (data.isException) { //success 
@@ -557,7 +557,7 @@ function addTileWs(tile, sequenceIndex, sequencePosition) {
         url: GAME_URL + "AddTileServlet",
         async: false,
         data: {"tile": JSONStringifiedTile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition}, 
-        timeout: 3000,
+        timeout: 1000,
         dataType: 'json',
         success: function (data) {
             isTileAdded = !data.isException;
@@ -578,7 +578,7 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         async: false,
         data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition": sourceSequencePosition,
             "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
-        timeout: 3000,
+        timeout: 1000,
         dataType: 'json',
         success: function (data) {
             if (data.isException) { 
@@ -597,7 +597,7 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition) {
         url: GAME_URL + "TakeBackTileServlet",
         async: false,
         data: {"sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition},
-        timeout: 3000,
+        timeout: 1000   ,
         dataType: 'json',
         success: function (data) {
             if (data.isException) { 
@@ -650,7 +650,7 @@ function onResign() {
         url: GAME_URL + "ResignServlet",
         async: false,
         data: {},
-        timeout: 3000,
+        timeout: 1000,
         dataType: 'json',
         success: function (data) {
             if (data.isException)
@@ -671,7 +671,7 @@ function onFinishTurn() {
         url: GAME_URL + "FinishTurnServlet",
         async: true,  //IMPORTANT: async: true because gui is reponsive
         data: {},
-        timeout: 3000,
+        timeout: 1000,
         dataType: 'json',
         success: function (data) {
             if (data.isException)
