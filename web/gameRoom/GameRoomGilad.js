@@ -270,6 +270,7 @@ function handleRummikubWsEvent(event) {
             handleTileReturnedEvent(event);
             break;
     }
+    //removeEmptySeries();
 }
 
 function handleGameOverEvent(event) {
@@ -407,6 +408,12 @@ function handleTileReturnedEvent(event) {
     showPlayerHandWs();
 }
 
+function handleTileReturnedEvent(event) {
+    showPlayerHandWs();
+}
+
+
+
 function setGameMessage(msg) {
     $("#gameMsg").html(msg).fadeIn(500).delay(3000).fadeOut(500);
 }
@@ -518,6 +525,7 @@ function createSequenceWs(tiles, droppedTile,sender) {
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            sender.sortable('cancel');
         }
     });
 }
@@ -540,6 +548,7 @@ function addTileWs(droppedTile, sequenceIndex, sequencePosition) {
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            sender.sortable('cancel');
         }
     });
 }
@@ -556,9 +565,11 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         success: function (data) {
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
+                sender.sortable('cancel');
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+        sender.sortable('cancel');
         }
     });
 }
