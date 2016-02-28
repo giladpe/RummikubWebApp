@@ -65,38 +65,18 @@ function handleDropOnNewSerieEvent(event, ui) {
     var sender = $(ui.sender);
     //var droppedTileParentId = $(ui.sender).attr('id');
     var droppedTileParentId = sender.attr('id');
-    sender.sortable('cancel');
+
     if (droppedTileParentId === "handTileDiv") {
         var tiles = [];
         tiles.push(createTileObj(droppedTile));
-        if (createSequenceWs(tiles, droppedTile)) {
-            droppedTile.remove();
-        }
+        createSequenceWs(tiles, droppedTile,sender)
+
+    } else {
+
+
     }
-    //may be need to change to handle drop from board to new serie
-    //}
-    //    var newSerieId = createNewSerieWithId(droppedTile);
-    //$("#serie" + newSerieId).append(droppedTile);
 }
-//function handleDropOnNewSerieEvent(event, ui) {
-//    //var droppedTile = $('#' + ui.draggable.prop('id'));
-//    var droppedTile = $('#' + ui.item.attr('id'));
-//    var droppedTileParentId = $(ui.sender).attr('id');
-//
-//    if (droppedTileParentId === "handTileDiv") {
-//        var tiles = [];
-//        tiles.push(createTileObj(droppedTile));
-//        if (createSequenceWs(tiles)) {
-//            droppedTile.remove();
-//        }
-//    }
-//    else{
-//        //may be need to change to handle drop from board to new serie
-//        $(ui.sender).sortable('cancel');
-//    }
-//    //    var newSerieId = createNewSerieWithId(droppedTile);
-//    //$("#serie" + newSerieId).append(droppedTile);
-//}
+
 function createNewSerieWithId() {
     var newSerieId = serieId;
     var serieArea = $("#seriesArea");
@@ -118,7 +98,6 @@ function createNewSerieWithId() {
                 ui.item.startPos = ui.item.index();
             },
             receive: handleDropOnSerieEvent
-                    //cancel: null
         });
     }
 
@@ -135,16 +114,13 @@ function setSeriesSortable() {
             ui.item.startPos = ui.item.index();
         },
         receive: handleDropOnSerieEvent
-                //cancel: null
     });
 
 }
 
 
 function handleDropOnSerieEvent(event, ui) {
-    //        if($(ui.sender).attr('id')==='sort1' 
-    //       && $('#sort2').children('li').length>3){
-    //      $(ui.sender).sortable('cancel');
+
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
     var sourceID = sender.attr('id');
@@ -154,13 +130,13 @@ function handleDropOnSerieEvent(event, ui) {
     //var targetSize = $("#"+targetID+" li").length;
     //if(toIndex===0||targetSize-1===toIndex){
     if (sourceID === "handTileDiv") {
-        addTileWs(droppedTile, sequenceIndex, sequencePosition);
+        addTileWs(droppedTile, sequenceIndex, sequencePosition,sender);
     } else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
         var sourceSequencePosition = ui.item.startPos;//may be need to remove and find this tile in hand
-        moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition);
+        moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition,sender);
     }
-    $(ui.sender).sortable('cancel'); // we have to cancel the sortable action and the remove the tile
+
 }
 
 function createTileObj(tileView) {
@@ -344,7 +320,9 @@ function handleGameStartEvent(event) {
 }
 
 function handleGameWinnerEvent(event) {
-    redirect(GAME_URL + WINNER_SCREEN);
+    var winner = event.playerName;
+    redirect(GAME_URL + WINNER_SCREEN+"?gwinner="+winner);
+    
     //game event screen need to get the result from event.playerName
 }
 
@@ -404,6 +382,7 @@ function getTurnMsg() {
 
 function handleRevertEvent(event) {
     $("#seriesArea").empty();
+    showPlayerHandWs();
 }
 
 function handleSequenceCreatedEvent(event) {
@@ -550,7 +529,7 @@ function initButtons(disableButtons) {
 
 // <editor-fold defaultstate="collapsed" desc="function calling servlets">
 
-function createSequenceWs(tiles, droppedTile) {
+function createSequenceWs(tiles, droppedTile,sender) {
     var JSONStringifiedTiles = JSON.stringify(tiles);
     $.ajax({
         url: GAME_URL + "CreateSequenceServlet",
@@ -560,42 +539,47 @@ function createSequenceWs(tiles, droppedTile) {
         success: function (data) {
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
+                sender.sortable('cancel');
+
             } else {
                 droppedTile.remove();
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            sender.sortable('cancel');
         }
     });
 }
 
-function addTileWs(droppedTile, sequenceIndex, sequencePosition) {
+function addTileWs(droppedTile, sequenceIndex, sequencePosition,sender) {
     var tile = createTileObj(droppedTile);
     var JSONStringifiedTile = JSON.stringify(tile);
     $.ajax({
         url: GAME_URL + "AddTileServlet",
-        //async: false,
+        async: false,
         data: {"tile": JSONStringifiedTile, "sequenceIndex": sequenceIndex, "sequencePosition": sequencePosition},
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
+                sender.sortable('cancel');
             } else {
                 droppedTile.remove();
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            sender.sortable('cancel');
         }
     });
 }
 
 
 
-function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition) {
+function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition,sender) {
     $.ajax({
         url: GAME_URL + "MoveTileServlet",
-        //async: false,
+        async: false,
         data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition": sourceSequencePosition,
             "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
         timeout: 1000,
@@ -603,10 +587,12 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         success: function (data) {
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
+                sender.sortable('cancel');
             }
 
         },
         error: function (jqXHR, textStatus, errorThrown) {
+        sender.sortable('cancel');
         }
     });
 }
@@ -620,9 +606,10 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition, droppedTile, send
         dataType: 'json',
         success: function (data) {
 
-            sender.sortable('cancel');
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
+                sender.sortable('cancel');
+
             } else {
                 droppedTile.remove();
                 if (sender.find("li").length < 1) {
@@ -631,6 +618,7 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition, droppedTile, send
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
+            sender.sortable('cancel');
         }
     });
     return false;
