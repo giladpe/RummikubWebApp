@@ -96,7 +96,7 @@ function createNewSerieWithId() {
             helper:"clone", 
             opacity:0.5,
             cursor:"pointer",
-           start: function(event, ui) {ui.item.startPos = ui.item.index();},
+            start: function(event, ui) {ui.item.startPos = ui.item.index();},
             receive: handleDropOnSerieEvent 
             //cancel: null
         });
@@ -106,43 +106,52 @@ function createNewSerieWithId() {
 }
 
 function handleDropOnSerieEvent(event, ui){
-    //        if($(ui.sender).attr('id')==='sort1' 
-    //       && $('#sort2').children('li').length>3){
-    //      $(ui.sender).sortable('cancel');
      var droppedTile = $('#' + ui.item.attr('id'));
      var sourceID = $(ui.sender).attr('id');
-     //var targetID = $(this).attr('id');
-     var sequencePosition = droppedTile.index();
-     var sequenceIndex = $(this).index();
-     //var targetSize = $("#"+targetID+" li").length;
-     //if(toIndex===0||targetSize-1===toIndex){
-        if(sourceID === "handTileDiv"){
-            var tile = createTileObj(droppedTile);
-            var isTileAdded = addTileWs(tile, sequenceIndex, sequencePosition);
+     var targetSequencePosition = droppedTile.index();
+     var targetSequenceIndex = $(this).index();
 
-            if(isTileAdded) {
-                $(ui.sender).sortable('cancel'); // we have to cancel the sortable action and the remove the tile
-                droppedTile.remove();
-            }
-            else {
-                $(ui.sender).sortable('cancel');
-            }
-        }else {  ///arrive from serie
-            var sourceSequenceIndex = $('#' + sourceID).index();
-            var sourceSequencePosition =  ui.item.startPos;//may be need to remove and find this tile in hand
-            moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition); 
-            $(ui.sender).sortable('cancel');
+    $(ui.sender).sortable('cancel');
+
+    if(sourceID === "handTileDiv"){
+        var tile = createTileObj(droppedTile);
+        var isTileAdded = addTileWs(tile, targetSequenceIndex, targetSequencePosition);
+
+        if(isTileAdded) {
+            droppedTile.remove();
         }
-     //}else{  ///split  
-     //}
-//     var sourceSize = $("#"+sourceID+" li").length;
-//    if(sourceSize===0&&sourceID!=="handTileDiv"){
-//        //remove sender if have no tiles in it  
-//        $("#"+sourceID).remove();
-//    }
-
-    
+    }
+    else {  ///arrive from serie
+        var sourceSequenceIndex = $('#' + sourceID).index();
+        var sourceSequencePosition =  ui.item.startPos;     //may be need to remove and find this tile in hand
+        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition); 
+    }
 }
+
+//function handleDropOnSerieEvent(event, ui){
+//     var droppedTile = $('#' + ui.item.attr('id'));
+//     var sourceID = $(ui.sender).attr('id');
+//     var targetSequencePosition = droppedTile.index();
+//     var targetSequenceIndex = $(this).index();
+//     
+//    if(sourceID === "handTileDiv"){
+//        var tile = createTileObj(droppedTile);
+//        var isTileAdded = addTileWs(tile, targetSequenceIndex, targetSequencePosition);
+//
+//        if(isTileAdded) {
+//            $(ui.sender).sortable('cancel'); // we have to cancel the sortable action and the remove the tile
+//            droppedTile.remove();
+//        }
+//        else {
+//            $(ui.sender).sortable('cancel');
+//        }
+//    }else {  ///arrive from serie
+//        var sourceSequenceIndex = $('#' + sourceID).index();
+//        var sourceSequencePosition =  ui.item.startPos;     //may be need to remove and find this tile in hand
+//        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition); 
+//        $(ui.sender).sortable('cancel');
+//    }
+//}
 
 function createTileObj(tileView) {
 
@@ -158,7 +167,6 @@ function Tile(color, value) {
     this.color = color;
     this.value = value;
 }
-
 
 function createViewTile(tileToCreate) {
     var tileValue = tileToCreate.value !== 0 ? tileToCreate.value : "J";
@@ -176,7 +184,6 @@ function createViewTile(tileToCreate) {
     return tile;
 }
 
-/////TEST VERSION - added: the hand is sortable only if it is my turn
 function printTilesInParent(tiles, parent) {
     for (var tile in tiles) {
         var tileToAdd = createViewTile(tiles[tile]);
@@ -198,92 +205,55 @@ function createPlayerHandWs(tiles) {
         });
     }
 }
-//END OF TEST
 
-
-//function printTilesInParent(tiles, parent) {
-//    for (var tile in tiles) {
-//        var tileToAdd = createViewTile(tiles[tile]);
-//        parent.append(tileToAdd);
-//    }
-//    
-//    if (currPlayerName === myDetails.name) {
-//
-//    }
-//}
-//function createPlayerHandWs(tiles) {
-//    var hand = $("#handTileDiv");
-//    hand.empty();
-//    printTilesInParent(tiles, hand);
-//    hand.sortable({
-//        connectWith: 'ul',
-//        helper:"clone", 
-//        opacity:0.5,
-//        cursor:"pointer"
-//    });
-//}
 
 function handleRummikubWsEvent(event) {
     switch (event.type) {
+        
         case GAME_OVER:
-        {
             handleGameOverEvent(event);
             break;
-        }
+
         case GAME_START:
-        {
             handleGameStartEvent(event);
             break;
-        }
+
         case GAME_WINNER:
-        {
             handleGameWinnerEvent(event);
             break;
-        }
+
         case PLAYER_FINISHED_TURN:
-        {
             handlePlayerFinishedTurnEvent(event);
             break;
-        }
+
         case PLAYER_RESIGNED:
-        {
             handlePlayerResignedEvent(event);
             break;
-        }
+
         case PLAYER_TURN:
-        {
             handlePlayerTurnEvent(event);
             break;
-        }
+        
         case REVERT:
-        {
             handleRevertEvent(event);
             break;
-        }
+
         case SEQUENCE_CREATED:
-        {
             handleSequenceCreatedEvent(event);
             break;
-        }
+
         case TILE_ADDED:
-        {
             handleTileAddedEvent(event);
             break;
-        }
+
         case TILE_MOVED:
-        {
             handleTileMovedEvent(event);
             break;
-        }
+
         case TILE_RETURNED:
-        {
+        default:
             handleTileReturnedEvent(event);
             break;
-        }
-        default:
-        {
-            break;
-        }
     }
 }
 
@@ -297,17 +267,6 @@ function handleGameOverEvent(event) {
 function handleGameStartEvent(event) {
     myDetails = getMyDetailsWs();
     playersDetailsList = getPlayersDetailsList(gameName);
-    //$(".gameBoard").empty().append('<div class = "serie" id = serie><div>new Series</div></div>');
-    //$("#serie").droppable({
-//       accept: ".tile",
-//        drop: handleDropOnNewSerieEvent
-//        
-//    });
-
-    //not sure about the next lines prefer u gilad to check it
-    //logicBoard = new Board();
-    //setPlayersBarWs();
-    //initPlayerLabelWs();
     initAllComponent();
 }
 
@@ -378,31 +337,28 @@ function handleSequenceCreatedEvent(event) {
     var newSerieId = createNewSerieWithId();
     var serie = $("#serie" + newSerieId);
     printTilesInParent(event.tiles, serie);
-//    $(".serie").sortable({
-//        revert: true
-//    });
-    //$("#serie" + newSerieId).append(droppedTile);
 }
+
 function insertTileAtIndex(serie, tile, index) {
-    if (index === 0) {
-        serie.prepend(tile);
-    } else {
-        var tileBefor = serie.children().eq(index - 1);
-        tileBefor.after(tile);
-    }
+    var tileBefor = serie.children().eq(index - 1);
+
+    index === 0 ? serie.prepend(tile) : tileBefor.after(tile);
+ 
+//    if (index === 0) {
+//        serie.prepend(tile);
+//    }
+//    else {
+//        var tileBefor = serie.children().eq(index - 1);
+//        tileBefor.after(tile);
+//    }
 }
+
 function handleTileAddedEvent(event) {
-    //var seriesList=$('#seriesArea');
     var serie = $('#seriesArea').children().eq(event.targetSequenceIndex);
     var tileToAdd = createViewTile(event.tiles[0]);
     insertTileAtIndex(serie, tileToAdd, event.targetSequencePosition);
-
-
-    //protected int targetSequenceIndex;
-    //protected int targetSequencePosition;
-    // printTilesInParent(,)
-
 }
+
 //    private void handleTileAddedEvent(Event event) {
 //
 //        rummikub.client.ws.Tile tileToAdd = event.getTiles().get(0);
@@ -420,12 +376,14 @@ function handleTileAddedEvent(event) {
 //            showPlayerHandWs();
 //        });
 
-
 function handleTileMovedEvent(event) {
     var serieSource = $('#seriesArea').children().eq(event.sourceSequenceIndex);
     var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
+    //var serieTarget = serieSource.children().eq(event.targetSequenceIndex);
     var serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
+    
     insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
+
     if(serieSource.find("li").length < 1){
         serieSource.remove();
     }
@@ -584,7 +542,6 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
             if (data.isException) { 
                 setGameMessage(data.voidAndStringResponse);
             }
-
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }
@@ -603,7 +560,6 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition) {
             if (data.isException) { 
                 setGameMessage(data.voidAndStringResponse);
             }
-
         },
         error: function (jqXHR, textStatus, errorThrown) {
         }
