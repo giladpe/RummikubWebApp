@@ -17,27 +17,31 @@ var EMPTY_STRING = "";
 var GAME_OVER_MSG = "Game Is Over";
 var PLAYER_DONE = " done his Turn";
 var PLAYER_RESIGNED = " decided to quite";
+var PLAY = " Play";
+var WAIT = " Wait";
 
-var currPlayerName = "";
+var currPlayerName;
 var eventID;
 var gameName;
 var gameButtonsList;
 var myDetails;
-var PLAY = " Play";
-var WAIT = " Wait";
-var playersDetailsList = "";
+var playersDetailsList;
 var intervalTimer;
 var timeOutTimer;
-var tileId = 0;
-var serieId = 0;
+var tileId;
+var serieId;
+var tileMovedFromSerieToSerie;
+var movedTileFromSerieToSerie;
+
 
 //activate the timer calls after the page is loaded
 $(function () {//onload function
-    serieId = 0;
+    currPlayerName = "";
     eventID = 0;
-    tileId = 0;
     gameName = getParameterByName('gid');
     gameButtonsList = $(".GameButton");
+    serieId = 0;
+    tileId = 0;
 
     $("#addSerieArea").sortable({
         connectWith: 'ul',
@@ -83,16 +87,20 @@ function createNewSerieWithId() {
     serieId++;
 
     if (currPlayerName === myDetails.name) {
-        $(".serie").sortable({
-            connectWith: "ul",
-            helper:"clone", 
-            opacity:0.5,
-            cursor:"pointer",
-            start: function(event, ui) {
-                ui.item.startPos = ui.item.index();
-            },
-            receive: handleDropOnSerieEvent 
-        });
+        setSeriesSortable();
+//        $(".serie").sortable({
+//            connectWith: "ul",
+//            helper:"clone", 
+//            opacity:0.5,
+//            cursor:"pointer",
+//            change: function(event, ui) {
+//                ui.item.startPos = ui.item.index();
+//            },
+//            start: function(event, ui) {
+//                ui.item.startPos = ui.item.index();
+//            },
+//            receive: handleDropOnSerieEvent 
+//        });
     }
 
     return newSerieId;
@@ -117,21 +125,33 @@ function handleDropOnSerieEvent(event, ui) {
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
     var sourceID = sender.attr('id');
-    var sequencePosition = droppedTile.index();
-    var sequenceIndex = $(this).index();
-            
-    sender.sortable('cancel');
+    var targetSequencePosition = droppedTile.index();
+    var targetSequenceIndex = $(this).index();
+    //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
+
+    
 
     if (sourceID === "handTileDiv") {
-        addTileWs(droppedTile, sequenceIndex, sequencePosition);
+        //sender.sortable('cancel');
+        addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
     } 
     else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
         var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
-        moveTileWs(sourceSequenceIndex, sourceSequencePosition, sequenceIndex, sequencePosition);
+        
+//        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
+//            sender.sortable('cancel');
+//        }
+        tileMovedFromSerieToSerie = true;
+        movedTileFromSerieToSerie = droppedTile;
+        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
     }
 
 }
+
+//function isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget) {
+//    return targetSequencePosition === 0 || targetSequencePosition === serieTarget.children().length-1;
+//}
 
 //function handleDropOnSerieEvent(event, ui){
 //     var droppedTile = $('#' + ui.item.attr('id'));
@@ -214,6 +234,7 @@ function createPlayerHandWs(tiles) {
         });
     }
 }
+
 function handleDropOnHand(event, ui) {
     var sequencePosition = ui.item.startPos;
     var sender = $(ui.sender);
@@ -355,8 +376,13 @@ function handleRevertEvent(event) {
 function handleSequenceCreatedEvent(event) {
     var newSerieId = createNewSerieWithId();
     var serie = $("#serie" + newSerieId);
+    
+    if (tileMovedFromSerieToSerie) {
+        movedTileFromSerieToSerie.remove();
+        tileMovedFromSerieToSerie = false;
+    }
+    
     printTilesInParent(event.tiles, serie);
-
 }
 
 function insertTileAtIndex(serie, tile, index) {
@@ -383,7 +409,6 @@ function handleTileAddedEvent(event) {
 function handleTileMovedEvent(event) {
     var serieSource = $('#seriesArea').children().eq(event.sourceSequenceIndex);
     var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
-    //var serieTarget = serieSource.children().eq(event.targetSequenceIndex);
     var serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
     
     insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
@@ -510,7 +535,6 @@ function initButtons(disableButtons) {
 
 function createSequenceWs(tiles, droppedTile,sender) {
     var JSONStringifiedTiles = JSON.stringify(tiles);
-    sender.sortable('cancel');
 
     $.ajax({
         url: GAME_URL + "CreateSequenceServlet",
@@ -518,6 +542,8 @@ function createSequenceWs(tiles, droppedTile,sender) {
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
+            sender.sortable('cancel');
+
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
             } else {
@@ -530,10 +556,10 @@ function createSequenceWs(tiles, droppedTile,sender) {
     });
 }
 
-function addTileWs(droppedTile, sequenceIndex, sequencePosition) {
+function addTileWs(droppedTile, sequenceIndex, sequencePosition, sender) {
     var tile = createTileObj(droppedTile);
     var JSONStringifiedTile = JSON.stringify(tile);
-
+    
     $.ajax({
         url: GAME_URL + "AddTileServlet",
         async: false,
@@ -541,6 +567,8 @@ function addTileWs(droppedTile, sequenceIndex, sequencePosition) {
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
+            sender.sortable('cancel');
+
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
             } else {
@@ -553,23 +581,24 @@ function addTileWs(droppedTile, sequenceIndex, sequencePosition) {
     });
 }
 
-function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition) {
+function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender) {
 
     $.ajax({
         url: GAME_URL + "MoveTileServlet",
         async: false,
         data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition": sourceSequencePosition,
-            "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
+               "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
+            sender.sortable('cancel');
+            
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
-                sender.sortable('cancel');
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
-        sender.sortable('cancel');
+            sender.sortable('cancel');
         }
     });
 }
@@ -582,12 +611,15 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition, droppedTile, send
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
+            sender.sortable('cancel');
 
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
 
-            } else {
+            } 
+            else {
                 droppedTile.remove();
+                
                 if (sender.find("li").length < 1) {
                     sender.remove();
                 }
