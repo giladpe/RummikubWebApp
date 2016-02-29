@@ -8,6 +8,7 @@ var game_selected = "";
 var NUM_OF_COLUMS = 6;
 var CHOOSE_PLAYER = "Choose Player name: ";
 var NAME_PLACEHOLDER = 'Insert player name';
+var EMPTY_STRING = "";
 
 $(function () { // onload...do
     $('#joinBtn').on('click', function (event) {
@@ -83,9 +84,10 @@ function loadServlet(file) {
             if (!data.isException) //success 
             {
                 $('#errorMsg').html(data.voidAndStringResponse + 'game was created').fadeIn(500).delay(2000).fadeOut(500);
-                var gameTableDetailds = getTableGameDetails(data.data.voidAndStringResponse);
-                addRowToTable(gameTableDetailds);
-                getWaitingGames();
+                updateGameList(data.voidAndStringResponse); 
+//                var gameTableDetailds = getTableGameDetails(data.voidAndStringResponse);
+//                addRowToTable(gameTableDetailds);
+//                getWaitingGames();
             } else
             {
                 $("#errorMsg").html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
@@ -247,6 +249,15 @@ function printTable(watingGameList) {
 function getTableGameDetails(gameName) {
     var gameDetails = getGameDetails(gameName);
     return ([gameName, gameDetails.humanPlayers, gameDetails.computerizedPlayers, gameDetails.status, gameDetails.joinedHumanPlayers, gameDetails.loadedFromXML]);
+}
+
+function updateGameList(gameName) {
+    var gameDetails = getGameDetails(gameName);
+    
+    if (gameDetails !== EMPTY_STRING) {
+        addRowToTable(gameDetails);
+        getWaitingGames();
+    }
 }
 
 function addRowToTable(gameDetails) {
