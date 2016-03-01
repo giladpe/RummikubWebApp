@@ -113,6 +113,9 @@ function setSeriesSortable() {
         cursor: "pointer",
         start: function (event, ui) {
             ui.item.startPos = ui.item.index();
+            $(this).attr('data-prevPositionIndex', ui.item.index());
+            $(this).attr('data-prevSerieIndex', (ui.item.closest("ul")).index());
+            $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
         },
         //receive: handleDropOnSerieEvent,
         update:handleDropOnSerieEvent
@@ -126,7 +129,9 @@ function handleDropOnSerieEvent(event, ui){
     var targetSequencePosition = droppedTile.index();
     var targetSequenceIndex = $(this).index();
     //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
-
+    var prevPositionIndex = $(this).attr('data-prevPositionIndex'); //test
+    var prevSerieIndex = $(this).attr('data-prevSerieIndex');///test
+    //var oldIndex = $(this).attr('data-previndex');
     
 
     if (sourceID === "handTileDiv") {
