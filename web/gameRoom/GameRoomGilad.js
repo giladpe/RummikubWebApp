@@ -70,8 +70,7 @@ function handleDropOnNewSerieEvent(event, ui) {
 
     } 
     else {
-
-
+        sender.sortable('cancel');
     }
 }
 
@@ -115,13 +114,12 @@ function setSeriesSortable() {
         start: function (event, ui) {
             ui.item.startPos = ui.item.index();
         },
-        receive: handleDropOnSerieEvent
+        //receive: handleDropOnSerieEvent,
+        update:handleDropOnSerieEvent
     });
 }
 
-
-function handleDropOnSerieEvent(event, ui) {
-
+function handleDropOnSerieEvent(event, ui){
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
     var sourceID = sender.attr('id');
@@ -138,7 +136,10 @@ function handleDropOnSerieEvent(event, ui) {
     else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
         var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
-        
+        if(sourceSequenceIndex<0){
+            sourceSequenceIndex=targetSequenceIndex;
+            $( this ).sortable( "cancel" );
+        }
 //        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
 //            sender.sortable('cancel');
 //        }
@@ -147,7 +148,38 @@ function handleDropOnSerieEvent(event, ui) {
         moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
     }
 
+    
 }
+
+
+//function handleDropOnSerieEvent(event, ui) {
+//
+//    var droppedTile = $('#' + ui.item.attr('id'));
+//    var sender = $(ui.sender);
+//    var sourceID = sender.attr('id');
+//    var targetSequencePosition = droppedTile.index();
+//    var targetSequenceIndex = $(this).index();
+//    //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
+//
+//    
+//
+//    if (sourceID === "handTileDiv") {
+//        //sender.sortable('cancel');
+//        addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
+//    } 
+//    else {  ///arrive from serie
+//        var sourceSequenceIndex = $('#' + sourceID).index();
+//        var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
+//        
+////        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
+////            sender.sortable('cancel');
+////        }
+//        tileMovedFromSerieToSerie = true;
+//        movedTileFromSerieToSerie = droppedTile;
+//        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
+//    }
+//
+//}
 
 //function isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget) {
 //    return targetSequencePosition === 0 || targetSequencePosition === serieTarget.children().length-1;
@@ -592,6 +624,7 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         dataType: 'json',
         success: function (data) {
             sender.sortable('cancel');
+            //$( this ).sortable( "cancel" );
             
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
@@ -599,6 +632,7 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         },
         error: function (jqXHR, textStatus, errorThrown) {
             sender.sortable('cancel');
+           // $( this ).sortable( "cancel" );
         }
     });
 }
@@ -677,7 +711,7 @@ function onResign() {
             {
                 setGameMessage(data.voidAndStringResponse);
             } else {
-                redirect(GAME_URL + MAIN_SCREEN);
+                ////redirect(GAME_URL + MAIN_SCREEN);/////////////////////////need
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
