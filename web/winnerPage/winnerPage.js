@@ -6,11 +6,10 @@
 
 var GAME_URL = "http://localhost:8080/RummikubWebApp/";
 var MAIN_SCREEN = "index.html";
-var winner=""
 
 $(function () {//onload function
     
-    winner ="The Winner is: "+ getParameterByName('gwinner');
+    var winner ="The Winner is: "+ getParameterByName('gwinner');
     $("#winnerMsg").text(winner);
 });
 
