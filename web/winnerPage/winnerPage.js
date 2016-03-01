@@ -9,8 +9,9 @@ var MAIN_SCREEN = "index.html";
 var winner=""
 
 $(function () {//onload function
+    
     winner ="The Winner is: "+ getParameterByName('gwinner');
-    $("#winnerMsg").innerHTML=winner;
+    $("#winnerMsg").text(winner);
 });
 
 
