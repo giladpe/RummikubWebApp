@@ -112,7 +112,7 @@ function setSeriesSortable() {
         opacity: 0.5,
         cursor: "pointer",
         start: function (event, ui) {
-            ui.item.startPos = ui.item.index();
+            alert((ui.item.closest("ul")).attr('id'));
             $(this).attr('data-prevPositionIndex', ui.item.index());
             $(this).attr('data-prevSerieIndex', (ui.item.closest("ul")).index());
             $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
@@ -128,10 +128,6 @@ function handleDropOnSerieEvent(event, ui){
     var sourceID = sender.attr('id');
     var targetSequencePosition = droppedTile.index();
     var targetSequenceIndex = $(this).index();
-    //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
-    var prevPositionIndex = $(this).attr('data-prevPositionIndex'); //test
-    var prevSerieIndex = $(this).attr('data-prevSerieIndex');///test
-    //var oldIndex = $(this).attr('data-previndex');
     
 
     if (sourceID === "handTileDiv") {
@@ -139,18 +135,12 @@ function handleDropOnSerieEvent(event, ui){
         addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
     } 
     else {  ///arrive from serie
-        var sourceSequenceIndex = $('#' + sourceID).index();
-        var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
-        if(sourceSequenceIndex<0){
-            sourceSequenceIndex=targetSequenceIndex;
-            $( this ).sortable( "cancel" );
-        }
-//        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
-//            sender.sortable('cancel');
-//        }
+        var sourceSequencePosition = $(this).attr('data-prevPositionIndex'); //test
+        var sourceSequenceIndex = $(this).attr('data-prevSerieIndex');///test
+        sourceID = $(this).attr('data-senderID');///test    
         tileMovedFromSerieToSerie = true;
         movedTileFromSerieToSerie = droppedTile;
-        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
+        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, $(this));
     }
 
     
@@ -257,7 +247,7 @@ function createPlayerHandWs(tiles) {
     var hand = $("#handTileDiv");
     hand.empty();
     printTilesInParent(tiles, hand);
-
+    
     if (currPlayerName === myDetails.name) {
         hand.sortable({
             connectWith: 'ul',
@@ -265,7 +255,11 @@ function createPlayerHandWs(tiles) {
             opacity: 0.5,
             cursor: "pointer",
             start: function (event, ui) {
-                ui.item.startPos = ui.item.index();
+                //ui.item.startPos = ui.item.index();
+                //alert((ui.item.closest("ul")).attr('id'));
+                $(this).attr('data-prevPositionIndex', ui.item.index());
+                $(this).attr('data-prevSerieIndex', (ui.item.closest("ul")).index());
+                $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
             },
             receive: handleDropOnHand
         });
@@ -629,8 +623,6 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         dataType: 'json',
         success: function (data) {
             sender.sortable('cancel');
-            //$( this ).sortable( "cancel" );
-            
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
             }
