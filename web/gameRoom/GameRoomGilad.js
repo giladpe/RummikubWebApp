@@ -118,6 +118,14 @@ function setSeriesSortable() {
             $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
         },
         receive: handleDropOnSerieEvent,
+//        beforeStop: function (event,ui) {
+//            var serieTargetId = $('#seriesArea').children().eq($(this).index()).attr('id');
+//            
+//            if (ui.sender.attr('id') === serieTargetId || ui.sender === "undefined") {
+//                $(this).sortable('cancel');
+//                $('#seriesArea').children().eq($(this).index()).sortable('cancel');
+//            }
+//        }
         //update:handleDropOnSerieEvent
     });
 }
@@ -141,9 +149,10 @@ function handleDropOnSerieEvent(event, ui){
     else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
         var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
+        
         if(sourceSequenceIndex<0){
-            sourceSequenceIndex=targetSequenceIndex;
-            $( this ).sortable( "cancel" );
+            sourceSequenceIndex = targetSequenceIndex;
+            $(this).sortable( "cancel" );
         }
 //        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
 //            sender.sortable('cancel');
