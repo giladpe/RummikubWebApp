@@ -30,6 +30,7 @@ var intervalTimer;
 var timeOutTimer;
 var tileId;
 var serieId;
+var isTileMoveFromHandOrOtherSerie = false;
 //var tileMovedFromSerieToSerie;
 //var movedTileFromSerieToSerie;
 
@@ -66,10 +67,9 @@ function handleDropOnNewSerieEvent(event, ui) {
     if (droppedTileParentId === "handTileDiv") {
         var tiles = [];
         tiles.push(createTileObj(droppedTile));
-        createSequenceWs(tiles, droppedTile,sender);
+        createSequenceWs(tiles, droppedTile, sender);
 
-    } 
-    else {
+    } else {
         sender.sortable('cancel');
     }
 }
@@ -118,51 +118,45 @@ function setSeriesSortable() {
             $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
         },
         receive: handleDropOnSerieEvent,
-//        beforeStop: function (event,ui) {
-//            var serieTargetId = $('#seriesArea').children().eq($(this).index()).attr('id');
-//            
-//            if (ui.sender.attr('id') === serieTargetId || ui.sender === "undefined") {
-//                $(this).sortable('cancel');
-//                $('#seriesArea').children().eq($(this).index()).sortable('cancel');
-//            }
-//        }
-        //update:handleDropOnSerieEvent
+        stop: handleTileMoveInSerie
+                //update:handleDropOnSerieEvent
     });
 }
 
-function handleDropOnSerieEvent(event, ui){
+function handleTileMoveInSerie(event, ui) {
+    if (!isTileMoveFromHandOrOtherSerie) {
+        var sourceSerieIndex = $(this).index(); //$(this).attr('data-senderID');
+        var prevTilePositionIndex = $(this).attr('data-prevPositionIndex');
+        var newTilePositionIndex = ui.item.index();
+        //$(this).sortable('cancel');
+        moveTileWs(sourceSerieIndex, prevTilePositionIndex, sourceSerieIndex, newTilePositionIndex, $(this));
+    }
+    isTileMoveFromHandOrOtherSerie = false;
+
+}
+
+
+function handleDropOnSerieEvent(event, ui) {
+    isTileMoveFromHandOrOtherSerie = true;
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
     var sourceID = sender.attr('id');
     var targetSequencePosition = droppedTile.index();
     var targetSequenceIndex = $(this).index();
     //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
-    var prevPositionIndex = $(this).attr('data-prevPositionIndex'); //test
-    var prevSerieIndex = $(this).attr('data-prevSerieIndex');///test
+    //var prevPositionIndex = $(this).attr('data-prevPositionIndex'); //test
+    //var prevSerieIndex = $(this).attr('data-prevSerieIndex');///test
     //var oldIndex = $(this).attr('data-previndex');
-    
-
     if (sourceID === "handTileDiv") {
         //sender.sortable('cancel');
         addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
-    } 
-    else {  ///arrive from serie
+    } else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
         var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
-        
-        if(sourceSequenceIndex<0){
-            sourceSequenceIndex = targetSequenceIndex;
-            $(this).sortable( "cancel" );
-        }
-//        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
-//            sender.sortable('cancel');
-//        }
-       // tileMovedFromSerieToSerie = true;
-        //movedTileFromSerieToSerie = droppedTile;
         moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
     }
 
-    
+
 }
 
 
@@ -274,9 +268,11 @@ function createPlayerHandWs(tiles) {
             opacity: 0.5,
             cursor: "pointer",
             start: function (event, ui) {
-                ui.item.startPos = ui.item.index();
+                $(this).attr('data-prevPositionIndex', ui.item.index());
+                $(this).attr('data-prevSerieIndex', (ui.item.closest("ul")).index());
+                $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
             },
-            receive: handleDropOnHand
+            receive: handleDropOnHand,
         });
     }
 }
@@ -291,7 +287,7 @@ function handleDropOnHand(event, ui) {
 
 function handleRummikubWsEvent(event) {
     switch (event.type) {
-        
+
         case GAME_OVER:
             handleGameOverEvent(event);
             break;
@@ -315,7 +311,7 @@ function handleRummikubWsEvent(event) {
         case PLAYER_TURN:
             handlePlayerTurnEvent(event);
             break;
-        
+
         case REVERT:
             handleRevertEvent(event);
             break;
@@ -355,8 +351,8 @@ function handleGameStartEvent(event) {
 
 function handleGameWinnerEvent(event) {
     var winner = event.playerName;
-    redirect(GAME_URL + WINNER_SCREEN+"?gwinner="+winner);
-    
+    redirect(GAME_URL + WINNER_SCREEN + "?gwinner=" + winner);
+
     //game event screen need to get the result from event.playerName
 }
 
@@ -422,12 +418,12 @@ function handleRevertEvent(event) {
 function handleSequenceCreatedEvent(event) {
     var newSerieId = createNewSerieWithId();
     var serie = $("#serie" + newSerieId);
-    
+
 //    if (tileMovedFromSerieToSerie) {
 //        movedTileFromSerieToSerie.remove();
 //        tileMovedFromSerieToSerie = false;
 //    }
-    
+
     printTilesInParent(event.tiles, serie);
 }
 
@@ -435,7 +431,7 @@ function insertTileAtIndex(serie, tile, index) {
     var tileBefor = serie.children().eq(index - 1);
 
     index === 0 ? serie.prepend(tile) : tileBefor.after(tile);
- 
+
 //    if (index === 0) {
 //        serie.prepend(tile);
 //    }
@@ -456,22 +452,22 @@ function handleTileMovedEvent(event) {
     var serieSource = $('#seriesArea').children().eq(event.sourceSequenceIndex);
     var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
     var serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
-    
+
     insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
 
-    if(serieSource.find("li").length < 1){
+    if (serieSource.find("li").length < 1) {
         serieSource.remove();
     }
 }
 
 function removeEmptySeries() {
     $("#seriesArea").each(
-        function () {
-            var elem = $(this);
-            if (elem.children().length === 0) {
-                elem.remove();
+            function () {
+                var elem = $(this);
+                if (elem.children().length === 0) {
+                    elem.remove();
+                }
             }
-        }
     );
 }
 
@@ -579,7 +575,7 @@ function initButtons(disableButtons) {
 
 // <editor-fold defaultstate="collapsed" desc="function calling servlets">
 
-function createSequenceWs(tiles, droppedTile,sender) {
+function createSequenceWs(tiles, droppedTile, sender) {
     var JSONStringifiedTiles = JSON.stringify(tiles);
 
     $.ajax({
@@ -605,7 +601,7 @@ function createSequenceWs(tiles, droppedTile,sender) {
 function addTileWs(droppedTile, sequenceIndex, sequencePosition, sender) {
     var tile = createTileObj(droppedTile);
     var JSONStringifiedTile = JSON.stringify(tile);
-    
+
     $.ajax({
         url: GAME_URL + "AddTileServlet",
         async: false,
@@ -633,20 +629,20 @@ function moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceI
         url: GAME_URL + "MoveTileServlet",
         async: false,
         data: {"sourceSequenceIndex": sourceSequenceIndex, "sourceSequencePosition": sourceSequencePosition,
-               "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
+            "targetSequenceIndex": targetSequenceIndex, "targetSequencePosition": targetSequencePosition},
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
             sender.sortable('cancel');
             //$( this ).sortable( "cancel" );
-            
+
             if (data.isException) {
                 setGameMessage(data.voidAndStringResponse);
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             sender.sortable('cancel');
-           // $( this ).sortable( "cancel" );
+            // $( this ).sortable( "cancel" );
         }
     });
 }
@@ -664,10 +660,9 @@ function takeBackTileToHandWs(sequenceIndex, sequencePosition, droppedTile, send
             if (data.isException) { //success 
                 setGameMessage(data.voidAndStringResponse);
 
-            } 
-            else {
+            } else {
                 droppedTile.remove();
-                
+
                 if (sender.find("li").length < 1) {
                     sender.remove();
                 }
