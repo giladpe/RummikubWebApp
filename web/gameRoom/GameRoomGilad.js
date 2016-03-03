@@ -413,6 +413,7 @@ function getTurnMsg() {
 function handleRevertEvent(event) {
     $("#seriesArea").empty();
     showPlayerHandWs();
+    initPlayersBar();
 }
 
 function handleSequenceCreatedEvent(event) {
@@ -423,8 +424,9 @@ function handleSequenceCreatedEvent(event) {
 //        movedTileFromSerieToSerie.remove();
 //        tileMovedFromSerieToSerie = false;
 //    }
-
     printTilesInParent(event.tiles, serie);
+    initPlayersBar();
+
 }
 
 function insertTileAtIndex(serie, tile, index) {
@@ -445,6 +447,7 @@ function handleTileAddedEvent(event) {
     var serie = $('#seriesArea').children().eq(event.targetSequenceIndex);
     var tileToAdd = createViewTile(event.tiles[0]);
     insertTileAtIndex(serie, tileToAdd, event.targetSequencePosition);
+    initPlayersBar();
 
 }
 
@@ -473,11 +476,12 @@ function removeEmptySeries() {
 
 function handleTileReturnedEvent(event) {
     showPlayerHandWs();
+    initPlayersBar();
 }
 
-function handleTileReturnedEvent(event) {
-    showPlayerHandWs();
-}
+//function handleTileReturnedEvent(event) {
+//    showPlayerHandWs();
+//}
 
 
 
