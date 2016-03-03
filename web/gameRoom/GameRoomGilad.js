@@ -609,33 +609,37 @@ function triggerAjaxEventMonitoring() {
 }
 
 function getEventsWs() {
-    $.ajax({
-        url: GAME_URL + "GetEventsServlet",
-        data: {"eventID": eventID},
-        async: false,
-        timeout: 1000,
-        dataType: 'json',
-        success: function (data) {
-            if (!data.isException) //success 
-            {
-                var eventList = data.eventListResposne;
+    
+    if (eventID !== undefined) {
+        $.ajax({
+            url: GAME_URL + "GetEventsServlet",
+            data: {"eventID": eventID},
+            async: false,
+            timeout: 1000,
+            dataType: 'json',
+            success: function (data) {
+                if (!data.isException) //success 
+                {
+                    var eventList = data.eventListResposne;
 
-                if (eventList.length !== 0) {
-                    for (var i = 0; i < eventList.length; i++) {
-                        handleRummikubWsEvent(eventList[i]);
+                    if (eventList.length !== 0) {
+                        for (var i = 0; i < eventList.length; i++) {
+                            handleRummikubWsEvent(eventList[i]);
+                        }
+                        eventID = getLastEventID(eventList);
                     }
-                    eventID = getLastEventID(eventList);
+                } else {
+                    setGameMessage(data.voidAndStringResponse);
                 }
-            } else {
-                setGameMessage(data.voidAndStringResponse);
-            }
 
-            triggerAjaxEventMonitoring();
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            triggerAjaxEventMonitoring();
-        }
-    });
+                triggerAjaxEventMonitoring();
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                triggerAjaxEventMonitoring();
+            }
+        });    
+    }
+    return false;
 }
 
 function onResign() {
