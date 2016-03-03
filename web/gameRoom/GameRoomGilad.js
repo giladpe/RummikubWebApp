@@ -87,7 +87,7 @@ function createNewSerieWithId() {
 
     if (currPlayerName === myDetails.name) {
         setSeriesSortable();
-        }
+    }
 
     return newSerieId;
 }
@@ -111,16 +111,17 @@ function setSeriesSortable() {
 }
 
 function handleTileMoveInSerie(event, ui) {
-    var sourceSerieIndex = $(this).index(); //$(this).attr('data-senderID');
-    var NOT_FOUND = -1;
-    
-    if (!isTileMoveFromHandOrOtherSerie && sourceSerieIndex !== NOT_FOUND) {
-        var prevTilePositionIndex = $(this).attr('data-prevPositionIndex');
-        var newTilePositionIndex = ui.item.index();
-        //$(this).sortable('cancel');
-        moveTileWs(sourceSerieIndex, prevTilePositionIndex, sourceSerieIndex, newTilePositionIndex, $(this));
+    if ($(this).attr('data-senderID') !== "handTileDiv") {
+        var sourceSerieIndex = $(this).index(); //$(this).attr('data-senderID');
+        var NOT_FOUND = -1;
+
+        if (!isTileMoveFromHandOrOtherSerie && sourceSerieIndex !== NOT_FOUND) {
+            var prevTilePositionIndex = $(this).attr('data-prevPositionIndex');
+            var newTilePositionIndex = ui.item.index();
+            //$(this).sortable('cancel');
+            moveTileWs(sourceSerieIndex, prevTilePositionIndex, sourceSerieIndex, newTilePositionIndex, $(this));
+        }
     }
-    
     isTileMoveFromHandOrOtherSerie = false;
 }
 
@@ -134,7 +135,7 @@ function handleDropOnSerieEvent(event, ui) {
     var targetSequenceIndex = $(this).index();
 
     if (sourceID === "handTileDiv") {
-    
+
         addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
     } else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
@@ -197,6 +198,7 @@ function createPlayerHandWs(tiles) {
                 $(this).attr('data-senderID', (ui.item.closest("ul")).attr('id'));
             },
             receive: handleDropOnHand,
+            stop: handleTileMoveInSerie
         });
     }
 }
@@ -325,7 +327,7 @@ function setFirstSequenceTurnMsg() {
 
 function getTurnMsg() {
     var myName = myDetails.name;
-    
+
     if (myName === currPlayerName) {
         myName += PLAY;
     } else {
@@ -609,7 +611,7 @@ function triggerAjaxEventMonitoring() {
 }
 
 function getEventsWs() {
-    
+
     if (eventID !== undefined) {
         $.ajax({
             url: GAME_URL + "GetEventsServlet",
@@ -637,7 +639,7 @@ function getEventsWs() {
             error: function (jqXHR, textStatus, errorThrown) {
                 triggerAjaxEventMonitoring();
             }
-        });    
+        });
     }
     return false;
 }
