@@ -13,8 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import ws.rummikub.RummikubWebService;
 import ws.rummikub.RummikubWebServiceService;
 import ws.rummikub.Tile;
-import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
+import com.google.gson.Gson;
 import ws.rummikub.Color;
 //import rummikub.gameLogic.model.gameobjects.Tile;
 

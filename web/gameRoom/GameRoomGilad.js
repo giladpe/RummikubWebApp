@@ -111,15 +111,17 @@ function setSeriesSortable() {
 }
 
 function handleTileMoveInSerie(event, ui) {
-    if (!isTileMoveFromHandOrOtherSerie) {
-        var sourceSerieIndex = $(this).index(); //$(this).attr('data-senderID');
+    var sourceSerieIndex = $(this).index(); //$(this).attr('data-senderID');
+    var NOT_FOUND = -1;
+    
+    if (!isTileMoveFromHandOrOtherSerie && sourceSerieIndex !== NOT_FOUND) {
         var prevTilePositionIndex = $(this).attr('data-prevPositionIndex');
         var newTilePositionIndex = ui.item.index();
         //$(this).sortable('cancel');
         moveTileWs(sourceSerieIndex, prevTilePositionIndex, sourceSerieIndex, newTilePositionIndex, $(this));
     }
+    
     isTileMoveFromHandOrOtherSerie = false;
-
 }
 
 
@@ -323,6 +325,7 @@ function setFirstSequenceTurnMsg() {
 
 function getTurnMsg() {
     var myName = myDetails.name;
+    
     if (myName === currPlayerName) {
         myName += PLAY;
     } else {
@@ -609,7 +612,7 @@ function getEventsWs() {
     $.ajax({
         url: GAME_URL + "GetEventsServlet",
         data: {"eventID": eventID},
-        async: false,
+        async: true,
         timeout: 1000,
         dataType: 'json',
         success: function (data) {
