@@ -21,7 +21,7 @@ var PLAY = " Play";
 var WAIT = " Wait";
 
 var currPlayerName;
-var eventID;
+var eventID = 0;
 var gameName;
 var gameButtonsList;
 var myDetails;
@@ -612,7 +612,7 @@ function getEventsWs() {
     $.ajax({
         url: GAME_URL + "GetEventsServlet",
         data: {"eventID": eventID},
-        async: true,
+        async: false,
         timeout: 1000,
         dataType: 'json',
         success: function (data) {

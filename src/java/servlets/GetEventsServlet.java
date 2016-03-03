@@ -47,10 +47,9 @@ public class GetEventsServlet extends HttpServlet {
             response.setStatus(response.SC_OK);
 
             try {
-                int eventID = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.EVENT_ID);
+                Integer eventID = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.EVENT_ID);
                 Integer playerId = SessionUtils.getPlayerId(request);
-                List<Event> eventList = playerId == null? 
-                            new ArrayList<>() : rummikubAPI.getEvents(playerId, eventID);
+                List<Event> eventList = getEventListFromWs(rummikubAPI, eventID, playerId);
                 
                 ServletUtils.eventListResposne.setResposne(!ServletUtils.EXCEPTION, eventList);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.eventListResposne));                
@@ -102,5 +101,18 @@ public class GetEventsServlet extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    private List<Event> getEventListFromWs(RummikubWebService rummikubAPI, Integer eventID, Integer playerId) throws InvalidParameters_Exception {
+        List<Event> eventList;
+        
+        if (playerId == null || eventID == null) {
+            eventList = new ArrayList<>();
+        } 
+        else {
+            eventList = rummikubAPI.getEvents(playerId, eventID);
+        }    
+        
+        return eventList;
+    }
 
 }
