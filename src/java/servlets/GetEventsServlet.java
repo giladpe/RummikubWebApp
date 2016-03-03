@@ -7,6 +7,8 @@ package servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.AbstractList;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,8 +48,9 @@ public class GetEventsServlet extends HttpServlet {
 
             try {
                 int eventID = ServletUtils.getIntParameter(request, ServletParameterNamesConstants.EVENT_ID);
-
-                List<Event> eventList = rummikubAPI.getEvents(SessionUtils.getPlayerId(request), eventID);
+                Integer playerId = SessionUtils.getPlayerId(request);
+                List<Event> eventList = playerId == null? 
+                            new ArrayList<>() : rummikubAPI.getEvents(playerId, eventID);
                 
                 ServletUtils.eventListResposne.setResposne(!ServletUtils.EXCEPTION, eventList);
                 out.print(ServletUtils.GlobalGsonObject.toJson(ServletUtils.eventListResposne));                
