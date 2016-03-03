@@ -196,15 +196,13 @@ and open the template in the editor.
     height: 70px;
     color: white;
     padding: 10px;
-    background-image: url("../images/Bar.png");
+    background-image: url("../images/hole.png");
     background-position: center ;
     background-size:100% 100%;
     background-repeat: no-repeat;
 }
 
-.addSerieArea div.hovered {
-  background: #aaa;
-}
+
 
 li {
     background-image: url("../images/tile.png");

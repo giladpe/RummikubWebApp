@@ -59,7 +59,7 @@ $(function () {//onload function
 });
 
 function handleDropOnNewSerieEvent(event, ui) {
-
+    isTileMoveFromHandOrOtherSerie=true;
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
     var droppedTileParentId = sender.attr('id');
@@ -70,6 +70,10 @@ function handleDropOnNewSerieEvent(event, ui) {
         createSequenceWs(tiles, droppedTile, sender);
 
     } else {
+        //var prevTilePositionIndex = ui.item.startPos;
+        //var sourceSerieIndex = sender.index();
+        //var targetSerieIndex = $("#seriesArea ul").length+1;
+        //moveTileWs(sourceSerieIndex, prevTilePositionIndex,targetSerieIndex , 0, sender);
         sender.sortable('cancel');
     }
 }
