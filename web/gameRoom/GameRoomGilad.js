@@ -87,20 +87,7 @@ function createNewSerieWithId() {
 
     if (currPlayerName === myDetails.name) {
         setSeriesSortable();
-//        $(".serie").sortable({
-//            connectWith: "ul",
-//            helper:"clone", 
-//            opacity:0.5,
-//            cursor:"pointer",
-//            change: function(event, ui) {
-//                ui.item.startPos = ui.item.index();
-//            },
-//            start: function(event, ui) {
-//                ui.item.startPos = ui.item.index();
-//            },
-//            receive: handleDropOnSerieEvent 
-//        });
-    }
+        }
 
     return newSerieId;
 }
@@ -143,12 +130,9 @@ function handleDropOnSerieEvent(event, ui) {
     var sourceID = sender.attr('id');
     var targetSequencePosition = droppedTile.index();
     var targetSequenceIndex = $(this).index();
-    //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
-    //var prevPositionIndex = $(this).attr('data-prevPositionIndex'); //test
-    //var prevSerieIndex = $(this).attr('data-prevSerieIndex');///test
-    //var oldIndex = $(this).attr('data-previndex');
+
     if (sourceID === "handTileDiv") {
-        //sender.sortable('cancel');
+    
         addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
     } else {  ///arrive from serie
         var sourceSequenceIndex = $('#' + sourceID).index();
@@ -156,73 +140,11 @@ function handleDropOnSerieEvent(event, ui) {
         moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
     }
 
-
 }
-
-
-//function handleDropOnSerieEvent(event, ui) {
-//
-//    var droppedTile = $('#' + ui.item.attr('id'));
-//    var sender = $(ui.sender);
-//    var sourceID = sender.attr('id');
-//    var targetSequencePosition = droppedTile.index();
-//    var targetSequenceIndex = $(this).index();
-//    //var serieTarget = $('#seriesArea').children().eq(targetSequenceIndex);
-//
-//    
-//
-//    if (sourceID === "handTileDiv") {
-//        //sender.sortable('cancel');
-//        addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
-//    } 
-//    else {  ///arrive from serie
-//        var sourceSequenceIndex = $('#' + sourceID).index();
-//        var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
-//        
-////        if (isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget)) {
-////            sender.sortable('cancel');
-////        }
-//        tileMovedFromSerieToSerie = true;
-//        movedTileFromSerieToSerie = droppedTile;
-//        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
-//    }
-//
-//}
-
-//function isPositionAtStartOrEndOfSeries(targetSequencePosition, serieTarget) {
-//    return targetSequencePosition === 0 || targetSequencePosition === serieTarget.children().length-1;
-//}
-
-//function handleDropOnSerieEvent(event, ui){
-//     var droppedTile = $('#' + ui.item.attr('id'));
-//     var sourceID = $(ui.sender).attr('id');
-//     var targetSequencePosition = droppedTile.index();
-//     var targetSequenceIndex = $(this).index();
-//     
-//    if(sourceID === "handTileDiv"){
-//        var tile = createTileObj(droppedTile);
-//        var isTileAdded = addTileWs(tile, targetSequenceIndex, targetSequencePosition);
-//
-//        if(isTileAdded) {
-//            $(ui.sender).sortable('cancel'); // we have to cancel the sortable action and the remove the tile
-//            droppedTile.remove();
-//        }
-//        else {
-//            $(ui.sender).sortable('cancel');
-//        }
-//    }else {  ///arrive from serie
-//        var sourceSequenceIndex = $('#' + sourceID).index();
-//        var sourceSequencePosition =  ui.item.startPos;     //may be need to remove and find this tile in hand
-//        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition); 
-//        $(ui.sender).sortable('cancel');
-//    }
-//}
 
 function createTileObj(tileView) {
 
-    //var classes = (tileButton.attr("class")).split(" ");
     var color = (tileView.children().eq(0).attr("class"));
-    //var color = classes[0];
     var value = tileView.children().eq(0).text();
     var tile = new Tile(color, value);
     return tile;
@@ -723,8 +645,6 @@ function onResign() {
             if (data.isException)
             {
                 setGameMessage(data.voidAndStringResponse);
-            } else {
-                ////redirect(GAME_URL + MAIN_SCREEN);/////////////////////////need
             }
         },
         error: function (jqXHR, textStatus, errorThrown) {
