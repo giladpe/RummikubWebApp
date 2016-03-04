@@ -38,17 +38,18 @@ and open the template in the editor.
                             <th>Loaded Game</th>
                         </tr>
                     </thead>
-                        <tbody id="tableBody" style="cursor: pointer;">
-                        </tbody>
+                    <tbody id="tableBody" style="cursor: pointer;">
+                    </tbody>
                     <tfoot>
                         <tr><td colspan="6" align="center"><button id="refreshGameBtn" class="refreshBtn"/></td></tr>
                     </tfoot>
                 </table>
 
                 <form id="newGameFileds">
+                    
                     <input type="text" id="gameName" name="gameName" class="" placeholder="Insert game name  " size="12"/>
-                    <input type="text" id="humanPlayers" name="humanPlayers" class="" placeholder="Humans players" size="12"/>
-                    <input type="text" id="computerPlayers" name="computerPlayers" class="" placeholder="Computer players" size="12"/>
+                    <input onkeypress="return isNumberKey(event)" id="humanPlayers" type="number" min="1" max="4" name="humanPlayers" class="" placeholder="Humans players" >
+                    <input onkeypress="return isNumberKey(event)" id="computerPlayers" type="number" min="0" max="3"  name="computerPlayers" class="" placeholder="Computer players">
                     <input type="submit" id="newGamebtn" value="Create Game" class="gameSettingsBtn"/>
                 </form >
                 <form >

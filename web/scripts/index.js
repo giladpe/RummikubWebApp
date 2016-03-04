@@ -64,12 +64,16 @@ function onLoadGame() {
         reader.readAsText(textFile);
         $(reader).on('load', processFile);
     } else {
-        alert('Please upload a file before continuing')
+        setGameMessage('Please upload a file before continuing')
     }
-   
+
 //var txt = "";
 
 //document.getElementById("demo").innerHTML = txt;
+}
+
+function setGameMessage(msg) {
+    $("#errorMsg").html(msg).fadeIn(500).delay(3000).fadeOut(500);
 }
 
 function loadServlet(file) {
@@ -84,7 +88,7 @@ function loadServlet(file) {
             if (!data.isException) //success 
             {
                 $('#errorMsg').html(data.voidAndStringResponse + 'game was created').fadeIn(500).delay(2000).fadeOut(500);
-                updateGameList(data.voidAndStringResponse); 
+                updateGameList(data.voidAndStringResponse);
 //                var gameTableDetailds = getTableGameDetails(data.voidAndStringResponse);
 //                addRowToTable(gameTableDetailds);
 //                getWaitingGames();
@@ -123,10 +127,9 @@ function joinGame() {
                 success: function (data) {
                     if (!data.isException)
                     {
-                        
-                        redirect("gameRoom/gameRoom.html?gid="+game_selected)
-                    } 
-                    else
+
+                        redirect("gameRoom/gameRoom.html?gid=" + game_selected)
+                    } else
                     {
                         $('#errorMsg').html(data.voidAndStringResponse).fadeIn(500).delay(2000).fadeOut(500);
                     }
@@ -215,7 +218,7 @@ function getTableGameDetails(gameName) {
 
 function updateGameList(gameName) {
     var gameDetails = getGameDetails(gameName);
-    
+
     if (gameDetails !== EMPTY_STRING) {
         addRowToTable(gameDetails);
         getWaitingGames();
@@ -254,16 +257,25 @@ function getXMLPlayersNames(gameName) {
     var res = "";
     var playersDetailsList = getPlayersDetailsList(gameName);
     var playersNameArray = getPlayersNamesArray(playersDetailsList);
-    for (var i=0;i<playersNameArray.length;i++){
-        res+=playersNameArray[i];
-        if(i !== playersNameArray.length-1){
-            res+=",";
+    for (var i = 0; i < playersNameArray.length; i++) {
+        res += playersNameArray[i];
+        if (i !== playersNameArray.length - 1) {
+            res += ",";
         }
     }
     //res=res.slice(0,res.length-1);
     return res;
 }
 
+function isNumberKey(evt) {
+    var charCode = (evt.which) ? evt.which : event.keyCode;
+    var textFieldFunctionColler = $('#'+event.target.id).attr('placeholder');
+    if (charCode > 31 && (charCode < 48 || charCode > 57)){
+        setGameMessage('Please insert valid '+ textFieldFunctionColler+' number');
+        return false;
+    }
+    return true;
+}
 
 
 

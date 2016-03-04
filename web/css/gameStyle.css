@@ -135,8 +135,18 @@
     margin-top: 20px;
     margin-left: 34px;
 }
-
-
+#humanPlayers {
+    width: 125px
+}
+#computerPlayers {
+    width: 125px
+}
+#gameName{
+    width: 125px
+}
+#playerName {
+    width: 388px
+}
 
 /*.tileText:hover {
     font-size: 18px;
