@@ -78,7 +78,7 @@ $(function () {//onload function
 //}
 
 function handleDropOnNewSerieEvent(event, ui) {
-    isTileMoveFromHandOrOtherSerie=true;
+    isTileMoveFromHandOrOtherSerie = true;
     var droppedTile = $('#' + ui.item.attr('id'));
     var sender = $(ui.sender);
     var droppedTileParentId = sender.attr('id');
@@ -92,7 +92,7 @@ function handleDropOnNewSerieEvent(event, ui) {
         var prevTilePositionIndex = ui.item.startPos;
         var sourceSerieIndex = sender.index();
         var targetSerieIndex = $("#seriesArea ul").length;
-        moveTileWs(sourceSerieIndex, prevTilePositionIndex,targetSerieIndex , 0, sender);
+        moveTileWs(sourceSerieIndex, prevTilePositionIndex, targetSerieIndex, 0, sender);
     }
 }
 
@@ -137,7 +137,7 @@ function setSeriesSortable() {
         forcePlaceholderSize: true,
         connectWith: "ul",
         revert: true,
-        helper: "clone", 
+        helper: "clone",
         opacity: 0.5,
         cursor: "pointer",
         start: function (event, ui) {
@@ -161,7 +161,11 @@ function handleTileMoveInSerie(event, ui) {
             var prevTilePositionIndex = $(this).attr('data-prevPositionIndex');
             var newTilePositionIndex = ui.item.index();
             //$(this).sortable('cancel');
-            moveTileWs(sourceSerieIndex, prevTilePositionIndex, sourceSerieIndex, newTilePositionIndex, $(this));
+            if (prevTilePositionIndex !== newTilePositionIndex) {
+                moveTileWs(sourceSerieIndex, prevTilePositionIndex, sourceSerieIndex, newTilePositionIndex, $(this));
+            } else {
+                $(this).sortable('cancel');
+            }
         }
     }
     isTileMoveFromHandOrOtherSerie = false;
@@ -233,6 +237,8 @@ function createPlayerHandWs(tiles) {
             helper: "clone",
             opacity: 0.5,
             cursor: "pointer",
+            placeholder: "tst1",
+            forcePlaceholderSize: true,
             start: function (event, ui) {
                 $(this).attr('data-prevPositionIndex', ui.item.index());
                 $(this).attr('data-prevSerieIndex', (ui.item.closest("ul")).index());
@@ -404,8 +410,7 @@ function insertTileAtIndex(serie, tile, index) {
 
     if (index === 0) {
         serie.prepend(tile);
-    }
-    else {
+    } else {
         tileBefor.after(tile);
     }
 }
@@ -423,14 +428,13 @@ function handleTileMovedEvent(event) {
     var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
     var serieTarget;
 
-    if($("#seriesArea ul").length === event.targetSequenceIndex ) {
+    if ($("#seriesArea ul").length === event.targetSequenceIndex) {
         var newSerieId = createNewSerieWithId();
         serieTarget = $("#serie" + newSerieId);
-    } 
-    else {
-       serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
+    } else {
+        serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
     }
-    
+
 
     insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
 
