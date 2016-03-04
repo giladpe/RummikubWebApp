@@ -7,8 +7,18 @@ and open the template in the editor.
     Created on : 14-Feb-2016, 12:20:33
     Author     : giladPe
 */
-
-
+.ui-sortable-placeholder {
+    border: 3px dashed #aaa;
+    height: 50px;
+    width: 35px;
+    background: green;
+}
+.tst1 {
+    border: 3px dashed #aaa !important;
+    height: 50px !important;
+    width: 35px !important;
+    background: green !important;
+}
 #topBar{
     height: 80px;
     padding-top: 20px;

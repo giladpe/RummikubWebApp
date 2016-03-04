@@ -100,7 +100,7 @@ function handleDropOnNewSerieEvent(event, ui) {
 //function handleDropOnSerieEvent(event, ui) {
 //    isTileMoveFromHandOrOtherSerie = true;
 //    var sourceID = sender.attr('id');
-//    var targetSequencePosition = droppedTile.index();
+//    var targetSequencePosition = droppedfTile.index();
 //    var targetSequenceIndex = $(this).index();
 //
 //    if (sourceID === "handTileDiv") {
@@ -133,8 +133,11 @@ function createNewSerieWithId() {
 
 function setSeriesSortable() {
     $(".serie").sortable({
+        placeholder: "tst1",
+        forcePlaceholderSize: true,
         connectWith: "ul",
-        helper: "clone",
+        revert: true,
+        helper: "clone", 
         opacity: 0.5,
         cursor: "pointer",
         start: function (event, ui) {
