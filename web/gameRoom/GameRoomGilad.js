@@ -58,6 +58,25 @@ $(function () {//onload function
     getEventsWs();
 });
 
+//function handleDropOnNewSerieEvent(event, ui) {
+//    isTileMoveFromHandOrOtherSerie=true;
+//    var droppedTile = $('#' + ui.item.attr('id'));
+//    var sender = $(ui.sender);
+//    var droppedTileParentId = sender.attr('id');
+//
+//    if (droppedTileParentId === "handTileDiv") {
+//        var tiles = [];
+//        tiles.push(createTileObj(droppedTile));
+//        createSequenceWs(tiles, droppedTile, sender);
+//
+//    } else {
+//        var prevTilePositionIndex = ui.item.startPos;
+//        var sourceSerieIndex = sender.index();
+//        var targetSerieIndex = $("#seriesArea ul").length+1;
+//        moveTileWs(sourceSerieIndex, prevTilePositionIndex,targetSerieIndex , 0, sender);
+//    }
+//}
+
 function handleDropOnNewSerieEvent(event, ui) {
     isTileMoveFromHandOrOtherSerie=true;
     var droppedTile = $('#' + ui.item.attr('id'));
@@ -70,13 +89,29 @@ function handleDropOnNewSerieEvent(event, ui) {
         createSequenceWs(tiles, droppedTile, sender);
 
     } else {
-        //var prevTilePositionIndex = ui.item.startPos;
-        //var sourceSerieIndex = sender.index();
-        //var targetSerieIndex = $("#seriesArea ul").length+1;
-        //moveTileWs(sourceSerieIndex, prevTilePositionIndex,targetSerieIndex , 0, sender);
-        sender.sortable('cancel');
+        var prevTilePositionIndex = ui.item.startPos;
+        var sourceSerieIndex = sender.index();
+        var targetSerieIndex = $("#seriesArea ul").length;
+        moveTileWs(sourceSerieIndex, prevTilePositionIndex,targetSerieIndex , 0, sender);
     }
 }
+
+//
+//function handleDropOnSerieEvent(event, ui) {
+//    isTileMoveFromHandOrOtherSerie = true;
+//    var sourceID = sender.attr('id');
+//    var targetSequencePosition = droppedTile.index();
+//    var targetSequenceIndex = $(this).index();
+//
+//    if (sourceID === "handTileDiv") {
+//
+//        addTileWs(droppedTile, targetSequenceIndex, targetSequencePosition, sender);
+//    } else {  ///arrive from serie
+//        var sourceSequenceIndex = $('#' + sourceID).index();
+//        var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
+//        moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
+//    }
+//}
 
 function createNewSerieWithId() {
     var newSerieId = serieId;
@@ -146,7 +181,6 @@ function handleDropOnSerieEvent(event, ui) {
         var sourceSequencePosition = ui.item.startPos;      //may be need to remove and find this tile in hand
         moveTileWs(sourceSequenceIndex, sourceSequencePosition, targetSequenceIndex, targetSequencePosition, sender);
     }
-
 }
 
 function createTileObj(tileView) {
@@ -363,15 +397,14 @@ function handleSequenceCreatedEvent(event) {
 function insertTileAtIndex(serie, tile, index) {
     var tileBefor = serie.children().eq(index - 1);
 
-    index === 0 ? serie.prepend(tile) : tileBefor.after(tile);
+    //index === 0 ? serie.prepend(tile) : tileBefor.after(tile);
 
-//    if (index === 0) {
-//        serie.prepend(tile);
-//    }
-//    else {
-//        var tileBefor = serie.children().eq(index - 1);
-//        tileBefor.after(tile);
-//    }
+    if (index === 0) {
+        serie.prepend(tile);
+    }
+    else {
+        tileBefor.after(tile);
+    }
 }
 
 function handleTileAddedEvent(event) {
@@ -385,7 +418,16 @@ function handleTileAddedEvent(event) {
 function handleTileMovedEvent(event) {
     var serieSource = $('#seriesArea').children().eq(event.sourceSequenceIndex);
     var tileToMove = serieSource.children().eq(event.sourceSequencePosition);
-    var serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
+    var serieTarget;
+
+    if($("#seriesArea ul").length === event.targetSequenceIndex ) {
+        var newSerieId = createNewSerieWithId();
+        serieTarget = $("#serie" + newSerieId);
+    } 
+    else {
+       serieTarget = $('#seriesArea').children().eq(event.targetSequenceIndex);
+    }
+    
 
     insertTileAtIndex(serieTarget, tileToMove, event.targetSequencePosition);
 
